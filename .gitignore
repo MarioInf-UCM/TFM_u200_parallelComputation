@@ -36,7 +36,6 @@
 *.log
 *.out
 *.toc
-*.pdf
 .vscode
 .Xil
 _x

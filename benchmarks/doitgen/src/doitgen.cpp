@@ -1,131 +1,183 @@
-/**
- * This version is stamped on May 10, 2016
- *
- * Contact:
- *   Louis-Noel Pouchet <pouchet.ohio-state.edu>
- *   Tomofumi Yuki <tomofumi.yuki.fr>
- *
- * Web address: http://polybench.sourceforge.net
- */
-/* doitgen.c: this file is part of PolyBench/C */
-
+#include <iostream>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
 
-/* Include polybench common header. */
 #include "utilities/polybench.hpp"
-
-/* Include benchmark-specific header. */
 #include "doitgen.hpp"
 
+#define SIZE_R 15
+#define SIZE_Q 14
+#define SIZE_P 16
 
-/* Array initialization. */
-static
-void init_array(int nr, int nq, int np,
-		DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
-		DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np))
-{
-  int i, j, k;
-
-  for (i = 0; i < nr; i++)
-    for (j = 0; j < nq; j++)
-      for (k = 0; k < np; k++)
-	A[i][j][k] = (DATA_TYPE) ((i*j + k)%np) / np;
-  for (i = 0; i < np; i++)
-    for (j = 0; j < np; j++)
-      C4[i][j] = (DATA_TYPE) (i*j % np) / np;
-}
+using namespace std;
 
 
-/* DCE code. Must scan the entire live-out data.
-   Can be used also to check the correctness of the output. */
-static
-void print_array(int nr, int nq, int np,
-		 DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np))
-{
-  int i, j, k;
+// FUNCTION HEADERS
+//*************************************
+bool initArrays(double ****A, double ***C4, double **sum);
+void printArrays(double ***A, double **C4, double *sum);
+void freeArrays(double ***A, double **C4, double *sum);
+void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, int np);
 
-  POLYBENCH_DUMP_START;
-  POLYBENCH_DUMP_BEGIN("A");
-  for (i = 0; i < nr; i++)
-    for (j = 0; j < nq; j++)
-      for (k = 0; k < np; k++) {
-	if ((i*nq*np+j*np+k) % 20 == 0) fprintf (POLYBENCH_DUMP_TARGET, "\n");
-	fprintf (POLYBENCH_DUMP_TARGET, DATA_PRINTF_MODIFIER, A[i][j][k]);
-      }
-  POLYBENCH_DUMP_END("A");
-  POLYBENCH_DUMP_FINISH;
-}
+//*************************************
+// MAIN FUNCTION - START
+//*************************************
+int main(int argc, char** argv){
 
+  int nr = SIZE_R, nq = SIZE_Q, np=SIZE_P;
+  double ***A=NULL;  //SIZE_R x SIZE_Q x SIZE_P
+  double **C4=NULL;  //SIZE_P x SIZE_P
+  double *sum=NULL;  //SIZE_P
+  bool result;
 
-/* Main computational kernel. The whole function will be timed,
-   including the call and return. */
-void kernel_doitgen(int nr, int nq, int np,
-		    DATA_TYPE POLYBENCH_3D(A,NR,NQ,NP,nr,nq,np),
-		    DATA_TYPE POLYBENCH_2D(C4,NP,NP,np,np),
-		    DATA_TYPE POLYBENCH_1D(sum,NP,np))
-{
-  int r, q, p, s;
-
-#pragma scop
-  for (r = 0; r < _PB_NR; r++){
-    for (q = 0; q < _PB_NQ; q++){
-      for (p = 0; p < _PB_NP; p++){
-      	sum[p] = SCALAR_VAL(0.0);
-	      for (s = 0; s < _PB_NP; s++){
-	        sum[p] += A[r][q][s] * C4[s][p];
-        }
-      }
-      for (p = 0; p < _PB_NP; p++){
-	      A[r][q][p] = sum[p];
-      }
-    }
+  result = initArrays(&A, &C4, &sum);
+  if(!result){
+    cerr << "ERROR..: We couldn't init arrays" << endl;
+    return 0;
   }
-#pragma endscop
-
-}
-
-
-int main(int argc, char** argv)
-{
-  /* Retrieve problem size. */
-  int nr = NR;
-  int nq = NQ;
-  int np = NP;
-
-  /* Variable declaration/allocation. */
-  POLYBENCH_3D_ARRAY_DECL(A,DATA_TYPE,NR,NQ,NP,nr,nq,np);
-  POLYBENCH_1D_ARRAY_DECL(sum,DATA_TYPE,NP,np);
-  POLYBENCH_2D_ARRAY_DECL(C4,DATA_TYPE,NP,NP,np,np);
-
-  /* Initialize array(s). */
-  init_array (nr, nq, np,
-	      POLYBENCH_ARRAY(A),
-	      POLYBENCH_ARRAY(C4));
-
-  /* Start timer. */
-  polybench_start_instruments;
-
-  /* Run kernel. */
-  kernel_doitgen (nr, nq, np,
-		  POLYBENCH_ARRAY(A),
-		  POLYBENCH_ARRAY(C4),
-		  POLYBENCH_ARRAY(sum));
-
-  /* Stop and print timer. */
-  polybench_stop_instruments;
-  polybench_print_instruments;
-
-  /* Prevent dead-code elimination. All live-out data must be printed
-     by the function call in argument. */
-  polybench_prevent_dce(print_array(nr, nq, np,  POLYBENCH_ARRAY(A)));
-
-  /* Be clean. */
-  POLYBENCH_FREE_ARRAY(A);
-  POLYBENCH_FREE_ARRAY(sum);
-  POLYBENCH_FREE_ARRAY(C4);
+  
+  kernel_doitgen_CPU(A, C4, sum, nr, nq, np);
+  printArrays(A, C4, sum);
+  freeArrays(A, C4, sum);
 
   return 0;
 }
+//*************************************
+// MAIN FUNCTION - END
+//*************************************
+
+
+bool initArrays(double ****A, double ***C4, double **sum){
+  
+    *A = (double***)malloc(SIZE_R * sizeof(double**));
+    if(A==NULL){ return false;}
+
+    for (int r = 0; r < SIZE_R; r++) {
+      (*A)[r] = (double**)malloc(SIZE_Q * sizeof(double*));
+      if((*A)[r]==NULL){ return false;}
+
+      for (int q = 0; q < SIZE_Q; q++) {
+        (*A)[r][q] = (double*)malloc(SIZE_P * sizeof(double));
+        if((*A)[r][q]==NULL){ return false;}
+
+        for (int p = 0; p < SIZE_P; p++){
+          (*A)[r][q][p] = (double) ((r*q + p)%SIZE_P) / SIZE_P;
+        }
+      }
+    }
+
+    *C4 = (double**)malloc(SIZE_P * sizeof(double*));
+    if((*C4)==NULL){ return false;}
+    
+    for (int p1 = 0; p1 < SIZE_P; p1++) {
+      (*C4)[p1] = (double*)malloc(SIZE_P * sizeof(double));
+      if((*C4)[p1]==NULL){ return false;}
+
+      for (int p2 = 0; p2 < SIZE_P; p2++) {
+        (*C4)[p1][p2] = (double) (p1*p2 % SIZE_P) / SIZE_P;
+      }
+    }
+
+
+    *sum = (double*)malloc(SIZE_P * sizeof(double));
+    if(*sum==NULL){ return false;}
+   
+    for (int p = 0; p < SIZE_P; p++) {
+      (*sum)[p] = 0.0;
+    }
+
+  return true;
+}
+
+
+void printArrays(double ***A, double **C4, double *sum){
+
+  cout << "*******************" << endl;
+  cout << "* RESULTS ARRAY A *" << endl;
+  cout << "*******************" << endl;
+
+  for (int r = 0; r < SIZE_R; r++) {
+    cout << "\nARRAY A, DIMENSION R=" << r+1 << " of " << SIZE_R << endl;
+    for (int q = 0; q < SIZE_Q; q++) {
+        for (int p = 0; p < SIZE_P; p++) {
+            printf("%.2f  ", A[r][q][p]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+  }
+
+  cout << endl;
+  cout << "********************" << endl;
+  cout << "* RESULTS ARRAY C4 *" << endl;
+  cout << "********************" << endl;
+
+  for (int p1 = 0; p1 < SIZE_P; p1++) {
+    for (int p2 = 0; p2 < SIZE_P; p2++) {
+      printf("%.2f  ", C4[p1][p2]);
+    }
+    printf("\n");
+  }
+  printf("\n");
+
+  cout << endl;
+  cout << "*********************" << endl;
+  cout << "* RESULTS ARRAY SUM *" << endl;
+  cout << "*********************" << endl;
+
+  for (int p1 = 0; p1 < SIZE_P; p1++) {
+    printf("%.2f  ", sum[p1]);
+  }
+  printf("\n");
+
+  return;
+}
+
+
+void freeArrays(double ***A, double **C4, double *sum){
+
+  for (int r = 0; r < SIZE_R; r++) {
+    for (int q = 0; q < SIZE_Q; q++) {
+      free( A[r][q]);
+    }
+    free(A[r]);
+  }
+  free(A);
+
+  for (int p = 0; p < SIZE_P; p++) {
+    free(C4[p]);
+  }
+  free(C4);
+
+  free(sum);
+
+  return; 
+}
+
+
+void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, int np) {
+
+    for (int r = 0; r < nr; r++){
+      for (int q = 0; q < nq; q++){
+        for (int p = 0; p < np; p++){
+          
+          for (int s = 0; s < np; s++){
+            sum[p] += A[r][q][s] * C4[s][p];
+          }
+        }
+
+        for (int p = 0; p < np; p++){
+          A[r][q][p] = sum[p];
+        }
+      }
+    }
+
+  return;
+}
+
+
+
+
+

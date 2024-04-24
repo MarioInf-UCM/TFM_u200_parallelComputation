@@ -3,5 +3,13 @@
       {
         "path": "."
       },
-    ]
+    ],
+    "settings": {
+      "files.associations": {
+        ".fantomasignore": "ignore",
+        "random": "cpp",
+        "iostream": "cpp",
+        "ostream": "cpp"
+      }
+    }
 }

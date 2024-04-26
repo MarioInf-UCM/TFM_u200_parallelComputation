@@ -1,6 +1,6 @@
 
 
-.phony: clean traces help
+.phony: clean build
 
 
 #COMMANDS FOR KERNELS COMPILE
@@ -17,10 +17,13 @@ makeKernels_clean:
 #COMMANDS FOR SOFTWARE COMPILE
 #**************************************
 doitgen:
-	gcc -O3 -I utilities -I src/ src/utilities/polybench.cpp src/doitgen.cpp -DPOLYBENCH_TIME -DEXTRALARGE_DATASET -o build/doitgen
-	
+	@cd build; \
+	cmake ..; \
+	make -j
+
 doitgenRun:
-	./build/doitgen
+	@cd build; \
+	./doitgen
 
 clean:
-	rm -rf build/**
+	rm -rf build/*

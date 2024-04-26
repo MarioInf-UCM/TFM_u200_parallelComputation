@@ -1,15 +1,16 @@
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
-#include "doitgen.hpp"
 #include "utilities/event_timer.hpp"
 #include "utilities/xilinx_ocl_helper.hpp"
 
+#define PRINTRESULT true
 #define SIZE_R 15
 #define SIZE_Q 14
 #define SIZE_P 16
 
 using namespace std;
+using namespace cl;
 
 // FUNCTION HEADERS
 //*************************************
@@ -25,32 +26,80 @@ void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, i
 //*************************************
 int main(int argc, char** argv){
 
-  EventTimer event;
-  double ***A=NULL;  //SIZE_R x SIZE_Q x SIZE_P
-  double **C4=NULL;  //SIZE_P x SIZE_P
-  double *sum=NULL;  //SIZE_P
-  bool result;
+    EventTimer event;
+    double ***A=NULL;  //SIZE_R x SIZE_Q x SIZE_P
+    double **C4=NULL;  //SIZE_P x SIZE_P
+    double *sum=NULL;  //SIZE_P
+    bool result;
 
-  //STEP 1 - START: Initializaton OpenCL and load kernels"
-  et.add("Initializaton OpenCL and load kernels");
+    //STEP 1 - START: Initializaton OpenCL and load kernels"
+    event.add("Initializaton OpenCL and load kernels");
 
-  xilinx::example_utils::XilinxOclHelper xocl;
-  xocl.initialize("alveo_examples.xclbin");
-  cl::CommandQueue q = xocl.get_command_queue();
-  cl::Kernel krnl    = xocl.get_kernel("vadd");
+    xilinx::example_utils::XilinxOclHelper xocl;
+    xocl.initialize("kernels.xclbin");
+    CommandQueue q = xocl.get_command_queue();
+    Kernel krnl    = xocl.get_kernel("doitgenKernel");
 
-  event.finish();
-  //STEP 1 - END: Initializaton OpenCL and load kernels"
+    event.finish();
+    //STEP 1 - END: Initializaton OpenCL and load kernels"
 
 
-  result = initArrays(&A, &C4, &sum);
-  if(!result){
-    cerr << "ERROR..: We couldn't init arrays" << endl;
-    return 0;
+    //STEP 2 - START: Creating and allocating memory"
+    event.add("Creating and allocating memory");
+
+    result = initArrays(&A, &C4, &sum);
+    if(!result){
+        cerr << "ERROR..: We couldn't init arrays" << endl;
+        return 0;
+    }
+
+    event.finish();
+    //STEP 2 - END: Creating and allocating memory"
+
+
+    //STEP 3 - START: Running kernel in CPU"
+    event.add("Running kernel in CPU");
+
+    kernel_doitgen_CPU(A, C4, sum, SIZE_R, SIZE_Q, SIZE_P);
+
+    event.finish();
+    //STEP 3 - START: Running kernel in CPU"
+
+
+    //STEP 4 - START: Creating and mapping buffer 
+/*     event.add("Creating and mapping buffer")
+    
+    Buffer sendBuff_A(xocl.get_context(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        SIZE_R * SIZE_Q * SIZE_P * sizeof(double),
+                        A,
+                        NULL);
+
+    Buffer sendBuff_C4(xocl.get_context(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        SIZE_P * SIZE_P * sizeof(double),
+                        C4,
+                        NULL);
+
+    Buffer recvBuff_A(xocl.get_context(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        SIZE_P * SIZE_P * sizeof(double),
+                        C4,
+                        NULL);
+
+
+    event.finish(); */
+    //STEP 4 - END: Creating and mapping buffer 
+
+
+
+
+
+
+
+  if(PRINTRESULT){
+    printArrays(A, C4, sum);
   }
-  
-  kernel_doitgen_CPU(A, C4, sum, SIZE_R, SIZE_Q, SIZE_P);
-  printArrays(A, C4, sum);
   freeArrays(A, C4, sum);
 
   return 0;

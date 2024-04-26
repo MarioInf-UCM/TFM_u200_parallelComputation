@@ -10,7 +10,9 @@
         "random": "cpp",
         "iostream": "cpp",
         "ostream": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "string": "cpp",
+        "fstream": "cpp"
       }
     }
 }

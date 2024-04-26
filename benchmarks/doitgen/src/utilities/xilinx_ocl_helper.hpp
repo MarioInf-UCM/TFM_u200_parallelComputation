@@ -11,8 +11,9 @@
 
 #include "line_exception.hpp"
 
-#include <CL/cl2.hpp> //"/opt/intel/opencl-1.2-4.4.0.117/include/CL/cl.h"
-#include <CL/cl_ext_xilinx.h>
+//#include <CL/cl2.hpp> //"/opt/intel/opencl-1.2-4.4.0.117/include/CL/cl.h"
+//#include <CL/cl_ext_xilinx.h>
+#include <CL/opencl.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>

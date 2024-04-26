@@ -27,9 +27,7 @@ void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, i
 int main(int argc, char** argv){
 
     EventTimer event;
-    double ***A=NULL;  //SIZE_R x SIZE_Q x SIZE_P
-    double **C4=NULL;  //SIZE_P x SIZE_P
-    double *sum=NULL;  //SIZE_P
+    Event event_sp;
     bool result;
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
@@ -38,7 +36,7 @@ int main(int argc, char** argv){
     xilinx::example_utils::XilinxOclHelper xocl;
     xocl.initialize("kernels.xclbin");
     CommandQueue q = xocl.get_command_queue();
-    Kernel krnl    = xocl.get_kernel("doitgenKernel");
+    Kernel ker = xocl.get_kernel("doitgenKernel");
 
     event.finish();
     //STEP 1 - END: Initializaton OpenCL and load kernels"
@@ -46,6 +44,11 @@ int main(int argc, char** argv){
 
     //STEP 2 - START: Creating and allocating memory"
     event.add("Creating and allocating memory");
+
+    double ***A=NULL;             //SIZE_R x SIZE_Q x SIZE_P
+    double **C4=NULL;             //SIZE_P x SIZE_P
+    double *sum=NULL;             //SIZE_P
+    double ***resultDevice=NULL;  //SIZE_R x SIZE_Q x SIZE_P
 
     result = initArrays(&A, &C4, &sum);
     if(!result){
@@ -63,11 +66,11 @@ int main(int argc, char** argv){
     kernel_doitgen_CPU(A, C4, sum, SIZE_R, SIZE_Q, SIZE_P);
 
     event.finish();
-    //STEP 3 - START: Running kernel in CPU"
+    //STEP 3 - END: Running kernel in CPU"
 
 
     //STEP 4 - START: Creating and mapping buffer 
-/*     event.add("Creating and mapping buffer")
+    event.add("Creating and mapping buffer");
     
     Buffer sendBuff_A(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
@@ -84,14 +87,45 @@ int main(int argc, char** argv){
     Buffer recvBuff_A(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
                         SIZE_P * SIZE_P * sizeof(double),
-                        C4,
+                        resultDevice,
                         NULL);
 
+    ker.setArg(0, sendBuff_A);
+    ker.setArg(1, sendBuff_C4);
+    ker.setArg(2, recvBuff_A);
 
-    event.finish(); */
+    event.finish();
     //STEP 4 - END: Creating and mapping buffer 
 
 
+    //STEP 5 - START: Transmision data to device 
+    event.add("Transmision data to device");
+
+    q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_C4}, 0, NULL, &event_sp);
+    clWaitForEvents(1, (const cl_event *)&event_sp);
+
+    event.finish();
+    //STEP 5 - END: Transmision data to device 
+
+
+    //STEP 6 - START: Device execution
+    event.add("Device execution");
+
+    q.enqueueTask(ker, NULL, &event_sp);
+    clWaitForEvents(1, (const cl_event *)&event_sp);
+
+    event.finish();
+    //STEP 6 - END: Device execution
+
+
+    //STEP 7 - START: Transmision data from device 
+    event.add("Transmision data from device ");
+
+    q.enqueueMigrateMemObjects({recvBuff_A}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
+    clWaitForEvents(1, (const cl_event *)&event_sp);
+
+    event.finish();
+    //STEP 7 - END: Transmision data from device 
 
 
 

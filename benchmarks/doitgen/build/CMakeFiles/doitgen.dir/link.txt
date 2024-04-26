@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/doitgen.dir/src/doitgen.cpp.o  -o doitgen -rdynamic /opt/xilinx/xrt/lib/libxrt_core.so /opt/xilinx/xrt/lib/libxilinxopencl.so -lOpenCL -lpthread -luuid -ldl libexample_utils.a -Wl,-rpath,/opt/xilinx/xrt/lib 

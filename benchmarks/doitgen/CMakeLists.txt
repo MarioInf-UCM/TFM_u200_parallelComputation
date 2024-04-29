@@ -31,7 +31,8 @@ target_include_directories(example_utils PUBLIC
 
 # LOADING DOITGEN EXAMPLE
 add_executable(doitgen
-  src/doitgen.cpp)
+  src/doitgen.cpp
+  src/doitgenData/doitgenData.cpp)
 
 target_include_directories(doitgen PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src

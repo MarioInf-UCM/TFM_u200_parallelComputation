@@ -3,22 +3,18 @@
 #include <string.h>
 #include "utilities/event_timer.hpp"
 #include "utilities/xilinx_ocl_helper.hpp"
+#include "doitgenData/doitgenData.hpp"
 
 #define PRINTRESULT true
-#define SIZE_R 15
-#define SIZE_Q 14
-#define SIZE_P 16
 
 using namespace std;
 using namespace cl;
 
 // FUNCTION HEADERS
 //*************************************
-bool initArrays(double ****A, double ***C4, double **sum);
-void printArrays(double ***A, double **C4, double *sum);
-void freeArrays(double ***A, double **C4, double *sum);
-void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, int np);
-
+void printArrays(DoitgenData data);
+void kernel_doitgen_CPU(DoitgenData *data);
+bool compareResults(double ****A, double ****resultDevice);
 
 
 //*************************************
@@ -26,6 +22,7 @@ void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, i
 //*************************************
 int main(int argc, char** argv){
 
+    DoitgenData data = DoitgenData();
     EventTimer event;
     Event event_sp;
     bool result;
@@ -42,69 +39,51 @@ int main(int argc, char** argv){
     //STEP 1 - END: Initializaton OpenCL and load kernels"
 
 
-    //STEP 2 - START: Creating and allocating memory"
-    event.add("Creating and allocating memory");
-
-    double ***A=NULL;             //SIZE_R x SIZE_Q x SIZE_P
-    double **C4=NULL;             //SIZE_P x SIZE_P
-    double *sum=NULL;             //SIZE_P
-    double ***resultDevice=NULL;  //SIZE_R x SIZE_Q x SIZE_P
-
-    result = initArrays(&A, &C4, &sum);
-    if(!result){
-        cerr << "ERROR..: We couldn't init arrays" << endl;
-        return 0;
-    }
-
-    event.finish();
-    //STEP 2 - END: Creating and allocating memory"
-
-
-    //STEP 3 - START: Running kernel in CPU"
+    //STEP 2 - START: Running kernel in CPU"
     event.add("Running kernel in CPU");
 
-    kernel_doitgen_CPU(A, C4, sum, SIZE_R, SIZE_Q, SIZE_P);
+    kernel_doitgen_CPU(&data);
 
     event.finish();
-    //STEP 3 - END: Running kernel in CPU"
+    //STEP 2 - END: Running kernel in CPU"
 
 
-    //STEP 4 - START: Creating and mapping buffer 
+    //STEP 3 - START: Creating and mapping buffer 
     event.add("Creating and mapping buffer");
-    
+
     Buffer sendBuff_A(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
                         SIZE_R * SIZE_Q * SIZE_P * sizeof(double),
-                        A,
+                        data.getA(),
                         NULL);
 
     Buffer sendBuff_C4(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
                         SIZE_P * SIZE_P * sizeof(double),
-                        C4,
+                        data.getC4(),
                         NULL);
 
-    Buffer recvBuff_A(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        SIZE_P * SIZE_P * sizeof(double),
-                        resultDevice,
+    Buffer recvBuff_resultDevice(xocl.get_context(),
+                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR),
+                        SIZE_R * SIZE_Q * SIZE_P * sizeof(double),
+                        data.getResultDevice(),
                         NULL);
 
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_C4);
-    ker.setArg(2, recvBuff_A);
+    ker.setArg(2, recvBuff_resultDevice);
 
     event.finish();
-    //STEP 4 - END: Creating and mapping buffer 
+    //STEP 3 - END: Creating and mapping buffer 
 
 
-    //STEP 5 - START: Transmision data to device 
+    //STEP 5 - START: Transmision data to device
     event.add("Transmision data to device");
 
     q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_C4}, 0, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
-    event.finish();
+    event.finish(); 
     //STEP 5 - END: Transmision data to device 
 
 
@@ -118,23 +97,34 @@ int main(int argc, char** argv){
     //STEP 6 - END: Device execution
 
 
-    //STEP 7 - START: Transmision data from device 
+    //STEP 7 - START: Transmision data from device
     event.add("Transmision data from device ");
 
-    q.enqueueMigrateMemObjects({recvBuff_A}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
+    q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
     event.finish();
     //STEP 7 - END: Transmision data from device 
 
+    data.printData_A();
+    data.printData_resultDevice();
 
 
+/* 
+    if(PRINTRESULT){
+    printArrays(A, C4, sum, resultDevice);
+    }
+    freeArrays(A, C4, sum);
+ */
+/*
+    if(compareResults(&A, &resultDevice)){
+        cout << "WELL, The results match" << endl;
+    }else{
+        cout << "BAD, The results don't match" << endl;
+    }
+*/
 
 
-  if(PRINTRESULT){
-    printArrays(A, C4, sum);
-  }
-  freeArrays(A, C4, sum);
 
   return 0;
 }
@@ -143,127 +133,51 @@ int main(int argc, char** argv){
 //*************************************
 
 
-bool initArrays(double ****A, double ***C4, double **sum){
-  
-    *A = (double***)malloc(SIZE_R * sizeof(double**));
-    if(A==NULL){ return false;}
+void printArrays(DoitgenData data){
 
-    for (int r = 0; r < SIZE_R; r++) {
-      (*A)[r] = (double**)malloc(SIZE_Q * sizeof(double*));
-      if((*A)[r]==NULL){ return false;}
+    cout << "*******************" << endl;
+    cout << "* RESULTS ARRAY A *" << endl;
+    cout << "*******************" << endl;
+    data.printData_A();
 
-      for (int q = 0; q < SIZE_Q; q++) {
-        (*A)[r][q] = (double*)malloc(SIZE_P * sizeof(double));
-        if((*A)[r][q]==NULL){ return false;}
+    cout << endl;
+    cout << "********************" << endl;
+    cout << "* RESULTS ARRAY C4 *" << endl;
+    cout << "********************" << endl;
+    data.printData_C4();
 
-        for (int p = 0; p < SIZE_P; p++){
-          (*A)[r][q][p] = (double) ((r*q + p)%SIZE_P) / SIZE_P;
-        }
-      }
-    }
+    cout << endl;
+    cout << "********************" << endl;
+    cout << "* RESULTS FROM CPU *" << endl;
+    cout << "********************" << endl;
+    data.printData_resultCPU();
 
-    *C4 = (double**)malloc(SIZE_P * sizeof(double*));
-    if((*C4)==NULL){ return false;}
-    
-    for (int p1 = 0; p1 < SIZE_P; p1++) {
-      (*C4)[p1] = (double*)malloc(SIZE_P * sizeof(double));
-      if((*C4)[p1]==NULL){ return false;}
-
-      for (int p2 = 0; p2 < SIZE_P; p2++) {
-        (*C4)[p1][p2] = (double) (p1*p2 % SIZE_P) / SIZE_P;
-      }
-    }
-
-
-    *sum = (double*)malloc(SIZE_P * sizeof(double));
-    if(*sum==NULL){ return false;}
-   
-    for (int p = 0; p < SIZE_P; p++) {
-      (*sum)[p] = 0.0;
-    }
-
-  return true;
-}
-
-
-void printArrays(double ***A, double **C4, double *sum){
-
-  cout << "*******************" << endl;
-  cout << "* RESULTS ARRAY A *" << endl;
-  cout << "*******************" << endl;
-
-  for (int r = 0; r < SIZE_R; r++) {
-    cout << "\nARRAY A, DIMENSION R=" << r+1 << " of " << SIZE_R << endl;
-    for (int q = 0; q < SIZE_Q; q++) {
-        for (int p = 0; p < SIZE_P; p++) {
-            printf("%.2f  ", A[r][q][p]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-  }
-
-  cout << endl;
-  cout << "********************" << endl;
-  cout << "* RESULTS ARRAY C4 *" << endl;
-  cout << "********************" << endl;
-
-  for (int p1 = 0; p1 < SIZE_P; p1++) {
-    for (int p2 = 0; p2 < SIZE_P; p2++) {
-      printf("%.2f  ", C4[p1][p2]);
-    }
-    printf("\n");
-  }
-  printf("\n");
-
-  cout << endl;
-  cout << "*********************" << endl;
-  cout << "* RESULTS ARRAY SUM *" << endl;
-  cout << "*********************" << endl;
-
-  for (int p1 = 0; p1 < SIZE_P; p1++) {
-    printf("%.2f  ", sum[p1]);
-  }
-  printf("\n");
+    cout << endl;
+    cout << "***********************" << endl;
+    cout << "* RESULTS FROM DEVICE *" << endl;
+    cout << "***********************" << endl;
+    data.printData_resultDevice();
 
   return;
 }
 
 
-void freeArrays(double ***A, double **C4, double *sum){
+void kernel_doitgen_CPU(DoitgenData *data){
 
-  for (int r = 0; r < SIZE_R; r++) {
-    for (int q = 0; q < SIZE_Q; q++) {
-      free( A[r][q]);
-    }
-    free(A[r]);
-  }
-  free(A);
+    double sum[SIZE_P];
 
-  for (int p = 0; p < SIZE_P; p++) {
-    free(C4[p]);
-  }
-  free(C4);
-
-  free(sum);
-
-  return; 
-}
-
-
-void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, int np) {
-
-    for (int r = 0; r < nr; r++){
-      for (int q = 0; q < nq; q++){
-        for (int p = 0; p < np; p++){
+    for (int r = 0; r < SIZE_R; r++){
+      for (int q = 0; q < SIZE_Q; q++){
+        for (int p = 0; p < SIZE_P; p++){
           
-          for (int s = 0; s < np; s++){
-            sum[p] += A[r][q][s] * C4[s][p];
+          for (int s = 0; s < SIZE_P; s++){
+            sum[p]=0.0;
+            sum[p] += data->getA()[r][q][s] * data->getC4()[s][p];
           }
         }
 
-        for (int p = 0; p < np; p++){
-          A[r][q][p] = sum[p];
+        for (int p = 0; p < SIZE_P; p++){
+            data->getResultCPU()[r][q][p] = sum[p];
         }
       }
     }
@@ -272,6 +186,15 @@ void kernel_doitgen_CPU(double ***A, double **C4, double *sum, int nr, int nq, i
 }
 
 
-
-
-
+bool compareResults(double ****A, double ****resultDevice){
+    for (int r = 0; r < SIZE_R; r++) {
+      for (int q = 0; q < SIZE_Q; q++) {
+        for (int p = 0; p < SIZE_P; p++){
+           //if(! (*A)[r][q][p] == (*resultDevice)[r][q][p] ){
+           // return false;
+           //}
+        }
+      }
+    }
+    return true;
+}

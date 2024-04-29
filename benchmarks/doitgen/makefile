@@ -27,3 +27,4 @@ doitgenRun:
 
 clean:
 	rm -rf build/*
+	rm -rf build/.*

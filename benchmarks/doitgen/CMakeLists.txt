@@ -20,8 +20,8 @@ endif()
 
 # Library of utility functions common to all applications
 add_library(example_utils STATIC
-  src/utilities/event_timer.cpp
-  src/utilities/xilinx_ocl_helper.cpp
+  src/utilities/event_timer/event_timer.cpp
+  src/utilities/xilinx_ocl_helper/xilinx_ocl_helper.cpp
 )
 
 target_include_directories(example_utils PUBLIC
@@ -30,9 +30,28 @@ target_include_directories(example_utils PUBLIC
 )
 
 # LOADING DOITGEN EXAMPLE
+if (DEFINED TYPEDATA)
+  message(STATUS "Value for ENABLE_FEATURE: ${ENABLE_FEATURE}")
+
+  if (TYPEDATA STREQUAL "INT")
+    add_definitions(-DTYPEDATA_INT)
+  elseif (TYPEDATA STREQUAL "FP")
+    add_definitions(-DTYPEDATA_FP)
+  else()
+    message(WARNING "ERROR: Invalid value for ENABLE_FEATURE: ${ENABLE_FEATURE}")
+  endif()
+
+else()
+  message(STATUS "Default value for ENABLE_FEATURE")
+  add_definitions(-DTYPEDATA_INT)
+endif()
+
+
 add_executable(doitgen
-  src/doitgen.cpp
-  src/doitgenData/doitgenData.cpp)
+  src/main.cpp
+  src/doitgenData/doitgenData.cpp
+  src/doitgenHost/doitgenHost.cpp
+  )
 
 target_include_directories(doitgen PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src

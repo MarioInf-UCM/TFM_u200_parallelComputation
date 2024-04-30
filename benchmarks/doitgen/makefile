@@ -1,4 +1,4 @@
-
+TYPEDATA=INT	#Posible values: INT, FP
 
 .phony: clean build
 
@@ -18,7 +18,7 @@ makeKernels_clean:
 #**************************************
 doitgen:
 	@cd build; \
-	cmake ..; \
+	cmake -DTYPEDATA=${TYPEDATA} ..; \
 	make -j
 
 doitgenRun:
@@ -27,4 +27,3 @@ doitgenRun:
 
 clean:
 	rm -rf build/*
-	rm -rf build/.*

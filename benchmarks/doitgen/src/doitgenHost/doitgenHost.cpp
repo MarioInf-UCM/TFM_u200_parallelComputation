@@ -1,26 +1,22 @@
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
-#include "utilities/event_timer.hpp"
-#include "utilities/xilinx_ocl_helper.hpp"
-#include "doitgenData/doitgenData.hpp"
-
-#define PRINTRESULT true
+#include "doitgenHost.hpp"
 
 using namespace std;
 using namespace cl;
 
-// FUNCTION HEADERS
-//*************************************
-void printArrays(DoitgenData data);
-void kernel_doitgen_CPU(DoitgenData *data);
-bool compareResults(double ****A, double ****resultDevice);
+//********************************
+//* CONSTRUCTORS AND DESTRUCTORS *
+//********************************
+DoitgenHost::DoitgenHost(){}
+DoitgenHost::~DoitgenHost(){}
 
 
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-int main(int argc, char** argv){
+int DoitgenHost::doitgenHost_exec(){
 
     DoitgenData data = DoitgenData();
     EventTimer event;
@@ -46,26 +42,26 @@ int main(int argc, char** argv){
 
     event.finish();
     //STEP 2 - END: Running kernel in CPU"
-
+/*
 
     //STEP 3 - START: Creating and mapping buffer 
     event.add("Creating and mapping buffer");
 
     Buffer sendBuff_A(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        SIZE_R * SIZE_Q * SIZE_P * sizeof(double),
+                        SIZE_R * SIZE_Q * SIZE_P * sizeof(typeData),
                         data.getA(),
                         NULL);
 
     Buffer sendBuff_C4(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        SIZE_P * SIZE_P * sizeof(double),
+                        SIZE_P * SIZE_P * sizeof(typeData),
                         data.getC4(),
                         NULL);
 
     Buffer recvBuff_resultDevice(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR),
-                        SIZE_R * SIZE_Q * SIZE_P * sizeof(double),
+                        SIZE_R * SIZE_Q * SIZE_P * sizeof(typeData),
                         data.getResultDevice(),
                         NULL);
 
@@ -105,9 +101,9 @@ int main(int argc, char** argv){
 
     event.finish();
     //STEP 7 - END: Transmision data from device 
-
+*/
     data.printData_A();
-    data.printData_resultDevice();
+    //data.printData_resultDevice();
 
 
 /* 
@@ -133,7 +129,7 @@ int main(int argc, char** argv){
 //*************************************
 
 
-void printArrays(DoitgenData data){
+void DoitgenHost::printArrays(DoitgenData data){
 
     cout << "*******************" << endl;
     cout << "* RESULTS ARRAY A *" << endl;
@@ -162,7 +158,7 @@ void printArrays(DoitgenData data){
 }
 
 
-void kernel_doitgen_CPU(DoitgenData *data){
+void DoitgenHost::kernel_doitgen_CPU(DoitgenData *data){
 
     double sum[SIZE_P];
 
@@ -186,7 +182,7 @@ void kernel_doitgen_CPU(DoitgenData *data){
 }
 
 
-bool compareResults(double ****A, double ****resultDevice){
+bool DoitgenHost::compareResults(DoitgenData data){
     for (int r = 0; r < SIZE_R; r++) {
       for (int q = 0; q < SIZE_Q; q++) {
         for (int p = 0; p < SIZE_P; p++){

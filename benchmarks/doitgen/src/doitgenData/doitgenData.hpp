@@ -3,11 +3,7 @@
 
 #include <vector>
 #include <iostream>
-
-#define PRINTRESULT true
-#define SIZE_R 5
-#define SIZE_Q 6
-#define SIZE_P 7
+#include "../config/config.hpp"
 
 class DoitgenData{
 
@@ -16,10 +12,10 @@ class DoitgenData{
     //*****************************
     private:
 
-        double A[SIZE_R][SIZE_Q][SIZE_P];               //SIZE_R x SIZE_Q x SIZE_P
-        double C4[SIZE_P][SIZE_P];                      //SIZE_P x SIZE_P
-        double resultCPU[SIZE_R][SIZE_Q][SIZE_P];       //SIZE_R x SIZE_Q x SIZE_P
-        double resultDevice[SIZE_R][SIZE_Q][SIZE_P];    //SIZE_R x SIZE_Q x SIZE_P
+        typeData A[SIZE_R][SIZE_Q][SIZE_P];               //SIZE_R x SIZE_Q x SIZE_P
+        typeData C4[SIZE_P][SIZE_P];                      //SIZE_P x SIZE_P
+        typeData resultCPU[SIZE_R][SIZE_Q][SIZE_P];       //SIZE_R x SIZE_Q x SIZE_P
+        typeData resultDevice[SIZE_R][SIZE_Q][SIZE_P];    //SIZE_R x SIZE_Q x SIZE_P
 
 
 
@@ -49,26 +45,18 @@ class DoitgenData{
         //*************************
         //* GET AND SET FUNCTIONS *
         //*************************
-        double (&getA())[SIZE_R][SIZE_Q][SIZE_P];
-        void setA(double (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
+        typeData (&getA())[SIZE_R][SIZE_Q][SIZE_P];
+        void setA(typeData (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
 
-        double (&getC4())[SIZE_P][SIZE_P];
-        void setC4(double (&newA)[SIZE_P][SIZE_P]);
+        typeData (&getC4())[SIZE_P][SIZE_P];
+        void setC4(typeData (&newA)[SIZE_P][SIZE_P]);
 
-        double (&getResultCPU())[SIZE_R][SIZE_Q][SIZE_P];
-        void setResultCPU(double (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
+        typeData (&getResultCPU())[SIZE_R][SIZE_Q][SIZE_P];
+        void setResultCPU(typeData (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
 
-        double (&getResultDevice())[SIZE_R][SIZE_Q][SIZE_P];
-        void setResultDevice(double (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
+        typeData (&getResultDevice())[SIZE_R][SIZE_Q][SIZE_P];
+        void setResultDevice(typeData (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
         
-
-
-
-
-    private:
-
-
-
 };
 
 #endif

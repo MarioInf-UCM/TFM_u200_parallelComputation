@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE_R 5
+#define SIZE_R 5 *4
 #define SIZE_Q 6
 #define SIZE_P 7
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -12,8 +12,8 @@ if(NOT XRT_FOUND)
   MESSAGE(FATAL_ERROR "XRT not found, please source XRT setup script before building")
 endif()
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/kernels/kernels.xclbin")
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kernels/kernels.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kernels.xclbin COPYONLY)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/core/kernels.xclbin")
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/core/kernels.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kernels.xclbin COPYONLY)
 else()
   MESSAGE(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again")
 endif()

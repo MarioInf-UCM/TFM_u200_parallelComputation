@@ -1,6 +1,9 @@
 {
     "folders": [
       {
+        "path": "benchmark1_doitgen"
+      },
+      {
         "path": "."
       },
     ],

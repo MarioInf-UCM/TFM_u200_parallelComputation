@@ -42,7 +42,7 @@ int DoitgenHost::doitgenHost_exec(){
 
     event.finish();
     //STEP 2 - END: Running kernel in CPU"
-/*
+
 
     //STEP 3 - START: Creating and mapping buffer 
     event.add("Creating and mapping buffer");
@@ -101,24 +101,29 @@ int DoitgenHost::doitgenHost_exec(){
 
     event.finish();
     //STEP 7 - END: Transmision data from device 
-*/
-    data.printData_A();
-    //data.printData_resultDevice();
 
-
-/* 
     if(PRINTRESULT){
-    printArrays(A, C4, sum, resultDevice);
+        printArrays(data);
     }
-    freeArrays(A, C4, sum);
- */
-/*
-    if(compareResults(&A, &resultDevice)){
+
+    if(compareResults(data)){
         cout << "WELL, The results match" << endl;
     }else{
         cout << "BAD, The results don't match" << endl;
     }
-*/
+
+    q.finish();
+    cout << endl;
+    cout << "--------------- Key execution times ---------------" << endl;
+    cout << "-- (SIZE_R = " << SIZE_R << "  SIZE_Q = " << SIZE_Q << "  SIZE_P = " << SIZE_P << "  ) --" << endl;
+    cout << endl;
+    event.print();
+    cout << endl;
+    cout << "---------------------------------------------------" << endl;
+
+
+
+
 
 
 
@@ -186,9 +191,9 @@ bool DoitgenHost::compareResults(DoitgenData data){
     for (int r = 0; r < SIZE_R; r++) {
       for (int q = 0; q < SIZE_Q; q++) {
         for (int p = 0; p < SIZE_P; p++){
-           //if(! (*A)[r][q][p] == (*resultDevice)[r][q][p] ){
-           // return false;
-           //}
+            if(!data.getResultCPU()[r][q][p] == data.getResultDevice()[r][q][p] ){
+                return false;
+            }
         }
       }
     }

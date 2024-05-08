@@ -1,16 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE_R 5 *4
+
+#if defined(TYPEDATA_INT)
+    typedef int typeData;
+#elif defined(TYPEDATA_FP)
+    typedef float typeData;
+#else
+    typedef int typeData;
+#endif
+
+#define PRINTRESULT true
+#define SIZE_R 5
 #define SIZE_Q 6
 #define SIZE_P 7
+
 
 extern "C"{
 
     //*************************************
     // MAIN KERNEL FUNCTION - START
     //*************************************
-    void doitgenKernel(double *inD_A, double *inD_C4, double *outD_A) {
+    void doitgenKernel(typeData *inD_A, typeData *inD_C4, typeData *outD_A) {
 
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_C4 offset = slave bundle = gmem
@@ -22,17 +33,17 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
 
-        double A[SIZE_R][SIZE_Q][SIZE_P];  //SIZE_R x SIZE_Q x SIZE_P
-        double C4[SIZE_P][SIZE_P];         //SIZE_P x SIZE_P
-        double sum[SIZE_P];                //SIZE_P
+        typeData A[SIZE_R][SIZE_Q][SIZE_P];  //SIZE_R x SIZE_Q x SIZE_P
+        typeData C4[SIZE_P][SIZE_P];         //SIZE_P x SIZE_P
+        typeData sum[SIZE_P];                //SIZE_P
 
         // MATRIX FILLING
         //***************************************
         for (int r = 0; r < SIZE_R; r++) {
             for (int q = 0; q < SIZE_Q; q++) {
                 for (int p = 0; p < SIZE_P; p++){
-                    //A[r][q][p]=inD_A[(r*SIZE_Q)+(q*SIZE_P)+p];
-                    outD_A[ ((r*SIZE_Q)+(q*SIZE_P)+p)] = inD_A[((r*SIZE_Q)+(q*SIZE_P)+p)];
+                    A[r][q][p]=inD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p];
+                    //outD_A[ ((r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p)] = inD_A[((r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p)];
                 }
             }
         }
@@ -42,7 +53,7 @@ extern "C"{
                 C4[p1][p2]=inD_C4[(p1*SIZE_P)+p2];
             }
         }
-/*
+
         // KERNEL EXECUTION
         //***************************************
         for (int r = 0; r < SIZE_R; r++){
@@ -56,13 +67,13 @@ extern "C"{
                 }
 
                 for (int p = 0; p < SIZE_P; p++){
-                    //outD_A[(r*SIZE_Q)+(q*SIZE_P)+p] = sum[p];
+                    outD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p] = sum[p];
                 }
             }
         }
         
         return;
-        */
+        
     }
     //*************************************
     // MAIN KERNEL FUNCTION - END

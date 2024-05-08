@@ -26,8 +26,7 @@ void DoitgenData::initData_A(){
         for (int q = 0; q < SIZE_Q; q++) {
             for (int p = 0; p < SIZE_P; p++){
                 #if defined(TYPEDATA_INT)
-                    cout << (double)((r*q + p)%SIZE_P) / SIZE_P) << endl;
-                    A[r][q][p] = (typeData) ((((r*q + p)%SIZE_P) / SIZE_P )*100000);
+                    A[r][q][p] = (  (typeData) (  ((double) (((r*q + p)%SIZE_P)) * 10 ) / SIZE_P) );
                 #elif defined(TYPEDATA_FP)
                     A[r][q][p] = (typeData) ((r*q + p)%SIZE_P) / SIZE_P;
                 #endif

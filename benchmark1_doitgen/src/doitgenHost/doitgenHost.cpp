@@ -17,7 +17,6 @@ DoitgenHost::~DoitgenHost(){}
 // MAIN FUNCTION - START
 //*************************************
 int DoitgenHost::doitgenHost_exec(){
-
     DoitgenData data = DoitgenData();
     EventTimer event;
     Event event_sp;
@@ -68,6 +67,9 @@ int DoitgenHost::doitgenHost_exec(){
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_C4);
     ker.setArg(2, recvBuff_resultDevice);
+    ker.setArg(3, SIZE_R);
+    ker.setArg(4, SIZE_Q);
+    ker.setArg(5, SIZE_P);
 
     event.finish();
     //STEP 3 - END: Creating and mapping buffer 
@@ -98,6 +100,7 @@ int DoitgenHost::doitgenHost_exec(){
 
     q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
+    q.finish();
 
     event.finish();
     //STEP 7 - END: Transmision data from device 
@@ -107,19 +110,17 @@ int DoitgenHost::doitgenHost_exec(){
     }
 
     if(compareResults(data)){
-        cout << "WELL, The results match" << endl;
+        cout << endl;
+        cout << endl;
+        cout << "\033[1;32m***WELL, The results match***\033[0m\n"  << endl;
+        printKeyResults(event);
     }else{
-        cout << "BAD, The results don't match" << endl;
+        cout << endl;
+        cout << endl;
+        cout << "\033[1;31m***BAD, The results don't match***\033[0m\n"  << endl;
+        return 0;
     }
 
-    q.finish();
-    cout << endl;
-    cout << "--------------- Key execution times ---------------" << endl;
-    cout << "-- (SIZE_R = " << SIZE_R << "  SIZE_Q = " << SIZE_Q << "  SIZE_P = " << SIZE_P << "  ) --" << endl;
-    cout << endl;
-    event.print();
-    cout << endl;
-    cout << "---------------------------------------------------" << endl;
 
 
 
@@ -133,34 +134,6 @@ int DoitgenHost::doitgenHost_exec(){
 // MAIN FUNCTION - END
 //*************************************
 
-
-void DoitgenHost::printArrays(DoitgenData data){
-
-    cout << "*******************" << endl;
-    cout << "* RESULTS ARRAY A *" << endl;
-    cout << "*******************" << endl;
-    data.printData_A();
-
-    cout << endl;
-    cout << "********************" << endl;
-    cout << "* RESULTS ARRAY C4 *" << endl;
-    cout << "********************" << endl;
-    data.printData_C4();
-
-    cout << endl;
-    cout << "********************" << endl;
-    cout << "* RESULTS FROM CPU *" << endl;
-    cout << "********************" << endl;
-    data.printData_resultCPU();
-
-    cout << endl;
-    cout << "***********************" << endl;
-    cout << "* RESULTS FROM DEVICE *" << endl;
-    cout << "***********************" << endl;
-    data.printData_resultDevice();
-
-  return;
-}
 
 
 void DoitgenHost::kernel_doitgen_CPU(DoitgenData *data){
@@ -191,11 +164,53 @@ bool DoitgenHost::compareResults(DoitgenData data){
     for (int r = 0; r < SIZE_R; r++) {
       for (int q = 0; q < SIZE_Q; q++) {
         for (int p = 0; p < SIZE_P; p++){
-            if(!data.getResultCPU()[r][q][p] == data.getResultDevice()[r][q][p] ){
-                return false;
-            }
+          if(data.getResultCPU()[r][q][p] != data.getResultDevice()[r][q][p]){
+              return false;
+          }
         }
       }
     }
     return true;
+}
+
+
+void DoitgenHost::printKeyResults(EventTimer event){
+
+    cout << "--------------- Key execution times ---------------" << endl;
+    cout << "-- (SIZE_R = " << SIZE_R << "  SIZE_Q = " << SIZE_Q << "  SIZE_P = " << SIZE_P << "  ) --" << endl;
+    cout << endl;
+    event.print();
+    cout << endl;
+    cout << "---------------------------------------------------" << endl;
+
+  return;
+}
+
+
+void DoitgenHost::printArrays(DoitgenData data){
+
+    cout << "*******************" << endl;
+    cout << "* RESULTS ARRAY A *" << endl;
+    cout << "*******************" << endl;
+    data.printData_A();
+
+    cout << endl;
+    cout << "********************" << endl;
+    cout << "* RESULTS ARRAY C4 *" << endl;
+    cout << "********************" << endl;
+    data.printData_C4();
+
+    cout << endl;
+    cout << "********************" << endl;
+    cout << "* RESULTS FROM CPU *" << endl;
+    cout << "********************" << endl;
+    data.printData_resultCPU();
+
+    cout << endl;
+    cout << "***********************" << endl;
+    cout << "* RESULTS FROM DEVICE *" << endl;
+    cout << "***********************" << endl;
+    data.printData_resultDevice();
+
+  return;
 }

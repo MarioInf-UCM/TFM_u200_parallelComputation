@@ -10,7 +10,6 @@ using namespace std;
 // MAIN FUNCTION - START
 //*************************************
 int main(int argc, char** argv){
-
     DoitgenHost::doitgenHost_exec();
 
 }

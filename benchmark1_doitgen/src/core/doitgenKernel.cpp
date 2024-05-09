@@ -10,10 +10,9 @@
     typedef int typeData;
 #endif
 
-#define PRINTRESULT true
-#define SIZE_R 5
-#define SIZE_Q 6
-#define SIZE_P 7
+#define SIZE_R_MAX 220
+#define SIZE_Q_MAX 250
+#define SIZE_P_MAX 270
 
 
 extern "C"{
@@ -21,7 +20,7 @@ extern "C"{
     //*************************************
     // MAIN KERNEL FUNCTION - START
     //*************************************
-    void doitgenKernel(typeData *inD_A, typeData *inD_C4, typeData *outD_A) {
+    void doitgenKernel(typeData *inD_A, typeData *inD_C4, typeData *outD_A, int SIZE_R, int SIZE_Q, int SIZE_P) {
 
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_C4 offset = slave bundle = gmem
@@ -30,31 +29,15 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = inD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_C4 bundle = control
         #pragma HLS INTERFACE s_axilite port = outD_A bundle = control
+        #pragma HLS INTERFACE s_axilite port = SIZE_R bundle = control
+        #pragma HLS INTERFACE s_axilite port = SIZE_Q bundle = control
+        #pragma HLS INTERFACE s_axilite port = SIZE_P bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
+        typeData sum[SIZE_P_MAX];
 
-        typeData A[SIZE_R][SIZE_Q][SIZE_P];  //SIZE_R x SIZE_Q x SIZE_P
-        typeData C4[SIZE_P][SIZE_P];         //SIZE_P x SIZE_P
-        typeData sum[SIZE_P];                //SIZE_P
-
-        // MATRIX FILLING
         //***************************************
-        for (int r = 0; r < SIZE_R; r++) {
-            for (int q = 0; q < SIZE_Q; q++) {
-                for (int p = 0; p < SIZE_P; p++){
-                    A[r][q][p]=inD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p];
-                    //outD_A[ ((r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p)] = inD_A[((r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p)];
-                }
-            }
-        }
-
-        for (int p1 = 0; p1 < SIZE_P; p1++) {
-            for (int p2 = 0; p2 < SIZE_P; p2++) {
-                C4[p1][p2]=inD_C4[(p1*SIZE_P)+p2];
-            }
-        }
-
-        // KERNEL EXECUTION
+        // KERNEL EXECUTION - START
         //***************************************
         for (int r = 0; r < SIZE_R; r++){
             for (int q = 0; q < SIZE_Q; q++){
@@ -62,7 +45,7 @@ extern "C"{
                 
                     for (int s = 0; s < SIZE_P; s++){
                         sum[p] = 0.0;
-                        sum[p] += A[r][q][s] * C4[s][p];
+                        sum[p] += inD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+s] * inD_C4[(s*SIZE_P)+p];
                     }
                 }
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
+#include <sstream>
 #include "doitgenHost.hpp"
 
 using namespace std;
@@ -16,8 +17,11 @@ DoitgenHost::~DoitgenHost(){}
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-int DoitgenHost::doitgenHost_exec(){
+int DoitgenHost::doitgenHost_noOptimization_exec(){
+
     DoitgenData data = DoitgenData();
+    FileWriter_interface fileWriter = FileWriter_interface("../log/results");
+    ostringstream stringToPrint;
     EventTimer event;
     Event event_sp;
     bool result;
@@ -26,7 +30,7 @@ int DoitgenHost::doitgenHost_exec(){
     event.add("Initializaton OpenCL and load kernels");
 
     xilinx::example_utils::XilinxOclHelper xocl;
-    xocl.initialize("kernels.xclbin");
+    xocl.initialize("kerDoitgen_noOptimization.xclbin");
     CommandQueue q = xocl.get_command_queue();
     Kernel ker = xocl.get_kernel("doitgenKernel");
 
@@ -114,17 +118,14 @@ int DoitgenHost::doitgenHost_exec(){
         cout << endl;
         cout << "\033[1;32m***WELL, The results match***\033[0m\n"  << endl;
         printKeyResults(event);
+        stringToPrint = event.getStream();
+        fileWriter.write(stringToPrint, VERBOSE);
     }else{
         cout << endl;
         cout << endl;
         cout << "\033[1;31m***BAD, The results don't match***\033[0m\n"  << endl;
         return 0;
     }
-
-
-
-
-
 
 
 

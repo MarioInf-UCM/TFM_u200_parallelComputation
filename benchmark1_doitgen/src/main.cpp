@@ -10,7 +10,13 @@ using namespace std;
 // MAIN FUNCTION - START
 //*************************************
 int main(int argc, char** argv){
-    DoitgenHost::doitgenHost_exec();
+
+
+    #if defined(NO_OPTIMIZATION)
+        DoitgenHost::doitgenHost_noOptimization_exec();
+    #endif
+
+
 
 }
 

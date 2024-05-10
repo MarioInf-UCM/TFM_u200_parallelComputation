@@ -34,6 +34,11 @@ class FileWriter_interface{
         string getFileURL() const;
         void setFileURL(string data);
 
+
+    private:
+        string calculateDefaultURL();
+
+
 };
 
 

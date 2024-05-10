@@ -12,11 +12,26 @@
     #endif
 
            
-    //DEFINE FLAG TO PRONT RESULT
+    //DEFINE FLAG TO PRINT RESULT AT THE END
     //******************************
     #if !defined(PRINTRESULT)
         #define PRINTRESULT false
     #endif
+
+
+    //DEFINE FLAG TO VERBOSE MODE
+    //******************************
+    #if !defined(VERBOSE)
+        #define VERBOSE false
+    #endif
+
+
+    //DEFINE OPTIMIZATION LEVEL
+    //******************************
+    #if !defined(NO_OPTIMIZATION) && !defined(MAPPING_BUFFERS) && !defined(PARALELIZE_KERNEL) && !defined(FULL_OPTIMIZATION)
+        #define NO_OPTIMIZATION
+    #endif
+
 
  
     //DEFINE DATASET SIZE
@@ -56,6 +71,5 @@
             #define SIZE_P 270
         #endif
     #endif
-
 
 #endif

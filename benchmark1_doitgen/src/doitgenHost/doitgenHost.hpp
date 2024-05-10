@@ -31,7 +31,7 @@ class DoitgenHost {
         DoitgenHost();
         ~DoitgenHost();
 
-        static int doitgenHost_exec();
+        static int doitgenHost_noOptimization_exec();
 
 
     private:

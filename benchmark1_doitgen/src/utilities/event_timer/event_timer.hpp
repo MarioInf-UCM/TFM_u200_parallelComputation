@@ -56,7 +56,9 @@ public:
     void finish(void);
     void clear(void);
 
-    void print(int id = -1);
+    void print(int id = -1);   
+    ostringstream getStream(int id = -1);
+
 };
 
 #endif // EVENT_TIMER_HPP__

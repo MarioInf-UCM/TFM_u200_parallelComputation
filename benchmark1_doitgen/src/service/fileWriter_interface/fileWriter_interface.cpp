@@ -13,7 +13,7 @@ using namespace std;
 map<string, mutex> FileWriter_interface::mutexes;
 
 FileWriter_interface::FileWriter_interface():
-    fileURL("./defaultName_")
+    fileURL(calculateDefaultURL())
 {}
 FileWriter_interface::FileWriter_interface(string fileURL):
     fileURL(fileURL)
@@ -77,4 +77,16 @@ bool FileWriter_interface::writeln(ostringstream& data, bool verbose){
 string FileWriter_interface::getFileURL() const{ return fileURL; }
 void FileWriter_interface::setFileURL(string data){ 
     fileURL = data; 
+}
+
+
+//******************
+//* MÉTODOS PRIVADOS
+//******************
+string FileWriter_interface::calculateDefaultURL() {
+    time_t tiempoActual = time(0);
+    tm* tiempoLocal = localtime(&tiempoActual);
+    char buffer[80];
+    strftime(buffer, 80, "DefaultName_%Y-%m-%d_%H-%M-%S", tiempoLocal);
+    return string(buffer);
 }

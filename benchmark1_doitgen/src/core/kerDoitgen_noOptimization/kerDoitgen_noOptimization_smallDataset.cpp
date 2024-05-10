@@ -10,9 +10,9 @@
     typedef int typeData;
 #endif
 
-#define SIZE_R_MAX 220
-#define SIZE_Q_MAX 250
-#define SIZE_P_MAX 270
+#define SIZE_R 20
+#define SIZE_Q 25
+#define SIZE_P 30
 
 
 extern "C"{
@@ -20,7 +20,7 @@ extern "C"{
     //*************************************
     // MAIN KERNEL FUNCTION - START
     //*************************************
-    void doitgenKernel(typeData *inD_A, typeData *inD_C4, typeData *outD_A, int SIZE_R, int SIZE_Q, int SIZE_P) {
+    void kerDoitgen_noOptimization_smallDataset(typeData *inD_A, typeData *inD_C4, typeData *outD_A) {
 
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_C4 offset = slave bundle = gmem
@@ -29,12 +29,9 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = inD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_C4 bundle = control
         #pragma HLS INTERFACE s_axilite port = outD_A bundle = control
-        #pragma HLS INTERFACE s_axilite port = SIZE_R bundle = control
-        #pragma HLS INTERFACE s_axilite port = SIZE_Q bundle = control
-        #pragma HLS INTERFACE s_axilite port = SIZE_P bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
-        typeData sum[SIZE_P_MAX];
+        typeData sum[SIZE_P];
 
         //***************************************
         // KERNEL EXECUTION - START

@@ -7,9 +7,9 @@ KERNELS_DIRECTORY=src/core
 
 #COMMANDS FOR KERNELS COMPILE
 #**************************************
-makeKernels_build:
+makeKernels_noOptimization_build:
 	@cd ${KERNELS_DIRECTORY}; \
-	make -f makeKernels.mk TYPEDATA=${TYPEDATA} build
+	make -f makefile_Doitgen_noOptimization.mk TYPEDATA=${TYPEDATA} build
 
 makeKernels_clean:
 	@cd ${KERNELS_DIRECTORY};  \
@@ -39,7 +39,12 @@ doitgenRun:
 	@cd build; \
 	./doitgen
 
-clean:
-	rm -rf build/*
-	rm -rf build/.run
-	rm -rf build/.Xil
+cleanHost:
+	rm -rf build/hostBuild/*
+	rm -rf build/hostBuild/.run
+	rm -rf build/hostBuild/.Xil
+
+cleanKernels:
+	rm -rf build/kernelBuild/*
+	rm -rf build/kernelBuild/.run
+	rm -rf build/kernelBuild/.Xil

@@ -1,22 +1,29 @@
 TYPEDATA=FP	#Posible values: INT, FP
 BUILD_DIRECTORY=build/hostBuild
-KERNELS_DIRECTORY=src/core
+KERNELS_ROUTE=src/core/
+KERNEL_DOITGEN_NOOPT_SUBROUTE=ker_doitgen_noOpt
+KERNEL_DOITGEN_NOOPT_NAME=makeKer_Doitgen_noOpt.mk
+
+LIBS = -ljsoncpp
 
 .phony: clean build
 
 
-#COMMANDS FOR KERNELS COMPILE
 #**************************************
-makeKernels_noOptimization_build:
-	@cd ${KERNELS_DIRECTORY}; \
-	make -f makefile_Doitgen_noOptimization.mk TYPEDATA=${TYPEDATA} build
+# COMMANDS FOR KERNELS COMPILE
+#**************************************
+kernelBuild_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=sw_emu build
+	
+kernelBuild_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=hw_emu build
 
-makeKernels_clean:
-	@cd ${KERNELS_DIRECTORY};  \
-	make -f makeKernels.mk clean
 
 
-#COMMANDS FOR SOFTWARE COMPILE
+#**************************************
+# COMMANDS FOR SOFTWARE COMPILE
 #**************************************
 #config_sw_emu:
 #	@cd ${BUILD_DIRECTORY}; \
@@ -27,7 +34,6 @@ makeKernels_clean:
 #	@cd ${BUILD_DIRECTORY}; \
 #	export XCL_EMULATION_MODE=hw_emu; \
 #	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1
-
 
 
 hostBuild_sw_emu:
@@ -47,7 +53,9 @@ doitgenRun:
 	./doitgen
 
 
-
+#**************************************
+# OTHER COMMANDS
+#**************************************
 cleanHost:
 	rm -rf build/hostBuild/*
 	rm -rf build/hostBuild/.run

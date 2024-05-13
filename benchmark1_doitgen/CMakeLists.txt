@@ -13,7 +13,7 @@ if(NOT XRT_FOUND)
 endif()
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/build/kernelBuild/kerDoitgen_noOptimization.xclbin")
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/build/kernelBuild/kerDoitgen_noOptimization.xclbin ${CMAKE_CURRENT_BINARY_DIR}/build/kernelBuild/kerDoitgen_noOptimization.xclbin COPYONLY)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/build/kernelBuild/sw_emu/kernelPackage_Doitgen_noOptimization_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/build/hostBuild/kernelPackage_Doitgen_noOptimization_sw_emu.xclbin COPYONLY)
 else()
   MESSAGE(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again")
 endif()
@@ -29,7 +29,10 @@ target_include_directories(example_utils PUBLIC
   ${OpenCL_INCLUDE_DIRS}
 )
 
-# LOADING DOITGEN EXAMPLE
+
+#******************************
+# COMPAILING HOST APPLICATION *
+#******************************
 if (DEFINED TYPEDATA)
   message(STATUS "Value for ENABLE_FEATURE: ${ENABLE_FEATURE}")
 

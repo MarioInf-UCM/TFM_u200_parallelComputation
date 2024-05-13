@@ -7,12 +7,12 @@
 #elif defined(TYPEDATA_FP)
     typedef float typeData;
 #else
-    typedef int typeData;
+    typedef float typeData;
 #endif
 
-#define SIZE_R 140
-#define SIZE_Q 150
-#define SIZE_P 160
+#define SIZE_R 8
+#define SIZE_Q 10
+#define SIZE_P 12
 
 
 extern "C"{
@@ -20,7 +20,7 @@ extern "C"{
     //*************************************
     // MAIN KERNEL FUNCTION - START
     //*************************************
-    void kerDoitgen_noOptimization_largeDataset(typeData *inD_A, typeData *inD_C4, typeData *outD_A) {
+    void ker_doitgen_noOpt_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A) {
 
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_C4 offset = slave bundle = gmem

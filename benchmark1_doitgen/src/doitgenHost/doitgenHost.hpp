@@ -5,7 +5,7 @@
 #include <vector>
 #include "../config/config.hpp"
 #include "../doitgenData/doitgenData.hpp"
-#include "../service/fileWriter_interface/fileWriter_interface.hpp"
+#include "../service/fileWriter_service/fileWriter_service.hpp"
 #include "../utilities/event_timer/event_timer.hpp"
 #include "../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
 
@@ -31,7 +31,7 @@ class DoitgenHost {
         DoitgenHost();
         ~DoitgenHost();
 
-        static int doitgenHost_noOptimization_exec();
+        static int doitgenHost_noOpt_exec();
 
 
     private:

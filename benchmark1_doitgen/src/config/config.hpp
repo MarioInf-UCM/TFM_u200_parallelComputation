@@ -25,14 +25,6 @@
         #define VERBOSE false
     #endif
 
-
-    //DEFINE OPTIMIZATION LEVEL
-    //******************************
-    #if !defined(NO_OPTIMIZATION) && !defined(MAPPING_BUFFERS) && !defined(PARALELIZE_KERNEL) && !defined(FULL_OPTIMIZATION)
-        #define NO_OPTIMIZATION
-    #endif
-
-
  
     //DEFINE DATASET SIZE
     //******************************

@@ -17,10 +17,10 @@ DoitgenHost::~DoitgenHost(){}
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-int DoitgenHost::doitgenHost_noOptimization_exec(){
+int DoitgenHost::doitgenHost_noOpt_exec(){
 
     DoitgenData data = DoitgenData();
-    FileWriter_interface fileWriter = FileWriter_interface("../log/results");
+    //FileWriter_service fileWriter = FileWriter_service("../log/results");
     ostringstream stringToPrint;
     EventTimer event;
     Event event_sp;
@@ -118,8 +118,8 @@ int DoitgenHost::doitgenHost_noOptimization_exec(){
         cout << endl;
         cout << "\033[1;32m***WELL, The results match***\033[0m\n"  << endl;
         printKeyResults(event);
-        stringToPrint = event.getStream();
-        fileWriter.write(stringToPrint, VERBOSE);
+        //stringToPrint = event.getStream();
+        //fileWriter.write(stringToPrint, VERBOSE);
     }else{
         cout << endl;
         cout << endl;

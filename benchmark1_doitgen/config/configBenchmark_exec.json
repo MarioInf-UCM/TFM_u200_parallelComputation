@@ -1,0 +1,36 @@
+{
+    "testList":[
+        {
+            "statsFile":"../../log/prueba1.txt",
+            "logFile":"../../log/prueba1.txt",
+            "executionList":[
+                {
+                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_mini",
+                    "numExecutions": 3
+                },
+                {
+                    "kernelPackage": "/../kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_small",
+                    "numExecutions": 3
+                },
+                {
+                    "kernelPackage": "/../kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_medium",
+                    "numExecutions": 3
+                },
+                {
+                    "kernelPackage": "/../kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_large",
+                    "numExecutions": 3
+                },
+                {
+                    "kernelPackage": "/../kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_extralarge",
+                    "numExecutions": 3
+                }
+            ]
+        }
+    ]
+ 
+}  

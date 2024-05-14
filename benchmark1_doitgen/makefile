@@ -1,10 +1,11 @@
-TYPEDATA=FP	#Posible values: INT, FP
 BUILD_DIRECTORY=build/hostBuild
+CMAKE_DIRECTORY=../../cmake
+
 KERNELS_ROUTE=src/core/
 KERNEL_DOITGEN_NOOPT_SUBROUTE=ker_doitgen_noOpt
 KERNEL_DOITGEN_NOOPT_NAME=makeKer_Doitgen_noOpt.mk
 
-LIBS = -ljsoncpp
+CONFIGFILE_ROUTE=../../config/configBenchmark_exec.json
 
 .phony: clean build
 
@@ -38,19 +39,25 @@ kernelBuild_hw_emu:
 
 hostBuild_sw_emu:
 	@cd $(BUILD_DIRECTORY); \
-	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1
-	cmake -DTYPEDATA=${TYPEDATA} ../..; \
+	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
+	cmake -DTARGET=sw_emu $(CMAKE_DIRECTORY); \
 	make -j
 
 hostBuild_hw_emu:
 	@cd $(BUILD_DIRECTORY); \
-	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1
-	cmake -DTYPEDATA=${TYPEDATA} ../..; \
+	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
+	cmake -DTARGET=hw_emu $(CMAKE_DIRECTORY); \
 	make -j
 
-doitgenRun:
+hostBuild_hw:
 	@cd $(BUILD_DIRECTORY); \
-	./doitgen
+	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
+	cmake -DTARGET=hw $(CMAKE_DIRECTORY); \
+	make -j
+
+run:
+	@cd $(BUILD_DIRECTORY); \
+	./benchmarkExec $(CONFIGFILE_ROUTE)
 
 
 #**************************************

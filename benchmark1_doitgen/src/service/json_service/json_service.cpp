@@ -1,0 +1,81 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
+#include <jsoncpp/json/json.h>
+#include "json_service.hpp"
+
+using namespace std;
+using namespace Json;
+
+
+
+//******************************************
+// DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
+//******************************************
+Json_service::Json_service(){}
+Json_service::Json_service(string jsonFileURL){
+    setFileURL(jsonFileURL);
+}
+
+Json_service::~Json_service(){ }
+
+
+
+//**********************************
+// DEFINICIÓN DE MÉTODOS FUNCIONALES
+//**********************************
+JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
+
+    JsonConfiguration jsonConfiguration = JsonConfiguration();
+     
+    ifstream file(getFileURL());
+    if (!file.is_open()) {
+        cerr << "ERROR..: Couldn't open the configuration Json file (" << getFileURL() << ")"  << endl;
+        jsonConfiguration.set_status(false);
+        return jsonConfiguration;
+    }
+
+    CharReaderBuilder builder;
+    Value root;
+    CharReader *reader;
+    JSONCPP_STRING errs;
+    bool result = true;
+    
+    reader = builder.newCharReader();
+    result = parseFromStream(builder, file, &root, &errs);
+    if(!result){
+        cerr << "ERROR..: Couldn't parse the content of the configuration Json file (" << getFileURL() << ")" << endl ;
+        cerr << errs << endl;
+        jsonConfiguration.set_status(false);
+        return jsonConfiguration;
+    }
+    file.close();
+
+    Test testTemp;
+    Execution executionTemp;
+    Value testSelected = Value::null;
+    for (const auto &test : root["testList"]) {
+        testTemp = Test();
+        testTemp.set_statsFile(test["statsFile"].asString());
+        testTemp.set_logFile(test["logFile"].asString());
+        
+        for (const auto &execution : test["executionList"]) {
+            executionTemp = Execution();
+            executionTemp.set_kernelPackage(execution["kernelPackage"].asString());
+            executionTemp.set_kernel(execution["kernel"].asString());
+            executionTemp.set_numExecutions(execution["numExecutions"].asInt());
+            testTemp.get_executionList().push_back(executionTemp);
+        }
+        jsonConfiguration.get_testList().push_back(testTemp);        
+    }
+
+    return jsonConfiguration;
+}
+
+
+//********************************************************
+// ZONA DE DEFINICIÓN DE MÉTODOS DE ACCESO A LAS VARIABLES
+//********************************************************
+string Json_service::getFileURL(){ return fileURL; }
+void Json_service::setFileURL(string data){ fileURL = data; }

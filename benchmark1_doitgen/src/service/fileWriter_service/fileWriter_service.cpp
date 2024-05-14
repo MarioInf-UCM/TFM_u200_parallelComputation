@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 
-#include "fileWriter_interface.hpp"
+#include "fileWriter_service.hpp"
 
 using namespace std;
 
@@ -10,23 +10,23 @@ using namespace std;
 //***************************************************************
 // DEFINICIÓN DE CONSTRUCORES, DESTRUCTORES Y VARIABLES ESTÁTICAS
 //***************************************************************
-map<string, mutex> FileWriter_interface::mutexes;
+map<string, mutex> FileWriter_service::mutexes;
 
-FileWriter_interface::FileWriter_interface():
+FileWriter_service::FileWriter_service():
     fileURL(calculateDefaultURL())
 {}
-FileWriter_interface::FileWriter_interface(string fileURL):
+FileWriter_service::FileWriter_service(string fileURL):
     fileURL(fileURL)
 {}
 
-FileWriter_interface::~FileWriter_interface(){}
+FileWriter_service::~FileWriter_service(){}
 
 
 
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-bool FileWriter_interface::write(ostringstream& data, bool verbose){
+bool FileWriter_service::write(ostringstream& data, bool verbose){
     lock_guard<mutex> lock(mutexes[fileURL]);
     ofstream archivo(fileURL, ios::app);
 
@@ -47,7 +47,7 @@ bool FileWriter_interface::write(ostringstream& data, bool verbose){
     return true;
 }
 
-bool FileWriter_interface::writeln(ostringstream& data, bool verbose){
+bool FileWriter_service::writeln(ostringstream& data, bool verbose){
     lock_guard<mutex> lock(mutexes[fileURL]);
     ofstream archivo(fileURL, ios::app);
 
@@ -74,8 +74,8 @@ bool FileWriter_interface::writeln(ostringstream& data, bool verbose){
 //**********************************************
 //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS
 //**********************************************
-string FileWriter_interface::getFileURL() const{ return fileURL; }
-void FileWriter_interface::setFileURL(string data){ 
+string FileWriter_service::getFileURL() const{ return fileURL; }
+void FileWriter_service::setFileURL(string data){ 
     fileURL = data; 
 }
 
@@ -83,7 +83,7 @@ void FileWriter_interface::setFileURL(string data){
 //******************
 //* MÉTODOS PRIVADOS
 //******************
-string FileWriter_interface::calculateDefaultURL() {
+string FileWriter_service::calculateDefaultURL() {
     time_t tiempoActual = time(0);
     tm* tiempoLocal = localtime(&tiempoActual);
     char buffer[80];

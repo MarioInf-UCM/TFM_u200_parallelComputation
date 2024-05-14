@@ -106,8 +106,8 @@ void EventTimer::print(int id)
     }
     std::cout.flags(flags);
 }
-
-ostringstream EventTimer::getStream(int id)
+/* 
+ostringstream EventTimer::getStream(int id=-1)
 {
     ios_base::fmtflags flags(std::cout.flags());
     ostringstream output;
@@ -131,4 +131,4 @@ ostringstream EventTimer::getStream(int id)
 
     cout.flags(flags);
     return output;
-}
+} */

@@ -10,16 +10,16 @@
 
 using namespace std;
 
-class FileWriter_interface{
+class FileWriter_service{
 
     private:
         string fileURL;
         static map<string, mutex> mutexes;
 
     public:
-        FileWriter_interface();
-        FileWriter_interface(string fileURL);
-        ~FileWriter_interface();
+        FileWriter_service();
+        FileWriter_service(string fileURL);
+        ~FileWriter_service();
 
         //**********************************
         // DEFINICIÓN DE MÉTODOS FUNCIONALES

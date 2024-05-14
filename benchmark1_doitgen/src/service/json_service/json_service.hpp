@@ -2,13 +2,12 @@
 #define __JSON_INTERFACE_H_
 
 #include <string>
-//#include <jsoncpp/json/json.h>
+#include <jsoncpp/json/json.h>
 #include "jsonConfiguration/jsonConfiguration.hpp"
-
 
 using namespace std;
 
-class Json_interface {
+class Json_service {
 
     //*****************************
     //* DEFINITION ZONE ATRIBUTES *
@@ -26,9 +25,9 @@ class Json_interface {
         //********************************
         //* CONSTRUCTORS AND DESTRUCTORS *
         //********************************
-        Json_interface();
-        Json_interface(string jsonFileURL);
-        ~Json_interface();
+        Json_service();
+        Json_service(string jsonFileURL);
+        ~Json_service();
         
 
         //*********************

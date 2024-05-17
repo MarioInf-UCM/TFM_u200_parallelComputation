@@ -6,12 +6,10 @@
 //*******************************
 Test::Test():
     statsFile(""),
-    logFile(""),
     executionList(vector<Execution>()
 ){}
-Test::Test(string statsFile, string logFile, vector<Execution> executionList):
+Test::Test(string statsFile, vector<Execution> executionList):
     statsFile(statsFile),
-    logFile(logFile),
     executionList(vector<Execution>()
 ){
     set_executionList(executionList);
@@ -23,13 +21,16 @@ Test::~Test(){}
 //************************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES *
 //************************************
-string Test::displayInfo(){
-    string info = "Stats File: " + get_statsFile() + "\n";
-    info += "Log File: " + get_logFile() + "\n";
-    info += "Execution List:\n";
+string Test::displayInfo(string initLineString){
+    string info = initLineString + "{\n";
+    
+    info += initLineString + "Stats File: " + get_statsFile() + "\n";
+    info += initLineString + "Execution List:\n";
     for (size_t i = 0; i < get_executionList().size(); ++i) {
-        info += "  " + get_executionList()[i].displayInfo();
+        info += get_executionList()[i].displayInfo(initLineString + "\t");
     }
+
+    info += initLineString + "}\n";
     return info;
 }
 
@@ -39,9 +40,6 @@ string Test::displayInfo(){
 //*************************
 string Test::get_statsFile() const{ return statsFile; }
 void Test::set_statsFile(string data){ statsFile=data; }
-
-string Test::get_logFile() const{ return logFile; }
-void Test::set_logFile(string data){ logFile=data; }
 
 
 vector<Execution>& Test::get_executionList(){ return executionList; }

@@ -26,24 +26,15 @@ kernelBuild_hw_emu:
 #**************************************
 # COMMANDS FOR SOFTWARE COMPILE
 #**************************************
-#config_sw_emu:
-#	@cd ${BUILD_DIRECTORY}; \
-#	export XCL_EMULATION_MODE=sw_emu; \
-#	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1
-#
-#config_hw_emu:
-#	@cd ${BUILD_DIRECTORY}; \
-#	export XCL_EMULATION_MODE=hw_emu; \
-#	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1
-
-
 hostBuild_sw_emu:
+	export XCL_EMULATION_MODE=sw_emu; \
 	@cd $(BUILD_DIRECTORY); \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=sw_emu $(CMAKE_DIRECTORY); \
 	make -j
 
 hostBuild_hw_emu:
+	export XCL_EMULATION_MODE=hw_emu; \
 	@cd $(BUILD_DIRECTORY); \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=hw_emu $(CMAKE_DIRECTORY); \
@@ -60,15 +51,19 @@ run:
 	./benchmarkExec $(CONFIGFILE_ROUTE)
 
 
+
 #**************************************
 # OTHER COMMANDS
 #**************************************
-cleanHost:
+clean_host:
 	rm -rf build/hostBuild/*
 	rm -rf build/hostBuild/.run
 	rm -rf build/hostBuild/.Xil
 
-cleanKernels:
+clean_kernels:
 	rm -rf build/kernelBuild/*
 	rm -rf build/kernelBuild/.run
 	rm -rf build/kernelBuild/.Xil
+
+clean_out:
+	rm -rf out/*

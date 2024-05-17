@@ -30,7 +30,7 @@ class Execution{
         ~Execution();
 
 
-        string displayInfo();
+        string displayInfo(string initLineString);
 
 
 

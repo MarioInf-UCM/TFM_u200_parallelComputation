@@ -13,10 +13,14 @@ using namespace std;
 //*******************************
 JsonConfiguration::JsonConfiguration():
     status(true),
+    outDir(""),
+    logFile(""),
     testList(vector<Test>()
 ){}
-JsonConfiguration::JsonConfiguration(bool status, vector<Test> testList):
+JsonConfiguration::JsonConfiguration(bool status, string outDir, string logFile, vector<Test> testList):
     status(status),
+    outDir(outDir),
+    logFile(logFile),
     testList(vector<Test>()
 ){
     set_testList(testList);
@@ -29,11 +33,17 @@ JsonConfiguration::~JsonConfiguration(){ }
 //************************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES *
 //************************************
-string JsonConfiguration::displayInfo(){
-    string info = "Test List:\n";
+string JsonConfiguration::displayInfo(string initLineString){
+    string info = initLineString + "{\n";
+
+    info += initLineString + "Out Directory:" + get_outDir() + "\n";
+    info += initLineString + "Log File: " +get_logFile()+ "\n";
+    info += initLineString + "Test List:\n";
     for (size_t i = 0; i < get_testList().size(); ++i) {
-        info += "  " + get_testList()[i].displayInfo();
+        info += get_testList()[i].displayInfo(initLineString + "\t");
     }
+    
+    info += initLineString + "}\n";
     return info;
 }
 
@@ -44,6 +54,12 @@ string JsonConfiguration::displayInfo(){
 //**********************************************************
 bool JsonConfiguration::get_status() const{ return status; }
 void JsonConfiguration::set_status(bool data){ status = data; }
+
+string JsonConfiguration::get_outDir() const{ return outDir; }
+void JsonConfiguration::set_outDir(string data){ outDir=data; }
+
+string JsonConfiguration::get_logFile() const{ return logFile; }
+void JsonConfiguration::set_logFile(string data){ logFile=data; }
 
 
 vector<Test>& JsonConfiguration::get_testList(){ return testList; }

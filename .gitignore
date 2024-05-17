@@ -41,6 +41,7 @@
 _x
 *.xo
 **/build/*
+**/out/*
 *.ltx
 *.xclbin
 *.info

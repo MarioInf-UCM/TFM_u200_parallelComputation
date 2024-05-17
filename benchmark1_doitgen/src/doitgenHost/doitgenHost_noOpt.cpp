@@ -17,7 +17,7 @@ DoitgenHost::~DoitgenHost(){}
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-int DoitgenHost::doitgenHost_noOpt_exec(){
+int DoitgenHost::doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile){
 
     DoitgenData data = DoitgenData();
     //FileWriter_service fileWriter = FileWriter_service("../log/results");

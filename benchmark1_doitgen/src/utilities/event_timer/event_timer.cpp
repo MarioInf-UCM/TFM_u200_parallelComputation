@@ -106,29 +106,3 @@ void EventTimer::print(int id)
     }
     std::cout.flags(flags);
 }
-/* 
-ostringstream EventTimer::getStream(int id=-1)
-{
-    ios_base::fmtflags flags(std::cout.flags());
-    ostringstream output;
-
-    if (id >= 0) {
-        if ((unsigned)id > event_names.size()){
-            return output;
-        }
-        output << event_names[id] << " : " << fixed << setprecision(3)
-               << ms_difference(start_times[id], end_times[id]) << endl;
-    }
-    else {
-        int printable_events = unfinished ? event_count - 1 : event_count;
-        for (int i = 0; i < printable_events; i++) {
-            output << left << setw(max_string_length) << event_names[i] << " : ";
-            output << right << setw(8) << fixed << setprecision(3)
-                   << ms_difference(start_times[i], end_times[i]) << " ms"
-                   << endl;
-        }
-    }
-
-    cout.flags(flags);
-    return output;
-} */

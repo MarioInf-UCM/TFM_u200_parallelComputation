@@ -54,6 +54,7 @@ endif()
 # Library of utility functions common to all applications
 #******************************************************************
 add_library(example_utils STATIC
+  ../src/utilities/dateAndTime/dateAndTime.cpp
   ../src/utilities/event_timer/event_timer.cpp
   ../src/utilities/xilinx_ocl_helper/xilinx_ocl_helper.cpp
 )
@@ -70,6 +71,7 @@ target_include_directories(example_utils PUBLIC
 add_executable(benchmarkExec
   ../src/main.cpp
   ../src/doitgenData/doitgenData.cpp
+  ../src/doitgenHost/doitgenHost.cpp
   ../src/doitgenHost/doitgenHost_noOpt.cpp
   ../src/service/fileWriter_service/fileWriter_service.cpp
   ../src/service/json_service/json_service.cpp

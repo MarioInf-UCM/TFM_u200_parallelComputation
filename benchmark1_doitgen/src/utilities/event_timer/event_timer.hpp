@@ -57,7 +57,6 @@ public:
     void clear(void);
 
     void print(int id = -1);   
-    //ostringstream getStream(int id = -1);
 
 };
 

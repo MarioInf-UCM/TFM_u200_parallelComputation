@@ -22,10 +22,14 @@ Execution::~Execution(){}
 //************************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES *
 //************************************
-string Execution::displayInfo(){
-    string info = "Kernel Package: " + get_kernelPackage() + "\n";
-    info += "Kernel: " + get_kernel() + "\n";
-    info += "Number of Executions: " + to_string(get_numExecutions()) + "\n";
+string Execution::displayInfo(string initLineString){
+    string info = initLineString + "{\n";
+
+    info += initLineString + "Kernel Package: " + get_kernelPackage() + "\n";
+    info += initLineString + "Kernel: " + get_kernel() + "\n";
+    info += initLineString + "Number of Executions: " + to_string(get_numExecutions()) + "\n";
+
+    info += initLineString + "}\n";
     return info;
 }
 

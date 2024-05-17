@@ -13,11 +13,21 @@ using namespace std;
 map<string, mutex> FileWriter_service::mutexes;
 
 FileWriter_service::FileWriter_service():
-    fileURL(calculateDefaultURL())
+    fileURL("untitled"),
+    verbose(false)
 {}
 FileWriter_service::FileWriter_service(string fileURL):
-    fileURL(fileURL)
-{}
+    fileURL(fileURL),
+    verbose(false)
+{
+    createFile_recursive(getFileURL());
+}
+FileWriter_service::FileWriter_service(string fileURL, bool verbose):
+    fileURL(fileURL),
+    verbose(verbose)
+{
+    createFile_recursive(getFileURL());
+}
 
 FileWriter_service::~FileWriter_service(){}
 
@@ -26,19 +36,19 @@ FileWriter_service::~FileWriter_service(){}
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-bool FileWriter_service::write(ostringstream& data, bool verbose){
+
+// Método write
+//********************************
+bool FileWriter_service::write(const string& data) {
     lock_guard<mutex> lock(mutexes[fileURL]);
     ofstream archivo(fileURL, ios::app);
 
     if (archivo.is_open()) {
-
-        archivo << data.str() << ends;
-        if(verbose){
-            cout << data.str() << ends;
+        archivo << data;
+        archivo.close();
+        if (getVerbose()) {
+            cout << data;
         }
-        data.clear();
-        (data.str(std::string()), data.clear());
-
     } else {
         cerr << "El archivo de escritura no se abrió correctamente." << endl;
         return false;
@@ -46,29 +56,91 @@ bool FileWriter_service::write(ostringstream& data, bool verbose){
 
     return true;
 }
-
-bool FileWriter_service::writeln(ostringstream& data, bool verbose){
+bool FileWriter_service::write(const string& data, bool verbose) {
     lock_guard<mutex> lock(mutexes[fileURL]);
     ofstream archivo(fileURL, ios::app);
 
     if (archivo.is_open()) {
-
-        archivo << data.str() << endl;
-        if(verbose){
-            cout << data.str() << endl;
+        archivo << data;
+        archivo.close();
+        if (verbose) {
+            cout << data;
         }
-        data.clear();
-        (data.str(std::string()), data.clear());
+    } else {
+        cerr << "El archivo de escritura no se abrió correctamente." << endl;
+        return false;
+    }
 
+    return true;
+}
+bool FileWriter_service::write(ostringstream& data) {
+    return write(data.str());
+}
+bool FileWriter_service::write(ostringstream& data, bool verbose) {
+    return write(data.str(), verbose);
+}
+
+
+// Método writeln
+//********************************
+bool FileWriter_service::writeln(const string& data) {
+    lock_guard<mutex> lock(mutexes[fileURL]);
+    ofstream archivo(fileURL, ios::app);
+
+    if (archivo.is_open()) {
+        archivo << data << endl;
+        archivo.close();
+        if (getVerbose()) {
+            cout << data << endl;
+        }
     } else {
         cerr << "El archivo de escritura no se abrió correctamente." << endl;
         return false;
     }
     return true;
 }
+bool FileWriter_service::writeln(const string& data, bool verbose) {
+    lock_guard<mutex> lock(mutexes[fileURL]);
+    ofstream archivo(fileURL, ios::app);
+
+    if (archivo.is_open()) {
+        archivo << data << endl;
+        archivo.close();
+        if (verbose) {
+            cout << data << endl;
+        }
+    } else {
+        cerr << "El archivo de escritura no se abrió correctamente." << endl;
+        return false;
+    }
+    return true;
+}
+bool FileWriter_service::writeln(ostringstream& data) {
+    return writeln(data.str());
+}
+bool FileWriter_service::writeln(ostringstream& data, bool verbose) {
+    return writeln(data.str(), verbose);
+}
 
 
-
+// Método createFile_recursive
+//********************************
+bool FileWriter_service::createFile_recursive(string url) {
+    try {
+        filesystem::path filePath(url);
+        filesystem::create_directories(filePath.parent_path());
+        ofstream file(url);
+        if (file) {
+            return true;
+        } else {
+            cerr << "No se pudo crear el archivo: " << url << endl;
+            return false;
+        }
+    } catch (const filesystem::filesystem_error& e) {
+        cerr << "Error al crear el archivo: " << e.what() << endl;
+        return false;
+    }
+}
 
 
 //**********************************************
@@ -79,14 +151,7 @@ void FileWriter_service::setFileURL(string data){
     fileURL = data; 
 }
 
-
-//******************
-//* MÉTODOS PRIVADOS
-//******************
-string FileWriter_service::calculateDefaultURL() {
-    time_t tiempoActual = time(0);
-    tm* tiempoLocal = localtime(&tiempoActual);
-    char buffer[80];
-    strftime(buffer, 80, "DefaultName_%Y-%m-%d_%H-%M-%S", tiempoLocal);
-    return string(buffer);
+bool FileWriter_service::getVerbose() const{ return verbose;}
+void FileWriter_service::setVerbose(bool data){ 
+    verbose = data;
 }

@@ -52,13 +52,15 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
     }
     file.close();
 
+    jsonConfiguration.set_logFile(root["logFile"].asString());
+    jsonConfiguration.set_outDir(root["outDir"].asString());
+
     Test testTemp;
     Execution executionTemp;
     Value testSelected = Value::null;
     for (const auto &test : root["testList"]) {
         testTemp = Test();
         testTemp.set_statsFile(test["statsFile"].asString());
-        testTemp.set_logFile(test["logFile"].asString());
         
         for (const auto &execution : test["executionList"]) {
             executionTemp = Execution();

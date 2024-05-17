@@ -14,7 +14,6 @@ class Test{
     //*****************************
     private:
         string statsFile;
-        string logFile;
         vector<Execution> executionList;
 
 
@@ -24,11 +23,11 @@ class Test{
     //*****************************
     public:
         Test();
-        Test(string statsFile, string logFile, vector<Execution> executionList);
+        Test(string statsFile, vector<Execution> executionList);
         ~Test();
 
 
-        string displayInfo();
+        string displayInfo(string initLineString);
 
 
 
@@ -37,9 +36,6 @@ class Test{
         //*************************
         string get_statsFile() const;
         void set_statsFile(string data);
-
-        string get_logFile() const;
-        void set_logFile(string data);
         
         vector<Execution>& get_executionList();
         Execution getElement_executionList_byIndex(unsigned int index);

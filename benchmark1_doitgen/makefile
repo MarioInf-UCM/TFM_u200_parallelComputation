@@ -26,8 +26,9 @@ kernelBuild_hw_emu:
 #**************************************
 # COMMANDS FOR SOFTWARE COMPILE
 #**************************************
+#export XCL_EMULATION_MODE=sw_emu; \
+
 hostBuild_sw_emu:
-	export XCL_EMULATION_MODE=sw_emu; \
 	@cd $(BUILD_DIRECTORY); \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=sw_emu $(CMAKE_DIRECTORY); \

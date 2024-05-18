@@ -18,36 +18,41 @@ DoitgenHost::~DoitgenHost(){}
 // MAIN FUNCTION - START
 //*************************************
 int DoitgenHost::doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile){
+    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     DoitgenData data = DoitgenData();
-    //FileWriter_service fileWriter = FileWriter_service("../log/results");
     ostringstream stringToPrint;
     EventTimer event;
     Event event_sp;
     bool result;
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
+    fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
     event.add("Initializaton OpenCL and load kernels");
 
     xilinx::example_utils::XilinxOclHelper xocl;
-    xocl.initialize("kerDoitgen_noOptimization.xclbin");
+    xocl.initialize(exec.get_kernelPackage());
     CommandQueue q = xocl.get_command_queue();
-    Kernel ker = xocl.get_kernel("doitgenKernel");
+    Kernel ker = xocl.get_kernel(exec.get_kernel());
 
     event.finish();
+    fileWriter_logFile.writeln("STEP 1 - END: Initializaton OpenCL and load kernels (" + event.getInfoEvents(0) + "ms)");
     //STEP 1 - END: Initializaton OpenCL and load kernels"
 
 
     //STEP 2 - START: Running kernel in CPU"
+    fileWriter_logFile.writeln("STEP 2 - START: Running kernel in CPU");
     event.add("Running kernel in CPU");
 
     kernel_doitgen_CPU(&data);
 
     event.finish();
+    fileWriter_logFile.writeln("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1) + "ms)");
     //STEP 2 - END: Running kernel in CPU"
 
 
     //STEP 3 - START: Creating and mapping buffer 
+    fileWriter_logFile.writeln("STEP 3 - START: Creating and mapping buffer");
     event.add("Creating and mapping buffer");
 
     Buffer sendBuff_A(xocl.get_context(),
@@ -71,35 +76,38 @@ int DoitgenHost::doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileW
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_C4);
     ker.setArg(2, recvBuff_resultDevice);
-    ker.setArg(3, SIZE_R);
-    ker.setArg(4, SIZE_Q);
-    ker.setArg(5, SIZE_P);
 
     event.finish();
+    fileWriter_logFile.writeln("STEP 3 - END: Creating and mapping buffer (" + event.getInfoEvents(2) + "ms)"); 
     //STEP 3 - END: Creating and mapping buffer 
 
 
-    //STEP 5 - START: Transmision data to device
+    //STEP 4 - START: Transmision data to device
+    fileWriter_logFile.writeln("STEP 4 - START: Transmision data to device");
     event.add("Transmision data to device");
 
     q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_C4}, 0, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
-    event.finish(); 
-    //STEP 5 - END: Transmision data to device 
+    event.finish();
+    fileWriter_logFile.writeln("4 - END: Transmision data to device (" + event.getInfoEvents(2) + "ms)");
+    //STEP 4 - END: Transmision data to device 
 
 
-    //STEP 6 - START: Device execution
+    //STEP 5 - START: Device execution
+    fileWriter_logFile.writeln("STEP 5 - START: Device execution");
     event.add("Device execution");
 
     q.enqueueTask(ker, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
     event.finish();
-    //STEP 6 - END: Device execution
+    fileWriter_logFile.writeln("STEP 5 - END: Device execution (" + event.getInfoEvents(2) + "ms)");
+    //STEP 5 - END: Device execution
 
 
-    //STEP 7 - START: Transmision data from device
+    //STEP 6 - START: Transmision data from device
+    fileWriter_logFile.writeln("STEP 6 - START: Transmision data from device");
     event.add("Transmision data from device ");
 
     q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
@@ -107,7 +115,8 @@ int DoitgenHost::doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileW
     q.finish();
 
     event.finish();
-    //STEP 7 - END: Transmision data from device 
+    fileWriter_logFile.writeln("STEP 6 - END: Transmision data from device (" + event.getInfoEvents(2) + "ms)");
+    //STEP 6 - END: Transmision data from device 
 
     if(PRINTRESULT){
         printArrays(data);

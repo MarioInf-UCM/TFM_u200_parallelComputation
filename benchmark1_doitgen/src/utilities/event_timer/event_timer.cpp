@@ -46,11 +46,11 @@ EventTimer::EventTimer()
 float EventTimer::ms_difference(EventTimer::timepoint start,
                                 EventTimer::timepoint end)
 {
-    std::chrono::duration<float, std::milli> duration = end - start;
+    chrono::duration<float, milli> duration = end - start;
     return duration.count();
 }
 
-int EventTimer::add(std::string description)
+int EventTimer::add(string description)
 {
     // If previously pending event was unfinished, adding a new event
     // will terminate it if this function is called
@@ -63,13 +63,13 @@ int EventTimer::add(std::string description)
     int length = description.length();
     if (length > max_string_length)
         max_string_length = length;
-    start_times.push_back(std::chrono::high_resolution_clock::now());
+    start_times.push_back(chrono::high_resolution_clock::now());
     return event_count++;
 }
 
 void EventTimer::finish(void)
 {
-    end_times.push_back(std::chrono::high_resolution_clock::now());
+    end_times.push_back(chrono::high_resolution_clock::now());
     if (!unfinished) {
         end_times.pop_back();
         return;
@@ -88,21 +88,41 @@ void EventTimer::clear(void)
 
 void EventTimer::print(int id)
 {
-    std::ios_base::fmtflags flags(std::cout.flags());
+    ios_base::fmtflags flags(cout.flags());
     if (id >= 0) {
         if ((unsigned)id > event_names.size())
             return;
-        std::cout << event_names[id] << " : " << std::fixed << std::setprecision(3)
-                  << ms_difference(start_times[id], end_times[id]) << std::endl;
+        cout << event_names[id] << " : " << fixed << setprecision(3)
+                  << ms_difference(start_times[id], end_times[id]) << endl;
     }
     else {
         int printable_events = unfinished ? event_count - 1 : event_count;
         for (int i = 0; i < printable_events; i++) {
-            std::cout << std::left << std::setw(max_string_length) << event_names[i] << " : ";
-            std::cout << std::right << std::setw(8) << std::fixed << std::setprecision(3)
+            cout << left << setw(max_string_length) << event_names[i] << " : ";
+            cout << right << setw(8) << fixed << setprecision(3)
                       << ms_difference(start_times[i], end_times[i]) << " ms"
-                      << std::endl;
+                      << endl;
         }
     }
-    std::cout.flags(flags);
+    cout.flags(flags);
+}
+
+string EventTimer::getInfoEvents(int id) {
+    stringstream ss;
+    ios_base::fmtflags flags(ss.flags());
+    if (id >= 0) {
+        if ((unsigned)id >= event_names.size())
+            return "";
+        ss << event_names[id] << " : " << fixed << setprecision(3)
+           << ms_difference(start_times[id], end_times[id]) << " ms" << endl;
+    } else {
+        int printable_events = unfinished ? event_count - 1 : event_count;
+        for (int i = 0; i < printable_events; i++) {
+            ss << left << setw(max_string_length) << event_names[i] << " : ";
+            ss << right << setw(8) << fixed << setprecision(3)
+               << ms_difference(start_times[i], end_times[i]) << " ms" << endl;
+        }
+    }
+    ss.flags(flags);
+    return ss.str();
 }

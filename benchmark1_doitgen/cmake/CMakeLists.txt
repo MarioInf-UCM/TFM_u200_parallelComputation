@@ -10,7 +10,7 @@ find_package(OpenMP)
 find_package(jsoncpp REQUIRED)
 
 if(NOT XRT_FOUND)
-  MESSAGE(FATAL_ERROR "XRT not found, please source XRT setup script before building")
+  message(FATAL_ERROR "XRT not found, please source XRT setup script before building")
 endif()
 
 # Copying kernel files

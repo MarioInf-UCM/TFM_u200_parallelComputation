@@ -27,6 +27,8 @@ string Execution::displayInfo(string initLineString){
 
     info += initLineString + "Kernel Package: " + get_kernelPackage() + "\n";
     info += initLineString + "Kernel: " + get_kernel() + "\n";
+    info += initLineString + "Data Size: " + get_dataSize() + "\n";
+    info += initLineString + "Print Results?: " + (get_printResults()? "true":"false") + "\n";
     info += initLineString + "Number of Executions: " + to_string(get_numExecutions()) + "\n";
 
     info += initLineString + "}\n";
@@ -43,6 +45,12 @@ void Execution::set_kernelPackage(string data){ kernelPackage=data; }
 
 string Execution::get_kernel() const{ return kernel; }
 void Execution::set_kernel(string data){ kernel=data; }
+
+string Execution::get_dataSize() const{ return dataSize; }
+void Execution::set_dataSize(string data){ dataSize=data; }
+
+bool Execution::get_printResults() const{ return printResults; }
+void Execution::set_printResults(bool data){ printResults = data; }
 
 int Execution::get_numExecutions() const{ return numExecutions; }
 void Execution::set_numExecutions(int data){numExecutions=data; }

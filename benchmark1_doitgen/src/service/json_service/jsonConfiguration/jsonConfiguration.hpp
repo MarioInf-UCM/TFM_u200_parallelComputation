@@ -12,6 +12,7 @@ class JsonConfiguration{
     
     private:
         bool status;
+        bool verbose;
         string outDir;
         string logFile;
         vector<Test> testList;
@@ -28,6 +29,9 @@ class JsonConfiguration{
 
         bool get_status() const;
         void set_status(bool data);
+        
+        bool get_verbose() const;
+        void set_verbose(bool data);
 
         string get_outDir() const;
         void set_outDir(string data);

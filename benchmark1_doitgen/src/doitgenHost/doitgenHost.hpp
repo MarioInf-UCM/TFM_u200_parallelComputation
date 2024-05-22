@@ -3,12 +3,9 @@
 
 #include <iostream>
 #include <vector>
-#include "../config/config.hpp"
-#include "../doitgenData/doitgenData.hpp"
-#include "../service/fileWriter_service/fileWriter_service.hpp"
 #include "../service/json_service/jsonConfiguration/execution/execution.hpp"
-#include "../utilities/event_timer/event_timer.hpp"
-#include "../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
+#include "../service/fileWriter_service/fileWriter_service.hpp"
+#include "doitgenHost_noOpt/doitgenHost_noOpt.hpp"
 
 
 class DoitgenHost {
@@ -36,12 +33,6 @@ class DoitgenHost {
 
 
     private:
-        static int doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile);
-
-        static void kernel_doitgen_CPU(DoitgenData *data);
-        static bool compareResults(DoitgenData data);
-        static void printKeyResults(EventTimer event);
-        static void printArrays(DoitgenData data);
 
 };
 #endif

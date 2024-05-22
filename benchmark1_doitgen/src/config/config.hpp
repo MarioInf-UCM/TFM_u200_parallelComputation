@@ -8,60 +8,30 @@
     #elif defined(TYPEDATA_FP)
         typedef float typeData;
     #else
-        typedef int typeData;
+        typedef float typeData;
     #endif
 
-           
-    //DEFINE FLAG TO PRINT RESULT AT THE END
-    //******************************
-    #if !defined(PRINTRESULT)
-        #define PRINTRESULT false
-    #endif
-
-
-    //DEFINE FLAG TO VERBOSE MODE
-    //******************************
-    #if !defined(VERBOSE)
-        #define VERBOSE false
-    #endif
-
- 
-    //DEFINE DATASET SIZE
-    //******************************
-    #if !defined(MINI_DATASET) && !defined(SMALL_DATASET) && !defined(MEDIUM_DATASET) && !defined(LARGE_DATASET) && !defined(EXTRALARGE_DATASET)
-        #define MEDIUM_DATASET
-    #endif
 
     #if !defined(SIZE_R) && !defined(SIZE_Q) && !defined(SIZE_P)
-        #ifdef MINI_DATASET
-            #define SIZE_R 8
-            #define SIZE_Q 10
-            #define SIZE_P 12
-        #endif
+        #define SIZE_R_MINI 8
+        #define SIZE_Q_MINI 10
+        #define SIZE_P_MINI 12
 
-        #ifdef SMALL_DATASET
-            #define SIZE_R 20
-            #define SIZE_Q 25
-            #define SIZE_P 30
-        #endif
+        #define SIZE_R_SMALL 20
+        #define SIZE_Q_SMALL 25
+        #define SIZE_P_SMALL 30
 
-        #ifdef MEDIUM_DATASET
-            #define SIZE_R 40
-            #define SIZE_Q 50
-            #define SIZE_P 60
-        #endif
+        #define SIZE_R_MEDIUM 40
+        #define SIZE_Q_MEDIUM 50
+        #define SIZE_P_MEDIUM 60
 
-        #ifdef LARGE_DATASET
-            #define SIZE_R 140
-            #define SIZE_Q 150
-            #define SIZE_P 160
-        #endif
+        #define SIZE_R_LARGE 140
+        #define SIZE_Q_LARGE 150
+        #define SIZE_P_LARGE 160
 
-        #ifdef EXTRALARGE_DATASET
-            #define SIZE_R 220
-            #define SIZE_Q 250
-            #define SIZE_P 270
-        #endif
+        #define SIZE_R_EXTRALARGE 220
+        #define SIZE_Q_EXTRALARGE 250
+        #define SIZE_P_EXTRALARGE 270
     #endif
 
 #endif

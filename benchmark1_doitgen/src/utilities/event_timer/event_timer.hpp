@@ -86,7 +86,7 @@ public:
     void finish(void);
     void clear(void);
     void print(int id = -1);   
-    string getInfoEvents(int id = -1);
+    std::string getInfoEvents(int id = -1);
 
 };
 

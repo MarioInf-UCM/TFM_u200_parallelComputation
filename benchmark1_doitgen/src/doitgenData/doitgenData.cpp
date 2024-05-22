@@ -8,11 +8,19 @@ using namespace std;
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
 //********************************
-DoitgenData::DoitgenData(){
-    initData_A();
-    initData_C4();
-    initData_resultCPU();
-    initData_resultDevice();
+DoitgenData::DoitgenData(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P):
+    SIZE_R(SIZE_R),
+    SIZE_Q(SIZE_Q),
+    SIZE_P(SIZE_P),
+    A(vector< vector< vector<typeData>>>()),
+    C4(vector< vector<typeData>>()),
+    resultCPU(vector< vector< vector<typeData>>>()),
+    resultDevice(vector< vector< vector<typeData>>>())
+{
+    initData_A(SIZE_R, SIZE_Q, SIZE_P);
+    initData_C4(SIZE_P);
+    initData_resultCPU(SIZE_R, SIZE_Q, SIZE_P);
+    initData_resultDevice(SIZE_R, SIZE_Q, SIZE_P);
 }
 DoitgenData::~DoitgenData(){}
 
@@ -21,14 +29,18 @@ DoitgenData::~DoitgenData(){}
 //*********************
 //* GENERAL FUNCTIONS *
 //*********************
-void DoitgenData::initData_A(){
+void DoitgenData::initData_A(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P){
     for (int r = 0; r < SIZE_R; r++) {
+        get_A().push_back(vector< vector<typeData>>());
         for (int q = 0; q < SIZE_Q; q++) {
+            get_A()[r].push_back(vector<typeData>());
             for (int p = 0; p < SIZE_P; p++){
                 #if defined(TYPEDATA_INT)
-                    A[r][q][p] = (  (typeData) (  ((double) (((r*q + p)%SIZE_P)) * 10 ) / SIZE_P) );
+                    get_A()[r][q].push_back(  ((typeData) (  ((double) (((r*q + p)%SIZE_P)) * 10 ) / SIZE_P)) );
                 #elif defined(TYPEDATA_FP)
-                    A[r][q][p] = (typeData) ((r*q + p)%SIZE_P) / SIZE_P;
+                    get_A()[r][q].push_back((typeData) ((r*q + p)%SIZE_P) / SIZE_P);
+                #else
+                    get_A()[r][q].push_back((typeData) ((r*q + p)%SIZE_P) / SIZE_P);
                 #endif
             }
         }
@@ -37,13 +49,16 @@ void DoitgenData::initData_A(){
 }
 
 
-void DoitgenData::initData_C4(){
+void DoitgenData::initData_C4(unsigned int SIZE_P){
     for (int p1 = 0; p1 < SIZE_P; p1++) {
+        get_C4().push_back(vector<typeData>());
         for (int p2 = 0; p2 < SIZE_P; p2++) {
             #if defined(TYPEDATA_INT)
-                C4[p1][p2] = (typeData) floor(((p1*p2 % SIZE_P) / SIZE_P) *10) ;
+                get_C4()[p1].push_back( (typeData) floor(((p1*p2 % SIZE_P) / SIZE_P) *10) );
             #elif defined(TYPEDATA_FP)
-                C4[p1][p2] = (typeData) (p1*p2 % SIZE_P) / SIZE_P;
+                get_C4()[p1].push_back((typeData) (p1*p2 % SIZE_P) / SIZE_P);
+            #else
+                get_C4()[p1].push_back((typeData) (p1*p2 % SIZE_P) / SIZE_P);
             #endif
         }
     }
@@ -51,14 +66,18 @@ void DoitgenData::initData_C4(){
 }
 
 
-void DoitgenData::initData_resultCPU(){
+void DoitgenData::initData_resultCPU(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P){
     for (int r = 0; r < SIZE_R; r++) {
+        get_resultCPU().push_back(vector< vector<typeData>>());
         for (int q = 0; q < SIZE_Q; q++) {
+            get_resultCPU()[r].push_back(vector<typeData>());
             for (int p = 0; p < SIZE_P; p++){
                 #if defined(TYPEDATA_INT)
-                    resultCPU[r][q][p] = 0;
+                    get_resultCPU()[r][q].push_back(0);
                 #elif defined(TYPEDATA_FP)
-                    resultCPU[r][q][p] = 0.0;
+                    get_resultCPU()[r][q].push_back(0.0);
+                #else
+                    get_resultCPU()[r][q].push_back(0.0);
                 #endif
             }
         }
@@ -67,14 +86,18 @@ void DoitgenData::initData_resultCPU(){
 }
 
 
-void DoitgenData::initData_resultDevice(){
+void DoitgenData::initData_resultDevice(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P){
     for (int r = 0; r < SIZE_R; r++) {
+        get_resultDevice().push_back(vector< vector<typeData>>());
         for (int q = 0; q < SIZE_Q; q++) {
+            get_resultDevice()[r].push_back(vector<typeData>());
             for (int p = 0; p < SIZE_P; p++){
                 #if defined(TYPEDATA_INT)
-                    resultDevice[r][q][p] = 0;
+                    get_resultDevice()[r][q].push_back(0);
                 #elif defined(TYPEDATA_FP)
-                    resultDevice[r][q][p] = 0.0;
+                    get_resultDevice()[r][q].push_back(0.0);
+                #else
+                    get_resultDevice()[r][q].push_back(0.0);
                 #endif
             }
         }
@@ -83,76 +106,89 @@ void DoitgenData::initData_resultDevice(){
 }
 
 
-void DoitgenData::printData_A(){
-    for (int r = 0; r < SIZE_R; r++) {
-        cout << "\nARRAY A, DIMENSION R=" << r+1 << " of " << SIZE_R << endl;
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
+
+string DoitgenData::printData_A(){
+    string result="";
+    for (int r = 0; r < get_A().size(); r++) {
+        result += "\nARRAY A, DIMENSION R=" + to_string(r+1) + " of " + to_string(get_A().size()) + "\n";
+        for (int q = 0; q < get_A()[0].size(); q++) {
+            for (int p = 0; p < get_A()[0][0].size(); p++) {
                 #if defined(TYPEDATA_INT)
-                    printf("%d  ", A[r][q][p]);
+                    result += std::to_string(A[r][q][p]) + "  ";
                 #elif defined(TYPEDATA_FP)
-                    printf("%f  ", A[r][q][p]);
+                    result += std::to_string(A[r][q][p]) + "  ";
+                #else
+                    result += std::to_string(A[r][q][p]) + "  ";
                 #endif
             }
-            cout << endl;
+            result += "\n";
         }
-        cout << endl;
+        result += "\n";
     }
-    return;
+    return result;
 }
 
 
-void DoitgenData::printData_C4(){
-    for (int p1 = 0; p1 < SIZE_P; p1++) {
-        for (int p2 = 0; p2 < SIZE_P; p2++) {
+string DoitgenData::printData_C4(){
+    string result="";
+    for (int p1 = 0; p1 < get_C4().size(); p1++) {
+        for (int p2 = 0; p2 < get_C4()[0].size(); p2++) {
             #if defined(TYPEDATA_INT)
-                printf("%d  ", C4[p1][p2]);
+                result += to_string(C4[p1][p2]) + "  ";
             #elif defined(TYPEDATA_FP)
-                printf("%f  ", C4[p1][p2]);
+                result += to_string(C4[p1][p2]) + "  ";
+            #else
+                result += to_string(C4[p1][p2]) + "  ";
             #endif
         }
-        cout << endl;
+        result += "\n";
     }
-    cout << endl;
-    return;
+    result += "\n";
+    return result;
 }
 
 
-void DoitgenData::printData_resultCPU(){
-    for (int r = 0; r < SIZE_R; r++) {
-        cout << "\nARRAY RESULTCPU, DIMENSION R=" << r+1 << " of " << SIZE_R << endl;
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
+string DoitgenData::printData_resultCPU(){
+    string result="";
+    for (int r = 0; r < get_resultCPU().size(); r++) {
+        result += "\nARRAY RESULTCPU, DIMENSION R=" + to_string(r+1) + " of " + to_string(get_A().size()) + "\n";
+        for (int q = 0; q < get_resultCPU()[0].size(); q++) {
+            for (int p = 0; p < get_resultCPU()[0][0].size(); p++) {
                 #if defined(TYPEDATA_INT)
-                    printf("%d  ", resultCPU[r][q][p]);
+                    result += to_string(resultCPU[r][q][p]) + "  ";
                 #elif defined(TYPEDATA_FP)
-                    printf("%f  ", resultCPU[r][q][p]);
-                #endif                    
-            }
-            cout << endl;
-        }
-        cout << endl;
-    }
-    return;
-}
-
-
-void DoitgenData::printData_resultDevice(){
-    for (int r = 0; r < SIZE_R; r++) {
-        cout << "\nARRAY RESULTDEVICE, DIMENSION R=" << r+1 << " of " << SIZE_R << endl;
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
-                #if defined(TYPEDATA_INT)
-                    printf("%d  ", resultDevice[r][q][p]);
-                #elif defined(TYPEDATA_FP)
-                    printf("%f  ", resultDevice[r][q][p]);
+                    result += to_string(resultCPU[r][q][p]) + "  ";
+                #else
+                    result += to_string(resultCPU[r][q][p]) + "  ";
                 #endif
             }
-            cout << endl;
+            result += "\n";
         }
-        cout << endl;
+        result += "\n";
     }
-    return;
+    return result;
+}
+
+
+string DoitgenData::printData_resultDevice(){
+    string result="";
+    for (int r = 0; r < get_resultDevice().size(); r++) {
+        result += "\nARRAY RESULTDEVICE, DIMENSION R=" + to_string(r+1) + " of " + to_string(get_A().size()) + "\n";
+        for (int q = 0; q < get_resultDevice()[0].size(); q++) {
+            for (int p = 0; p < get_resultDevice()[0][0].size(); p++) {
+                #if defined(TYPEDATA_INT)
+                    result += to_string(resultDevice[r][q][p]) + "  ";
+                #elif defined(TYPEDATA_FP)
+                    result += to_string(resultDevice[r][q][p]) + "  ";
+                #else
+                    result += to_string(resultDevice[r][q][p]) + "  ";
+                #endif
+            }
+            result += "\n";
+        }
+        result += "\n";
+    }
+    return result;
 }
 
 
@@ -160,60 +196,103 @@ void DoitgenData::printData_resultDevice(){
 //*************************
 //* GET AND SET FUNCTIONS *
 //*************************
-typeData (&DoitgenData::getA())[SIZE_R][SIZE_Q][SIZE_P]{
-    return A;
+unsigned int DoitgenData::get_SIZE_R(){ return SIZE_R; }
+void DoitgenData::set_SIZE_R(unsigned int data){ SIZE_R=data; }
+
+unsigned int DoitgenData::get_SIZE_Q(){ return SIZE_Q; }
+void DoitgenData::set_SIZE_Q(unsigned int data){ SIZE_Q=data; }
+
+unsigned int DoitgenData::get_SIZE_P(){ return SIZE_P; }
+void DoitgenData::set_SIZE_P(unsigned int data){ SIZE_P=data; }
+
+
+vector< vector< vector<typeData>>>& DoitgenData::get_A(){ 
+    return A; 
 }
-void DoitgenData::setA(typeData (&data)[SIZE_R][SIZE_Q][SIZE_P]){
-    for (int r = 0; r < SIZE_R; r++) {
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
-                A[r][q][p] = data[r][q][p];
+typeData DoitgenData::getElement_A_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP){
+    return get_A()[indexR][indexQ][indexP];
+}
+void DoitgenData::set_A(vector< vector< vector<typeData>>> newList){
+    get_A().clear();
+    for (int r=0 ; r<newList.size() ; r++) {
+        get_A().push_back(vector< vector<typeData>>());
+        for (int q=0 ; q<newList.size() ; q++) {
+            get_A()[r].push_back(vector<typeData>());
+            for (int p=0 ; p<newList.size() ; p++) {
+                get_A()[r][q].push_back(newList[r][q][p]);
             }
         }
     }
-    return;       
+}
+void DoitgenData::setElement_A_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value){
+    get_A()[indexR][indexQ][indexP]=value;
 }
 
 
-typeData (&DoitgenData::getC4())[SIZE_P][SIZE_P]{
+
+vector< vector<typeData>>& DoitgenData::get_C4(){
     return C4;
 }
-void DoitgenData::setC4(typeData (&data)[SIZE_P][SIZE_P]){
-    for (int p1 = 0; p1 < SIZE_P; p1++) {
-        for (int p2 = 0; p2 < SIZE_P; p2++) {
-            C4[p1][p2] = data[p1][p2];
+typeData DoitgenData::getElement_C4_byIndex(unsigned int indexP1, unsigned int indexP2){
+    return get_C4()[indexP1][indexP2];
+}
+void DoitgenData::set_C4(vector< vector<typeData>> newList){
+    get_C4().clear();
+    for (int p1=0 ; p1<newList.size() ; p1++) {
+        get_C4().push_back(vector<typeData>());
+        for (int p2=0 ; p2<newList.size() ; p2++) {
+            get_C4()[p1].push_back(newList[p1][p2]);
         }
-    }  
-    return;
+    } 
+}
+void DoitgenData::setElement_C4_byIndex(unsigned int indexP1, unsigned int indexP2, typeData value){
+    get_C4()[indexP1][indexP2];
 }
 
 
-typeData (&DoitgenData::getResultCPU())[SIZE_R][SIZE_Q][SIZE_P]{
+
+vector< vector< vector<typeData>>>& DoitgenData::get_resultCPU(){
     return resultCPU;
 }
-void DoitgenData::setResultCPU(typeData (&data)[SIZE_R][SIZE_Q][SIZE_P]){
-    for (int r = 0; r < SIZE_R; r++) {
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
-                resultCPU[r][q][p] = data[r][q][p];
+typeData DoitgenData::getElement_resultCPU_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP){
+    return get_resultCPU()[indexR][indexQ][indexP];
+}
+void DoitgenData::set_resultCPU(vector< vector< vector<typeData>>> newList){
+    get_resultCPU().clear();
+    for (int r=0 ; r<newList.size() ; r++) {
+        get_resultCPU().push_back(vector< vector<typeData>>());
+        for (int q=0 ; q<newList.size() ; q++) {
+            get_resultCPU()[r].push_back(vector<typeData>());
+            for (int p=0 ; p<newList.size() ; p++) {
+                get_resultCPU()[r][q].push_back(newList[r][q][p]);
             }
         }
     }
-    return;    
+}
+void DoitgenData::setElement_resultCPU_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value){
+    get_resultCPU()[indexR][indexQ][indexP]=value;
 }
 
 
-typeData (&DoitgenData::getResultDevice())[SIZE_R][SIZE_Q][SIZE_P]{
+
+vector< vector< vector<typeData>>>& DoitgenData::get_resultDevice(){
     return resultDevice;
 }
-void DoitgenData::setResultDevice(typeData (&data)[SIZE_R][SIZE_Q][SIZE_P]){
-    for (int r = 0; r < SIZE_R; r++) {
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
-                resultDevice[r][q][p] = data[r][q][p];
+typeData DoitgenData::getElement_resultDevice_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP){
+    return get_resultDevice()[indexR][indexQ][indexP];
+}
+void DoitgenData::set_resultDevice(vector< vector< vector<typeData>>> newList){
+    get_resultDevice().clear();
+    for (int r=0 ; r<newList.size() ; r++) {
+        get_resultDevice().push_back(vector< vector<typeData>>());
+        for (int q=0 ; q<newList.size() ; q++) {
+            get_resultDevice()[r].push_back(vector<typeData>());
+            for (int p=0 ; p<newList.size() ; p++) {
+                get_resultDevice()[r][q].push_back(newList[r][q][p]);
             }
         }
     }
-    return;    
 }
-
+void DoitgenData::setElement_resultDevice_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value){
+    get_resultDevice()[indexR][indexQ][indexP]=value;
+}

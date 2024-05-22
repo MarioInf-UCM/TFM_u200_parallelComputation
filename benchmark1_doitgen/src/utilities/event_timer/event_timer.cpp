@@ -107,7 +107,7 @@ void EventTimer::print(int id)
     cout.flags(flags);
 }
 
-string EventTimer::getInfoEvents(int id) {
+std::string EventTimer::getInfoEvents(int id) {
     stringstream ss;
     ios_base::fmtflags flags(ss.flags());
     if (id >= 0) {

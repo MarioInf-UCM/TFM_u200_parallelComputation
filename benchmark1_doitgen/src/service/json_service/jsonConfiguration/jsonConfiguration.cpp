@@ -36,7 +36,8 @@ JsonConfiguration::~JsonConfiguration(){ }
 string JsonConfiguration::displayInfo(string initLineString){
     string info = initLineString + "{\n";
 
-    info += initLineString + "Out Directory:" + get_outDir() + "\n";
+    info += initLineString + "Verbose?: " + (get_verbose()? "true":"false") + "\n";
+    info += initLineString + "Out Directory: " + get_outDir() + "\n";
     info += initLineString + "Log File: " +get_logFile()+ "\n";
     info += initLineString + "Test List:\n";
     for (size_t i = 0; i < get_testList().size(); ++i) {
@@ -54,6 +55,9 @@ string JsonConfiguration::displayInfo(string initLineString){
 //**********************************************************
 bool JsonConfiguration::get_status() const{ return status; }
 void JsonConfiguration::set_status(bool data){ status = data; }
+
+bool JsonConfiguration::get_verbose() const{ return verbose; }
+void JsonConfiguration::set_verbose(bool data){ verbose = data; }
 
 string JsonConfiguration::get_outDir() const{ return outDir; }
 void JsonConfiguration::set_outDir(string data){ outDir=data; }

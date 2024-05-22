@@ -13,6 +13,8 @@ class Execution{
     private:
         string kernelPackage;
         string kernel;
+        string dataSize;
+        bool printResults;
         int numExecutions;
 
 
@@ -42,6 +44,12 @@ class Execution{
 
         string get_kernel() const;
         void set_kernel(string data);
+
+        bool get_printResults() const;
+        void set_printResults(bool data);
+
+        string get_dataSize() const;
+        void set_dataSize(string data);
         
         int get_numExecutions() const;
         void set_numExecutions(int data);

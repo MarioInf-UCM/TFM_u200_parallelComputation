@@ -52,6 +52,7 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
     }
     file.close();
 
+    jsonConfiguration.set_verbose(root["verbose"].asBool());
     jsonConfiguration.set_logFile(root["logFile"].asString());
     jsonConfiguration.set_outDir(root["outDir"].asString());
 
@@ -66,6 +67,8 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
             executionTemp = Execution();
             executionTemp.set_kernelPackage(execution["kernelPackage"].asString());
             executionTemp.set_kernel(execution["kernel"].asString());
+            executionTemp.set_dataSize(execution["dataSize"].asString());
+            executionTemp.set_printResults(execution["printResults"].asBool());
             executionTemp.set_numExecutions(execution["numExecutions"].asInt());
             testTemp.get_executionList().push_back(executionTemp);
         }

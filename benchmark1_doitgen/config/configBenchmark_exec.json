@@ -1,6 +1,7 @@
 {
+    "verbose": true,
     "outDir": "../../out",
-    "logFile":"logFile.txt",
+    "logFile": "logFile.txt",
     "testList":[
         {
             "statsFile":"noOpt_results.txt",
@@ -8,27 +9,9 @@
                 {
                     "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_noOpt_mini",
-                    "numExecutions": 3
-                },
-                {
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_small",
-                    "numExecutions": 3
-                },
-                {
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_medium",
-                    "numExecutions": 3
-                },
-                {
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_large",
-                    "numExecutions": 3
-                },
-                {
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_extralarge",
-                    "numExecutions": 3
+                    "dataSize": "mini", 
+                    "printResults": false,
+                    "numExecutions": 1
                 }
             ]
         }

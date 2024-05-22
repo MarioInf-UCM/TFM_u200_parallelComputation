@@ -1,9 +1,12 @@
-#ifndef DOITGENDATA_HPP
-#define DOITGENDATA_HPP
+#ifndef _DOITGENDATA_HPP_
+#define _DOITGENDATA_HPP_
 
 #include <vector>
 #include <iostream>
 #include "../config/config.hpp"
+
+using namespace std;
+
 
 class DoitgenData{
 
@@ -11,11 +14,14 @@ class DoitgenData{
     //* DEFINITION ZONE ATRIBUTES *
     //*****************************
     private:
+        unsigned int SIZE_R;
+        unsigned int SIZE_Q;
+        unsigned int SIZE_P;
 
-        typeData A[SIZE_R][SIZE_Q][SIZE_P];               //SIZE_R x SIZE_Q x SIZE_P
-        typeData C4[SIZE_P][SIZE_P];                      //SIZE_P x SIZE_P
-        typeData resultCPU[SIZE_R][SIZE_Q][SIZE_P];       //SIZE_R x SIZE_Q x SIZE_P
-        typeData resultDevice[SIZE_R][SIZE_Q][SIZE_P];    //SIZE_R x SIZE_Q x SIZE_P
+        vector< vector< vector<typeData>>> A;               //SIZE_R x SIZE_Q x SIZE_P
+        vector< vector< typeData>> C4;                      //SIZE_P x SIZE_P
+        vector< vector< vector<typeData>>> resultCPU;       //SIZE_R x SIZE_Q x SIZE_P
+        vector< vector< vector<typeData>>> resultDevice;    //SIZE_R x SIZE_Q x SIZE_P
 
 
 
@@ -27,35 +33,54 @@ class DoitgenData{
         //********************************
         //* CONSTRUCTORS AND DESTRUCTORS *
         //********************************
-        DoitgenData();
+        DoitgenData(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
         ~DoitgenData();
 
 
-        void initData_A();
-        void initData_C4();
-        void initData_resultCPU();
-        void initData_resultDevice();
+        void initData_A(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
+        void initData_C4(unsigned int SIZE_P);
+        void initData_resultCPU(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
+        void initData_resultDevice(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
         
-        void printData_A();
-        void printData_C4();
-        void printData_resultCPU();
-        void printData_resultDevice();
+        string printData_A();
+        string printData_C4();
+        string printData_resultCPU();
+        string printData_resultDevice();
 
 
         //*************************
         //* GET AND SET FUNCTIONS *
         //*************************
-        typeData (&getA())[SIZE_R][SIZE_Q][SIZE_P];
-        void setA(typeData (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
+        unsigned int get_SIZE_R();
+        void set_SIZE_R(unsigned int data);
 
-        typeData (&getC4())[SIZE_P][SIZE_P];
-        void setC4(typeData (&newA)[SIZE_P][SIZE_P]);
+        unsigned int get_SIZE_Q();
+        void set_SIZE_Q(unsigned int data);
 
-        typeData (&getResultCPU())[SIZE_R][SIZE_Q][SIZE_P];
-        void setResultCPU(typeData (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
+        unsigned int get_SIZE_P();
+        void set_SIZE_P(unsigned int data);
 
-        typeData (&getResultDevice())[SIZE_R][SIZE_Q][SIZE_P];
-        void setResultDevice(typeData (&newA)[SIZE_R][SIZE_Q][SIZE_P]);
+
+        vector< vector< vector<typeData>>>& get_A();
+        typeData getElement_A_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP);
+        void set_A(vector< vector< vector<typeData>>> newList);
+        void setElement_A_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value);
+
+        vector< vector<typeData>>& get_C4();
+        typeData getElement_C4_byIndex(unsigned int indexP1, unsigned int indexP2);
+        void set_C4(vector< vector<typeData>> newList);
+        void setElement_C4_byIndex(unsigned int indexP1, unsigned int indexP2, typeData value);
+
+        vector< vector< vector<typeData>>>& get_resultCPU();
+        typeData getElement_resultCPU_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP);
+        void set_resultCPU(vector< vector< vector<typeData>>> newList);
+        void setElement_resultCPU_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value);
+
+        vector< vector< vector<typeData>>>& get_resultDevice();
+        typeData getElement_resultDevice_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP);
+        void set_resultDevice(vector< vector< vector<typeData>>> newList);
+        void setElement_resultDevice_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value);
+
         
 };
 

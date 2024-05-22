@@ -5,7 +5,9 @@ KERNELS_ROUTE=src/core/
 KERNEL_DOITGEN_NOOPT_SUBROUTE=ker_doitgen_noOpt
 KERNEL_DOITGEN_NOOPT_NAME=makeKer_Doitgen_noOpt.mk
 
-CONFIGFILE_ROUTE=../../config/configBenchmark_exec.json
+CONFIGFILE_ROUTE=../../config/configBenchmark_exec2.json
+SCRIPTS_ROUTE=cmake/scripts/
+SCRIPT_ENVIRONTMENT_NAME=configEnvirontment.sh
 
 .phony: clean build
 
@@ -26,23 +28,27 @@ kernelBuild_hw_emu:
 #**************************************
 # COMMANDS FOR SOFTWARE COMPILE
 #**************************************
-#export XCL_EMULATION_MODE=sw_emu; \
 
 hostBuild_sw_emu:
-	@cd $(BUILD_DIRECTORY); \
+	cd $(BUILD_DIRECTORY); \
+	echo '#!/bin/sh' > export_env.sh; \
+	echo 'export XCL_EMULATION_MODE="sw_emu"' >> export_env.sh; \
+	chmod +x export_env.sh; \
+	source ./export_env.sh; \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=sw_emu $(CMAKE_DIRECTORY); \
 	make -j
 
 hostBuild_hw_emu:
-	export XCL_EMULATION_MODE=hw_emu; \
 	@cd $(BUILD_DIRECTORY); \
+	echo 'export XCL_EMULATION_MODE=hw_emu' > configEnvirontment.sh; \
+	chmod 755 configEnvirontment.sh; \
+	source ceonfigEnvirontment.sh; \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
-	cmake -DTARGET=hw_emu $(CMAKE_DIRECTORY); \
 	make -j
 
 hostBuild_hw:
-	@cd $(BUILD_DIRECTORY); \
+	cd $(BUILD_DIRECTORY); \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=hw $(CMAKE_DIRECTORY); \
 	make -j

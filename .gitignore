@@ -42,6 +42,7 @@ _x
 *.xo
 **/build/*
 **/out/*
+**/venv/
 *.ltx
 *.xclbin
 *.info

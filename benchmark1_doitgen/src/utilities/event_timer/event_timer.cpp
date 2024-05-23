@@ -126,3 +126,21 @@ std::string EventTimer::getInfoEvents(int id) {
     ss.flags(flags);
     return ss.str();
 }
+
+std::string EventTimer::getTimeEvents(int id) {
+    stringstream ss;
+    ios_base::fmtflags flags(ss.flags());
+    if (id >= 0) {
+        if ((unsigned)id >= event_names.size()){
+            return "";
+        }
+        ss << fixed << setprecision(3) << ms_difference(start_times[id], end_times[id]);
+    } else {
+        int printable_events = unfinished ? event_count - 1 : event_count;
+        for (int i = 0; i < printable_events; i++) {
+            ss << fixed << setprecision(3) << ms_difference(start_times[i], end_times[i]);
+        }
+    }
+    ss.flags(flags);
+    return ss.str();
+}

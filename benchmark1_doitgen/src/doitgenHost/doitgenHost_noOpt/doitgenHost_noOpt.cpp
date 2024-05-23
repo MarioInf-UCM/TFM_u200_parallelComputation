@@ -20,7 +20,7 @@ DoitgenHost_noOpt::~DoitgenHost_noOpt(){}
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile){
+bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_R=0, SIZE_Q=0, SIZE_P=0;    
@@ -132,21 +132,20 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, FileWriter_servic
     fileWriter_logFile.write("STEP 6 - END: Transmision data from device (" + event.getInfoEvents(5));
     //STEP 6 - END: Transmision data from device 
 
-
-    if(exec.get_printResults()){
-        fileWriter_logFile.write(printArrays(data));
-    }
-
     if(compareResults(data)){
-        cout << endl;
-        cout << endl;
-        cout << "\033[1;32m***WELL, The results match***\033[0m\n"  << endl;
-        printKeyResults(event);
+        fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
+        fileWriter_logFile.write(getKeyResults(event));
+        fileWriter_statsFile.write(to_string(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()) + "," +
+                                    event.getTimeEvents(1) + "," + 
+                                    event.getTimeEvents(4) + "," + 
+                                    event.getTimeEvents(3) + "," + 
+                                    event.getTimeEvents(5) + "\n", false);
+        if(exec.get_printResults()){
+           fileWriter_logFile.write(printArrays(data));
+        }
         return true;
     }else{
-        cout << endl;
-        cout << endl;
-        cout << "\033[1;31m***BAD, The results don't match***\033[0m\n"  << endl;
+        fileWriter_logFile.write("\033[1;31m***BAD, The results don't match***\033[0m\n");
         return false;
     }
     
@@ -190,7 +189,6 @@ bool DoitgenHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsi
 void DoitgenHost_noOpt::kernel_doitgen_CPU(DoitgenData& data){
 
     vector<typeData> sum = vector<typeData>(data.get_SIZE_P(), 0.0);
-//    for(int i=0 ; i<data.get_SIZE_P) ; i++
 
     for (int r = 0; r < data.get_SIZE_R(); r++){
       for (int q = 0; q < data.get_SIZE_Q(); q++){
@@ -226,15 +224,14 @@ bool DoitgenHost_noOpt::compareResults(DoitgenData& data){
 }
 
 
-void DoitgenHost_noOpt::printKeyResults(EventTimer event){
+string DoitgenHost_noOpt::getKeyResults(EventTimer event){
 
-    cout << "--------------- Key execution times ---------------" << endl;
-    cout << endl;
-    event.print();
-    cout << endl;
-    cout << "---------------------------------------------------" << endl;
+    string result = "";
+    result += "--------------- Key execution times ---------------\n"; 
+    result += event.getInfoEvents();
+    result += "---------------------------------------------------\n";
 
-  return;
+  return result;
 }
 
 

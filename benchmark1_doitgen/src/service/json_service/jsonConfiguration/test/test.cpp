@@ -23,8 +23,9 @@ Test::~Test(){}
 //************************************
 string Test::displayInfo(string initLineString){
     string info = initLineString + "{\n";
-    
+    info += initLineString + "Name: " + get_name() + "\n";
     info += initLineString + "Stats File: " + get_statsFile() + "\n";
+    info += initLineString + "Generate pictures?: " + (get_generatePictures()? "true" : "false") + "\n";
     info += initLineString + "Execution List:\n";
     for (size_t i = 0; i < get_executionList().size(); ++i) {
         info += get_executionList()[i].displayInfo(initLineString + "\t");
@@ -38,9 +39,14 @@ string Test::displayInfo(string initLineString){
 //*************************
 //* GET AND SET FUNCTIONS *
 //*************************
+string Test::get_name() const{ return name; }
+void Test::set_name(string data){ name=data; }
+
 string Test::get_statsFile() const{ return statsFile; }
 void Test::set_statsFile(string data){ statsFile=data; }
 
+bool Test::get_generatePictures() const{ return generatePictures; }
+void Test::set_generatePictures(bool data){ generatePictures=data; }
 
 vector<Execution>& Test::get_executionList(){ return executionList; }
 Execution Test::getElement_executionList_byIndex(unsigned int index){

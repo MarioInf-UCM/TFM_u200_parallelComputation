@@ -27,14 +27,14 @@ class DoitgenHost_noOpt {
         DoitgenHost_noOpt();
         ~DoitgenHost_noOpt();
 
-        static bool doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile);
+        static bool doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:
         static bool initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P);
         static void kernel_doitgen_CPU(DoitgenData& data);
         static bool compareResults(DoitgenData& data);
-        static void printKeyResults(EventTimer event);
+        static string getKeyResults(EventTimer event);
         static string printArrays(DoitgenData& data);
         static void emsamble_dataToBuffers(DoitgenData& data, vector<typeData>& temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice);
         static void emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice);

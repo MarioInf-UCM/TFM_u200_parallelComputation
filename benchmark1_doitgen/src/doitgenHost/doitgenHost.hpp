@@ -29,7 +29,7 @@ class DoitgenHost {
         DoitgenHost();
         ~DoitgenHost();
 
-        static bool doitgenHost_exec(Execution exec, FileWriter_service fileWriter_logFile);
+        static bool doitgenHost_exec(Execution exec, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:

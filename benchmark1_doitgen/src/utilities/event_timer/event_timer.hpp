@@ -87,6 +87,8 @@ public:
     void clear(void);
     void print(int id = -1);   
     std::string getInfoEvents(int id = -1);
+    std::string getTimeEvents(int id =-1);
+
 
 };
 

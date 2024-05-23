@@ -48,6 +48,13 @@ else()
 endif()
 
 
+# Copying python files
+#******************************************************************
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../python/generatePyctures.py")
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../python/generatePyctures.py ${CMAKE_CURRENT_BINARY_DIR}/generatePyctures.py COPYONLY)
+else()
+  message(FATAL_ERROR "Python files haven't been founded")
+endif()
 
 
 
@@ -78,6 +85,7 @@ add_executable(benchmarkExec
   ../src/service/json_service/jsonConfiguration/jsonConfiguration.cpp
   ../src/service/json_service/jsonConfiguration/execution/execution.cpp
   ../src/service/json_service/jsonConfiguration/test/test.cpp
+  ../src/service/externProgramsConnection_service/externProgramsConnection_service.cpp
   )
 
 target_include_directories(benchmarkExec PRIVATE

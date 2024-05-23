@@ -4,7 +4,9 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "statsFile":"noOpt_results.txt",
+            "name":"test_noOpt",
+            "statsFile":"test_noOpt_results.csv",
+            "generatePictures": true,
             "executionList":[
                 {
                     "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",

@@ -61,6 +61,8 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
     Value testSelected = Value::null;
     for (const auto &test : root["testList"]) {
         testTemp = Test();
+        testTemp.set_name(test["name"].asString());
+        testTemp.set_generatePictures(test["generatePictures"].asBool());
         testTemp.set_statsFile(test["statsFile"].asString());
         
         for (const auto &execution : test["executionList"]) {

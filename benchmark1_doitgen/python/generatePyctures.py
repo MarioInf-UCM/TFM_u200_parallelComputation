@@ -27,15 +27,18 @@ def generate_plot(csv_url, image_location):
     plt.plot(x, y4, marker='o', label='Receive buffers from device time')
 
     plt.title(f'Execution Time Comparison - {os.path.basename(csv_url)}')
-    plt.xlabel('X Axis')
+    plt.xlabel('Data size')
     plt.ylabel('Time (ms)')
     plt.legend()
+    plt.xscale('log')
+    plt.yscale('log')
 
-    image_path = os.path.join(image_location, f'{os.path.basename(image_location)}.jpg')
-    plt.savefig(image_path, format='jpg')
+    image_location = image_location +".jpg"
+    plt.savefig(image_location, format='jpg')
     plt.close()
 
     
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:

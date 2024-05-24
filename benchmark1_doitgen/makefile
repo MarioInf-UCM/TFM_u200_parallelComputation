@@ -5,7 +5,7 @@ KERNELS_ROUTE=src/core/
 KERNEL_DOITGEN_NOOPT_SUBROUTE=ker_doitgen_noOpt
 KERNEL_DOITGEN_NOOPT_NAME=makeKer_Doitgen_noOpt.mk
 
-CONFIGFILE_ROUTE=../../config/configBenchmark_exec3.json
+CONFIGFILE_ROUTE=../../config/configBenchmark_exec.json
 SCRIPTS_ROUTE=cmake/scripts/
 SCRIPT_ENVIRONTMENT_NAME=configEnvirontment.sh
 

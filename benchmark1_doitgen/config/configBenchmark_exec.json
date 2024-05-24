@@ -14,6 +14,34 @@
                     "dataSize": "mini", 
                     "printResults": false,
                     "numExecutions": 1
+                },
+                {
+                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_small",
+                    "dataSize": "small", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_medium",
+                    "dataSize": "medium", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_extralarge",
+                    "dataSize": "extralarge", 
+                    "printResults": false,
+                    "numExecutions": 1
                 }
             ]
         }

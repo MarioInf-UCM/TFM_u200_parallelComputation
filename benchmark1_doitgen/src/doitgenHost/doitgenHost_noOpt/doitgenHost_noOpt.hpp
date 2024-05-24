@@ -27,7 +27,7 @@ class DoitgenHost_noOpt {
         DoitgenHost_noOpt();
         ~DoitgenHost_noOpt();
 
-        static bool doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+        static bool doitgenHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:

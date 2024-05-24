@@ -33,8 +33,13 @@ def generate_plot(csv_url, image_location):
     plt.xscale('log')
     plt.yscale('log')
 
-    image_location = image_location +".jpg"
-    plt.savefig(image_location, format='jpg')
+
+    image_locationTemp = image_location +".jpg"
+    plt.savefig(image_locationTemp, format='jpg')
+
+    image_locationTemp = image_location +".eps"
+    plt.savefig(image_locationTemp, format='eps')
+
     plt.close()
 
     

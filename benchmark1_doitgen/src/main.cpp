@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include <cmath>
 #include "config/config.hpp"
 #include "doitgenHost/doitgenHost.hpp"
 #include "utilities/dateAndTime/dateAndTime.hpp"
@@ -28,6 +29,9 @@ int main(int argc, char** argv){
     FileWriter_service fileWriter_statsFile;
     FileWriter_service fileWriter_logFile;
     ExternProgramsConnection_service externProgramConnection;
+    vector<double> testAverageResults = vector<double>();
+    vector<double> executionResults = vector<double>();
+    string tempString_toWrite="";
 
     fileWriter_logFile = FileWriter_service(jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_logFile(), jsonConfiguration.get_verbose());
     fileWriter_logFile.writeln("Contenido del fichero de configuración:");
@@ -38,6 +42,8 @@ int main(int argc, char** argv){
         fileWriter_statsFile.writeln("x,CPU time execution,Device time execution,Send buffers to device time,Receive buffers from device time", false);
     
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
+            testAverageResults.clear();
+            
             for(int k=0 ; k<jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions() ; k++){
                 fileWriter_logFile.writeln("\n*************\n"
                                             "** Running test " + to_string(i+1) + "/" + to_string(jsonConfiguration.get_testList().size()) +
@@ -45,12 +51,30 @@ int main(int argc, char** argv){
                                             " and repetition "+ to_string(k+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions()) + "\n" +
                                             "*", true);
                 
-                result = DoitgenHost::doitgenHost_exec(jsonConfiguration.get_testList()[i].get_executionList()[j], fileWriter_logFile, fileWriter_statsFile);
+                executionResults.clear();
+                result = DoitgenHost::doitgenHost_exec(jsonConfiguration.get_testList()[i].get_executionList()[j], executionResults, fileWriter_logFile, fileWriter_statsFile);
                 if(!result){
                     numFailures++;
                 }
-                fileWriter_logFile.writeln("*\n**\n*************\n", true);
+                
+                fileWriter_logFile.write("New execution average results: ");
+                for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
+                    if((execResult) >= testAverageResults.size()){
+                        testAverageResults.push_back(executionResults[execResult]);
+                    }else{
+                        testAverageResults[execResult] = ( (testAverageResults[execResult]+ executionResults[execResult]) / 2.0 );
+                    }
+                    fileWriter_logFile.write(to_string(testAverageResults[execResult]) + "  ");
+                }
+
+                fileWriter_logFile.writeln("\n*\n**\n*************\n", true);
             }
+
+            tempString_toWrite="";
+            for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
+                tempString_toWrite += to_string(testAverageResults[execResult]) + ",";
+            }            
+            fileWriter_statsFile.writeln(tempString_toWrite, false);
         }
 
         if(jsonConfiguration.get_testList()[i].get_generatePictures()){
@@ -77,4 +101,3 @@ int main(int argc, char** argv){
 
     return 0;
 }
-

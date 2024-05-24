@@ -20,7 +20,7 @@ DoitgenHost_noOpt::~DoitgenHost_noOpt(){}
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_R=0, SIZE_Q=0, SIZE_P=0;    
@@ -132,14 +132,16 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, FileWriter_servic
     fileWriter_logFile.write("STEP 6 - END: Transmision data from device (" + event.getInfoEvents(5));
     //STEP 6 - END: Transmision data from device 
 
+
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
         fileWriter_logFile.write(getKeyResults(event));
-        fileWriter_statsFile.write(to_string(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()) + "," +
-                                    event.getTimeEvents(1) + "," + 
-                                    event.getTimeEvents(4) + "," + 
-                                    event.getTimeEvents(3) + "," + 
-                                    event.getTimeEvents(5) + "\n", false);
+        results.push_back(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()); 
+        results.push_back(stod(event.getTimeEvents(1))); 
+        results.push_back(stod(event.getTimeEvents(4))); 
+        results.push_back(stod(event.getTimeEvents(3))); 
+        results.push_back(stod(event.getTimeEvents(5)));
+
         if(exec.get_printResults()){
            fileWriter_logFile.write(printArrays(data));
         }

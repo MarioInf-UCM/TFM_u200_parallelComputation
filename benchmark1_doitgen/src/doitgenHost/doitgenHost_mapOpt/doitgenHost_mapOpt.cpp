@@ -60,29 +60,56 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
     //STEP 2 - END: Running kernel in CPU"
 
 
+    //STEP 3 - START: Running kernel in CPU optimizated"
+    fileWriter_logFile.writeln("STEP 3 - START: Running kernel in CPU optimizated");
+    event.add("Running kernel in CPU optimizated");
+
+    kernel_doitgen_CPU_opt(data);
+
+    event.finish();
+    fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
+    //STEP 3 - END: Running kernel in CPU optimizated"
+
+
     //STEP 3 - START: Creating and mapping buffer 
     fileWriter_logFile.writeln("STEP 3 - START: Creating and mapping buffer");
     event.add("Creating and mapping buffer");
 
     int sizeA_Andresult = data.get_SIZE_R() * data.get_SIZE_P() * data.get_SIZE_Q() * sizeof(typeData);
     int sizeC4 = data.get_SIZE_P() * data.get_SIZE_P() * sizeof(typeData);
+    
+    cl_mem_ext_ptr_t bankExpec_buff_A;
+    bankExpec_buff_A.flags = 0 | XCL_MEM_TOPOLOGY;
+    bankExpec_buff_A.obj   = NULL;
+    bankExpec_buff_A.param = 0;
+
+    cl_mem_ext_ptr_t bankExpec_buff_C4;
+    bankExpec_buff_C4.flags = 1 | XCL_MEM_TOPOLOGY;
+    bankExpec_buff_C4.obj   = NULL;
+    bankExpec_buff_C4.param = 0;
+
+    cl_mem_ext_ptr_t bankExpec_buff_resultDevice;
+    bankExpec_buff_resultDevice.flags = 2 | XCL_MEM_TOPOLOGY;
+    bankExpec_buff_resultDevice.obj   = NULL;
+    bankExpec_buff_resultDevice.param = 0;
+
 
     Buffer sendBuff_A(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
                         sizeA_Andresult,
-                        NULL,
+                        &bankExpec_buff_A,
                         NULL);
 
     Buffer sendBuff_C4(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
                         sizeC4,
-                        NULL,
+                        &bankExpec_buff_C4,
                         NULL);
 
     Buffer recvBuff_resultDevice(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR),
+                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_EXT_PTR_XILINX),
                         sizeA_Andresult,
-                        NULL,
+                        &bankExpec_buff_resultDevice,
                         NULL);
 
     ker.setArg(0, sendBuff_A);
@@ -150,15 +177,18 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
 
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
-        fileWriter_logFile.write(getKeyResults(event));
+        fileWriter_logFile.writeln("--------------- Key execution times ---------------");
+        fileWriter_logFile.write(event.getInfoEvents());
+        fileWriter_logFile.writeln("---------------------------------------------------");
         results.push_back(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()); 
-        results.push_back(stod(event.getTimeEvents(1))); 
-        results.push_back(stod(event.getTimeEvents(4))); 
-        results.push_back(stod(event.getTimeEvents(3))); 
-        results.push_back(stod(event.getTimeEvents(5)));
+        results.push_back(stod(event.getTimeEvents(1)));    //CPU execution time
+        results.push_back(stod(event.getTimeEvents(2)));    //CPU execution time optimizated
+        results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
+        results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
+        results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
 
         if(exec.get_printResults()){
-           fileWriter_logFile.write(printArrays(data));
+           fileWriter_logFile.write(data.printAll());
         }
         return true;
     }else{
@@ -227,6 +257,38 @@ void DoitgenHost_mapOpt::kernel_doitgen_CPU(DoitgenData& data){
 }
 
 
+void DoitgenHost_mapOpt::kernel_doitgen_CPU_opt(DoitgenData& data) {
+    const auto& A = data.get_A();
+    const auto& C4 = data.get_C4();
+    auto& resultCPU_opt = data.get_resultCPU_opt();
+    const unsigned int SIZE_R = data.get_SIZE_R();
+    const unsigned int SIZE_Q = data.get_SIZE_Q();
+    const unsigned int SIZE_P = data.get_SIZE_P();
+    vector<typeData> sum(data.get_SIZE_P(), 0.0);
+
+    #pragma omp parallel for collapse(2) private(sum) shared(resultCPU_opt)
+    for (int r = 0; r < SIZE_R; r++) {
+        for (int q = 0; q < SIZE_Q; q++) {
+            for (int p = 0; p < SIZE_P; p++) {
+                sum[p] = 0.0;
+
+                #pragma omp simd
+                for (int s = 0; s < SIZE_P; s++) {
+                    sum[p] += A[r][q][s] * C4[s][p];
+                }
+            }
+
+            for (int p = 0; p < SIZE_P; p++) {
+                #pragma omp atomic write
+                {
+                    resultCPU_opt[r][q][p] = sum[p];
+                }
+            }
+        }
+    }
+}
+
+
 bool DoitgenHost_mapOpt::compareResults(DoitgenData& data){
     for (int r = 0; r < data.get_SIZE_R(); r++){
       for (int q = 0; q < data.get_SIZE_Q(); q++){
@@ -238,39 +300,6 @@ bool DoitgenHost_mapOpt::compareResults(DoitgenData& data){
       }
     }
     return true;
-}
-
-
-string DoitgenHost_mapOpt::getKeyResults(EventTimer event){
-
-    string result = "";
-    result += "--------------- Key execution times ---------------\n"; 
-    result += event.getInfoEvents();
-    result += "---------------------------------------------------\n";
-
-  return result;
-}
-
-
-string DoitgenHost_mapOpt::printArrays(DoitgenData& data){
-    string result="";
-    result += "RESULTS ARRAY A\n";
-    result += "=====================\n";
-    result += data.printData_A() + "\n";
-
-    result += "RESULTS ARRAY C4\n";
-    result += "=====================\n";
-    result += data.printData_C4() + "\n";
-
-    result += "RESULTS FROM CPU\n";
-    result += "=====================\n";
-    result += data.printData_resultCPU() + "\n";
-
-    result += "RESULTS FROM DEVICE\n";
-    result += "=====================\n";
-    result += data.printData_resultDevice() + "\n";
-
-  return result;
 }
 
 

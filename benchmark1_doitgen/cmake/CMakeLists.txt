@@ -6,12 +6,17 @@ set(CMAKE_CXX_STANDARD 14)
 
 find_package(OpenCL REQUIRED)
 find_package(XRT REQUIRED)
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 if(NOT XRT_FOUND)
   message(FATAL_ERROR "XRT not found, please source XRT setup script before building")
 endif()
+
+#if(NOT OpenMP_CXX_FOUND)
+#    message(FATAL_ERROR "OpenMP not founded")
+#endif()
+
 
 # Copying kernel files
 #******************************************************************
@@ -73,8 +78,10 @@ target_include_directories(example_utils PUBLIC
 
 
 #******************************
-# COMPAILING HOST APPLICATION *
+# COMPILING HOST APPLICATION *
 #******************************
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopenmp")
+
 add_executable(benchmarkExec
   ../src/main.cpp
   ../src/doitgenData/doitgenData.cpp
@@ -104,4 +111,5 @@ target_link_libraries(benchmarkExec PRIVATE
   uuid
   ${CMAKE_DL_LIBS}
   example_utils
+#  OpenMP::OpenMP_CXX
   )

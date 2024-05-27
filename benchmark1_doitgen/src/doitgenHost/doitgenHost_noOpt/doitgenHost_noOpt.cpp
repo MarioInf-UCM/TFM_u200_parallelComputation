@@ -59,8 +59,19 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     //STEP 2 - END: Running kernel in CPU"
 
 
-    //STEP 3 - START: Creating buffer 
-    fileWriter_logFile.writeln("STEP 3 - START: Creating buffer");
+    //STEP 3 - START: Running kernel in CPU optimizated"
+    fileWriter_logFile.writeln("STEP 3 - START: Running kernel in CPU optimizated");
+    event.add("Running kernel in CPU optimizated");
+
+    kernel_doitgen_CPU_opt(data);
+
+    event.finish();
+    fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
+    //STEP 3 - END: Running kernel in CPU optimizated"
+
+
+    //STEP 4 - START: Creating buffer 
+    fileWriter_logFile.writeln("STEP 4 - START: Creating buffer");
     event.add("Creating buffers");
 
     vector<typeData> temp_A = vector<typeData>();
@@ -91,36 +102,36 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     ker.setArg(2, recvBuff_resultDevice);
 
     event.finish();
-    fileWriter_logFile.write("STEP 3 - END: Creating buffer (" + event.getInfoEvents(2)); 
-    //STEP 3 - END: Creating buffer 
+    fileWriter_logFile.write("STEP 4 - END: Creating buffer (" + event.getInfoEvents(3)); 
+    //STEP 4 - END: Creating buffer 
 
 
-    //STEP 4 - START: Transmision data to device
-    fileWriter_logFile.writeln("STEP 4 - START: Transmision data to device");
+    //STEP 5 - START: Transmision data to device
+    fileWriter_logFile.writeln("STEP 5 - START: Transmision data to device");
     event.add("Transmision data to device");
 
     q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_C4}, 0, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
     event.finish();
-    fileWriter_logFile.write("4 - END: Transmision data to device (" + event.getInfoEvents(3));
-    //STEP 4 - END: Transmision data to device 
+    fileWriter_logFile.write("5 - END: Transmision data to device (" + event.getInfoEvents(4));
+    //STEP 5 - END: Transmision data to device 
 
 
-    //STEP 5 - START: Device execution
-    fileWriter_logFile.writeln("STEP 5 - START: Device execution");
+    //STEP 6 - START: Device execution
+    fileWriter_logFile.writeln("STEP 6 - START: Device execution");
     event.add("Device execution");
 
     q.enqueueTask(ker, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
     event.finish();
-    fileWriter_logFile.write("STEP 5 - END: Device execution (" + event.getInfoEvents(4));
-    //STEP 5 - END: Device execution
+    fileWriter_logFile.write("STEP 6 - END: Device execution (" + event.getInfoEvents(5));
+    //STEP 6 - END: Device execution
 
 
-    //STEP 6 - START: Transmision data from device
-    fileWriter_logFile.writeln("STEP 6 - START: Transmision data from device");
+    //STEP 7 - START: Transmision data from device
+    fileWriter_logFile.writeln("STEP 7 - START: Transmision data from device");
     event.add("Transmision data from device ");
 
     q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
@@ -129,21 +140,25 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
 
     emsamble_buffersToData(data, temp_resultDevice);
     event.finish();
-    fileWriter_logFile.write("STEP 6 - END: Transmision data from device (" + event.getInfoEvents(5));
-    //STEP 6 - END: Transmision data from device 
+    fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
+    //STEP 7 - END: Transmision data from device 
 
 
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
-        fileWriter_logFile.write(getKeyResults(event));
+        fileWriter_logFile.writeln("--------------- Key execution times ---------------");
+        fileWriter_logFile.write(event.getInfoEvents());
+        fileWriter_logFile.writeln("---------------------------------------------------");
+
         results.push_back(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()); 
-        results.push_back(stod(event.getTimeEvents(1))); 
-        results.push_back(stod(event.getTimeEvents(4))); 
-        results.push_back(stod(event.getTimeEvents(3))); 
-        results.push_back(stod(event.getTimeEvents(5)));
+        results.push_back(stod(event.getTimeEvents(1)));    //CPU execution time
+        results.push_back(stod(event.getTimeEvents(2)));    //CPU execution time optimizated
+        results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
+        results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
+        results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
 
         if(exec.get_printResults()){
-           fileWriter_logFile.write(printArrays(data));
+           fileWriter_logFile.write(data.printAll());
         }
         return true;
     }else{
@@ -212,6 +227,38 @@ void DoitgenHost_noOpt::kernel_doitgen_CPU(DoitgenData& data){
 }
 
 
+void DoitgenHost_noOpt::kernel_doitgen_CPU_opt(DoitgenData& data) {
+    const auto& A = data.get_A();
+    const auto& C4 = data.get_C4();
+    auto& resultCPU_opt = data.get_resultCPU_opt();
+    const unsigned int SIZE_R = data.get_SIZE_R();
+    const unsigned int SIZE_Q = data.get_SIZE_Q();
+    const unsigned int SIZE_P = data.get_SIZE_P();
+    vector<typeData> sum(data.get_SIZE_P(), 0.0);
+
+    #pragma omp parallel for collapse(2) private(sum) shared(resultCPU_opt)
+    for (int r = 0; r < SIZE_R; r++) {
+        for (int q = 0; q < SIZE_Q; q++) {
+            for (int p = 0; p < SIZE_P; p++) {
+                sum[p] = 0.0;
+
+                #pragma omp simd
+                for (int s = 0; s < SIZE_P; s++) {
+                    sum[p] += A[r][q][s] * C4[s][p];
+                }
+            }
+
+            for (int p = 0; p < SIZE_P; p++) {
+                #pragma omp atomic write
+                {
+                    resultCPU_opt[r][q][p] = sum[p];
+                }
+            }
+        }
+    }
+}
+
+
 bool DoitgenHost_noOpt::compareResults(DoitgenData& data){
     for (int r = 0; r < data.get_SIZE_R(); r++){
       for (int q = 0; q < data.get_SIZE_Q(); q++){
@@ -225,38 +272,6 @@ bool DoitgenHost_noOpt::compareResults(DoitgenData& data){
     return true;
 }
 
-
-string DoitgenHost_noOpt::getKeyResults(EventTimer event){
-
-    string result = "";
-    result += "--------------- Key execution times ---------------\n"; 
-    result += event.getInfoEvents();
-    result += "---------------------------------------------------\n";
-
-  return result;
-}
-
-
-string DoitgenHost_noOpt::printArrays(DoitgenData& data){
-    string result="";
-    result += "RESULTS ARRAY A\n";
-    result += "=====================\n";
-    result += data.printData_A() + "\n";
-
-    result += "RESULTS ARRAY C4\n";
-    result += "=====================\n";
-    result += data.printData_C4() + "\n";
-
-    result += "RESULTS FROM CPU\n";
-    result += "=====================\n";
-    result += data.printData_resultCPU() + "\n";
-
-    result += "RESULTS FROM DEVICE\n";
-    result += "=====================\n";
-    result += data.printData_resultDevice() + "\n";
-
-  return result;
-}
 
 
 void DoitgenHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){

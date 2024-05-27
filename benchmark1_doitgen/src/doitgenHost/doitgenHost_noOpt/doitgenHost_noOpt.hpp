@@ -32,12 +32,11 @@ class DoitgenHost_noOpt {
 
     private:
         static bool initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P);
-        static void kernel_doitgen_CPU(DoitgenData& data);
-        static bool compareResults(DoitgenData& data);
-        static string getKeyResults(EventTimer event);
-        static string printArrays(DoitgenData& data);
         static void emsamble_dataToBuffers(DoitgenData& data, vector<typeData>& temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice);
         static void emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice);
+        static void kernel_doitgen_CPU(DoitgenData& data);
+        static void kernel_doitgen_CPU_opt(DoitgenData& data);
+        static bool compareResults(DoitgenData& data);
 
 };
 #endif

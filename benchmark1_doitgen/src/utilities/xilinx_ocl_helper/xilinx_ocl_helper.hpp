@@ -39,14 +39,13 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
 #define CL_HPP_ENABLE_PROGRAM_CONSTRUCTION_FROM_ARRAY_COMPATIBILITY 1
 
-#include "../line_exception/line_exception.hpp"
-
-//#include <CL/cl2.hpp> //"/opt/intel/opencl-1.2-4.4.0.117/include/CL/cl.h"
-//#include <CL/cl_ext_xilinx.h>
+#include <CL/opencl.hpp>
 #include <CL/opencl.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "/opt/xilinx/xrt/include/CL/cl_ext_xilinx.h"   //#include "CL/cl_ext_xilinx.h"
+#include "../line_exception/line_exception.hpp"
 
 // When creating a buffer with user pointer (CL_MEM_USE_HOST_PTR), under the hood
 // User ptr is used if and only if it is properly aligned (page aligned). When not

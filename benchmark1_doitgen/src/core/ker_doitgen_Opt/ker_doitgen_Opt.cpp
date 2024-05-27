@@ -49,17 +49,17 @@ extern "C"{
     // MAIN KERNEL FUNCTION - START
     //*************************************
     #ifdef MINI_DATASET
-        void ker_doitgen_noOpt_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(SMALL_DATASET)
-        void ker_doitgen_noOpt_small(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt_small(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(MEDIUM_DATASET)
-        void ker_doitgen_noOpt_medium(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt_medium(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(LARGE_DATASET)
-        void ker_doitgen_noOpt_large(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt_large(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(EXTRALARGE_DATASET)
-        void ker_doitgen_noOpt_extralarge(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt_extralarge(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #else
-        void ker_doitgen_noOpt(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem

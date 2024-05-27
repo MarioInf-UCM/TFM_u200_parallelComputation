@@ -21,6 +21,7 @@ class DoitgenData{
         vector< vector< vector<typeData>>> A;               //SIZE_R x SIZE_Q x SIZE_P
         vector< vector< typeData>> C4;                      //SIZE_P x SIZE_P
         vector< vector< vector<typeData>>> resultCPU;       //SIZE_R x SIZE_Q x SIZE_P
+        vector< vector< vector<typeData>>> resultCPU_opt;   //SIZE_R x SIZE_Q x SIZE_P
         vector< vector< vector<typeData>>> resultDevice;    //SIZE_R x SIZE_Q x SIZE_P
 
 
@@ -36,16 +37,18 @@ class DoitgenData{
         DoitgenData(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
         ~DoitgenData();
 
-
         void initData_A(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
         void initData_C4(unsigned int SIZE_P);
         void initData_resultCPU(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
+        void initData_resultCPU_opt(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
         void initData_resultDevice(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
         
         string printData_A();
         string printData_C4();
         string printData_resultCPU();
+        string printData_resultCPU_opt();
         string printData_resultDevice();
+        string printAll();
 
 
         //*************************
@@ -75,6 +78,11 @@ class DoitgenData{
         typeData getElement_resultCPU_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP);
         void set_resultCPU(vector< vector< vector<typeData>>> newList);
         void setElement_resultCPU_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value);
+
+        vector< vector< vector<typeData>>>& get_resultCPU_opt();
+        typeData getElement_resultCPU_opt_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP);
+        void set_resultCPU_opt(vector< vector< vector<typeData>>> newList);
+        void setElement_resultCPU_opt_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP, typeData value);
 
         vector< vector< vector<typeData>>>& get_resultDevice();
         typeData getElement_resultDevice_byIndex(unsigned int indexR, unsigned int indexQ, unsigned int indexP);

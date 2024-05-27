@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 
     for(int i=0 ; i<jsonConfiguration.get_testList().size() ; i++){
         fileWriter_statsFile = FileWriter_service(jsonConfiguration.get_outDir() + outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile(), jsonConfiguration.get_verbose());
-        fileWriter_statsFile.writeln("x,CPU time execution,Device time execution,Send buffers to device time,Receive buffers from device time", false);
+        fileWriter_statsFile.writeln("x,CPU time execution,CPU time execution optimizated,Device time execution,Send buffers to device time,Receive buffers from device time", false);
     
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
             testAverageResults.clear();
@@ -72,7 +72,11 @@ int main(int argc, char** argv){
 
             tempString_toWrite="";
             for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
-                tempString_toWrite += to_string(testAverageResults[execResult]) + ",";
+                if(execResult==executionResults.size()-1){
+                    tempString_toWrite += to_string(testAverageResults[execResult]);
+                }else{
+                    tempString_toWrite += to_string(testAverageResults[execResult]) + ",";
+                }
             }            
             fileWriter_statsFile.writeln(tempString_toWrite, false);
         }

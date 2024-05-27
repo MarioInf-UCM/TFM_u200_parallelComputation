@@ -67,6 +67,7 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
         
         for (const auto &execution : test["executionList"]) {
             executionTemp = Execution();
+            executionTemp.set_host(execution["host"].asString());
             executionTemp.set_kernelPackage(execution["kernelPackage"].asString());
             executionTemp.set_kernel(execution["kernel"].asString());
             executionTemp.set_dataSize(execution["dataSize"].asString());

@@ -80,6 +80,7 @@ add_executable(benchmarkExec
   ../src/doitgenData/doitgenData.cpp
   ../src/doitgenHost/doitgenHost.cpp
   ../src/doitgenHost/doitgenHost_noOpt/doitgenHost_noOpt.cpp
+  ../src/doitgenHost/doitgenHost_mapOpt/doitgenHost_mapOpt.cpp
   ../src/service/fileWriter_service/fileWriter_service.cpp
   ../src/service/json_service/json_service.cpp
   ../src/service/json_service/jsonConfiguration/jsonConfiguration.cpp

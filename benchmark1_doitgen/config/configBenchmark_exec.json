@@ -9,6 +9,7 @@
             "generatePictures": true,
             "executionList":[
                 {
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_noOpt_mini",
                     "dataSize": "mini", 
@@ -16,6 +17,7 @@
                     "numExecutions": 3
                 },
                 {
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_noOpt_small",
                     "dataSize": "small", 
@@ -23,6 +25,7 @@
                     "numExecutions": 3
                 },
                 {
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_noOpt_medium",
                     "dataSize": "medium", 
@@ -30,6 +33,7 @@
                     "numExecutions": 3
                 },
                 {
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_noOpt_large",
                     "dataSize": "large", 
@@ -37,6 +41,7 @@
                     "numExecutions": 3
                 },
                 {
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_noOpt_extralarge",
                     "dataSize": "extralarge", 

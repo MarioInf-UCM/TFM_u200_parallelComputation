@@ -11,6 +11,7 @@ class Execution{
     //* DEFINITION ZONE ATRIBUTES *
     //*****************************
     private:
+        string host;
         string kernelPackage;
         string kernel;
         string dataSize;
@@ -39,6 +40,9 @@ class Execution{
         //*************************
         //* GET AND SET FUNCTIONS *
         //*************************
+        string get_host() const;
+        void set_host(string data);
+
         string get_kernelPackage() const;
         void set_kernelPackage(string data);
 

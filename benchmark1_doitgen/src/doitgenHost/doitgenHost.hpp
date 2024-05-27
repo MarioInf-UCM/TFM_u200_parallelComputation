@@ -6,6 +6,7 @@
 #include "../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../service/fileWriter_service/fileWriter_service.hpp"
 #include "doitgenHost_noOpt/doitgenHost_noOpt.hpp"
+#include "doitgenHost_mapOpt/doitgenHost_mapOpt.hpp"
 
 
 class DoitgenHost {

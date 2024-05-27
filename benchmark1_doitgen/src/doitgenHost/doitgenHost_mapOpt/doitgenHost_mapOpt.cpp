@@ -3,7 +3,7 @@
 #include <string.h>
 #include <sstream>
 #include <vector>
-#include "doitgenHost_noOpt.hpp"
+#include "doitgenHost_mapOpt.hpp"
 
 using namespace std;
 using cl::Event;
@@ -14,14 +14,14 @@ using cl::Buffer;
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
 //********************************
-DoitgenHost_noOpt::DoitgenHost_noOpt(){}
-DoitgenHost_noOpt::~DoitgenHost_noOpt(){}
+DoitgenHost_mapOpt::DoitgenHost_mapOpt(){}
+DoitgenHost_mapOpt::~DoitgenHost_mapOpt(){}
 
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
-    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
+bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::DoitgenHost_mapOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_R=0, SIZE_Q=0, SIZE_P=0;    
     bool result = initParameter(exec, SIZE_R, SIZE_Q, SIZE_P);
@@ -33,6 +33,7 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     ostringstream stringToPrint;
     EventTimer event;
     Event event_sp;
+
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
@@ -59,40 +60,43 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     //STEP 2 - END: Running kernel in CPU"
 
 
-    //STEP 3 - START: Creating buffer 
-    fileWriter_logFile.writeln("STEP 3 - START: Creating buffer");
-    event.add("Creating buffers");
+    //STEP 3 - START: Creating and mapping buffer 
+    fileWriter_logFile.writeln("STEP 3 - START: Creating and mapping buffer");
+    event.add("Creating and mapping buffer");
 
-    vector<typeData> temp_A = vector<typeData>();
-    vector<typeData> temp_C4 = vector<typeData>();
-    vector<typeData> temp_resultDevice = vector<typeData>();
-    emsamble_dataToBuffers(data, temp_A, temp_C4, temp_resultDevice);
+    int sizeA_Andresult = data.get_SIZE_R() * data.get_SIZE_P() * data.get_SIZE_Q() * sizeof(typeData);
+    int sizeC4 = data.get_SIZE_P() * data.get_SIZE_P() * sizeof(typeData);
 
     Buffer sendBuff_A(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_A.size() * sizeof(typeData),
-                        temp_A.data(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR),
+                        sizeA_Andresult,
+                        NULL,
                         NULL);
 
     Buffer sendBuff_C4(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_C4.size() * sizeof(typeData),
-                        temp_C4.data(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR),
+                        sizeC4,
+                        NULL,
                         NULL);
 
     Buffer recvBuff_resultDevice(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_resultDevice.size() * sizeof(typeData),
-                        temp_resultDevice.data(),
+                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR),
+                        sizeA_Andresult,
+                        NULL,
                         NULL);
 
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_C4);
     ker.setArg(2, recvBuff_resultDevice);
 
+    typeData *temp_A = (typeData *)q.enqueueMapBuffer(sendBuff_A, CL_TRUE, CL_MAP_WRITE, 0, sizeA_Andresult);
+    typeData *temp_C4 = (typeData *)q.enqueueMapBuffer(sendBuff_C4, CL_TRUE, CL_MAP_WRITE, 0, sizeC4);
+    typeData *temp_resultDevice = (typeData *)q.enqueueMapBuffer(recvBuff_resultDevice, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, sizeA_Andresult);
+    emsamble_dataToBuffers(data, temp_A, temp_C4, temp_resultDevice);
+
     event.finish();
-    fileWriter_logFile.write("STEP 3 - END: Creating buffer (" + event.getInfoEvents(2)); 
-    //STEP 3 - END: Creating buffer 
+    fileWriter_logFile.write("STEP 3 - END: Creating and mapping buffer (" + event.getInfoEvents(2)); 
+    //STEP 3 - END: Creating and mapping buffer 
 
 
     //STEP 4 - START: Transmision data to device
@@ -133,6 +137,17 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     //STEP 6 - END: Transmision data from device 
 
 
+    //STEP 7 - START: Unmap memory object
+    fileWriter_logFile.writeln("STEP 7 - START: Unmap memory object");
+
+    q.enqueueUnmapMemObject(sendBuff_A, temp_A);
+    q.enqueueUnmapMemObject(sendBuff_C4, temp_C4);
+    q.enqueueUnmapMemObject(recvBuff_resultDevice, temp_resultDevice);
+
+    fileWriter_logFile.writeln("STEP 7 - END: Unmap memory object");
+    //STEP 7 - END: Unmap memory object
+
+
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
         fileWriter_logFile.write(getKeyResults(event));
@@ -159,7 +174,7 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
 
 
 
-bool DoitgenHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
+bool DoitgenHost_mapOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
     if(exec.get_dataSize() == "mini"){
         SIZE_R=SIZE_R_MINI;
         SIZE_Q=SIZE_Q_MINI;
@@ -188,7 +203,7 @@ bool DoitgenHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsi
 
 
 
-void DoitgenHost_noOpt::kernel_doitgen_CPU(DoitgenData& data){
+void DoitgenHost_mapOpt::kernel_doitgen_CPU(DoitgenData& data){
 
     vector<typeData> sum = vector<typeData>(data.get_SIZE_P(), 0.0);
 
@@ -212,7 +227,7 @@ void DoitgenHost_noOpt::kernel_doitgen_CPU(DoitgenData& data){
 }
 
 
-bool DoitgenHost_noOpt::compareResults(DoitgenData& data){
+bool DoitgenHost_mapOpt::compareResults(DoitgenData& data){
     for (int r = 0; r < data.get_SIZE_R(); r++){
       for (int q = 0; q < data.get_SIZE_Q(); q++){
         for (int p = 0; p < data.get_SIZE_P(); p++){
@@ -226,7 +241,7 @@ bool DoitgenHost_noOpt::compareResults(DoitgenData& data){
 }
 
 
-string DoitgenHost_noOpt::getKeyResults(EventTimer event){
+string DoitgenHost_mapOpt::getKeyResults(EventTimer event){
 
     string result = "";
     result += "--------------- Key execution times ---------------\n"; 
@@ -237,7 +252,7 @@ string DoitgenHost_noOpt::getKeyResults(EventTimer event){
 }
 
 
-string DoitgenHost_noOpt::printArrays(DoitgenData& data){
+string DoitgenHost_mapOpt::printArrays(DoitgenData& data){
     string result="";
     result += "RESULTS ARRAY A\n";
     result += "=====================\n";
@@ -259,23 +274,23 @@ string DoitgenHost_noOpt::printArrays(DoitgenData& data){
 }
 
 
-void DoitgenHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
-
-    temp_A.clear();
-    temp_resultDevice.clear();
+void DoitgenHost_mapOpt::emsamble_dataToBuffers(DoitgenData& data, typeData *temp_A,  typeData *temp_C4, typeData *temp_resultDevice){
+    int pos=0;
     for (int r = 0; r < data.get_SIZE_R(); r++) {
         for (int q = 0; q < data.get_SIZE_Q(); q++) {
             for (int p = 0; p < data.get_SIZE_P(); p++){
-                temp_A.push_back( data.get_A()[r][q][p] );
-                temp_resultDevice.push_back( 0.0 );
+                temp_A[pos] = data.get_A()[r][q][p];
+                temp_resultDevice[pos]=0.0;
+                pos++;
             }
         }
     }
 
-    temp_C4.clear();
+    pos=0;
     for (int p1 = 0; p1 < data.get_SIZE_P(); p1++) {
         for (int p2 = 0; p2 < data.get_SIZE_P(); p2++) {
-            temp_C4.push_back( data.get_C4()[p1][p2] );
+            temp_C4[pos] = data.get_C4()[p1][p2];
+            pos++;
         }
     }
 
@@ -283,14 +298,13 @@ void DoitgenHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeDat
 }
 
 
-void DoitgenHost_noOpt::emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice){
-    
-    int i=0;
+void DoitgenHost_mapOpt::emsamble_buffersToData(DoitgenData& data, typeData *temp_resultDevice){
+    int pos=0;
     for (int r = 0; r < data.get_SIZE_R(); r++) {
         for (int q = 0; q < data.get_SIZE_Q(); q++) {
             for (int p = 0; p < data.get_SIZE_P(); p++){
-                data.get_resultDevice()[r][q][p] = temp_resultDevice[i];
-                i++;
+                data.get_resultDevice()[r][q][p] = temp_resultDevice[pos];
+                pos++;
             }
         }
     }

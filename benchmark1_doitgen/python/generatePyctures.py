@@ -35,20 +35,22 @@ def generate_plot(csv_url, image_location):
     plt.xscale('log')
     plt.yscale('log')
 
-for i in range(len(x)):
-    plt.annotate(f'{y1[i]:.2f}', (x[i], y1[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='red', edgecolor='black', boxstyle='round,pad=0.2'))
-    plt.annotate(f'{y2[i]:.2f}', (x[i], y2[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='darkred', edgecolor='black', boxstyle='round,pad=0.2'))
-    plt.annotate(f'{y3[i]:.2f}', (x[i], y3[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='blue', edgecolor='black', boxstyle='round,pad=0.2'))
-    plt.annotate(f'{y4[i]:.2f}', (x[i], y4[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.2'))
-    plt.annotate(f'{y5[i]:.2f}', (x[i], y5[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='aquamarine', edgecolor='black', boxstyle='round,pad=0.2'))
-
-
+    # Anotar los puntos con sus valores exactos
+    for i in range(len(x)):
+        plt.annotate(f'{y1[i]:.2f}', (x[i], y1[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='red', edgecolor='black', boxstyle='round,pad=0.2'))
+        plt.annotate(f'{y2[i]:.2f}', (x[i], y2[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='darkred', edgecolor='black', boxstyle='round,pad=0.2'))
+        plt.annotate(f'{y3[i]:.2f}', (x[i], y3[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='blue', edgecolor='black', boxstyle='round,pad=0.2'))
+        plt.annotate(f'{y4[i]:.2f}', (x[i], y4[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.2'))
+        plt.annotate(f'{y5[i]:.2f}', (x[i], y5[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='aquamarine', edgecolor='black', boxstyle='round,pad=0.2'))
 
     image_locationTemp = image_location +".jpg"
-    plt.savefig(image_locationTemp, format='jpg')
+    plt.savefig(image_locationTemp, format='jpg', dpi=600)
+
+    image_locationTemp = image_location +".png"
+    plt.savefig(image_locationTemp, format='png', dpi=600)
 
     image_locationTemp = image_location +".eps"
-    plt.savefig(image_locationTemp, format='eps')
+    plt.savefig(image_locationTemp, format='eps', dpi=600)
 
     plt.close()
 

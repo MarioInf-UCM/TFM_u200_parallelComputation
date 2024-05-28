@@ -50,6 +50,10 @@ class DoitgenData{
         string printData_resultDevice();
         string printAll();
 
+        void kernel_doitgen_CPU();
+        void kernel_doitgen_CPU_opt();
+
+
 
         //*************************
         //* GET AND SET FUNCTIONS *

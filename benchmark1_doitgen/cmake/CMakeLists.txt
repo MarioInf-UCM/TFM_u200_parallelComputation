@@ -13,10 +13,6 @@ if(NOT XRT_FOUND)
   message(FATAL_ERROR "XRT not found, please source XRT setup script before building")
 endif()
 
-#if(NOT OpenMP_CXX_FOUND)
-#    message(FATAL_ERROR "OpenMP not founded")
-#endif()
-
 
 # Copying kernel files
 #******************************************************************
@@ -76,6 +72,18 @@ target_include_directories(example_utils PUBLIC
   ${OpenCL_INCLUDE_DIRS}
 )
 
+if(NOT TARGET OpenMP::OpenMP_CXX)
+    find_package(Threads REQUIRED)
+    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_CXX_FLAGS})
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_CXX_FLAGS} Threads::Threads)
+
+endif()
+
+message(STATUS ${OpenMP_CXX_FLAGS})
+
 
 #******************************
 # COMPILING HOST APPLICATION *
@@ -111,5 +119,6 @@ target_link_libraries(benchmarkExec PRIVATE
   uuid
   ${CMAKE_DL_LIBS}
   example_utils
-#  OpenMP::OpenMP_CXX
+  OpenMP::OpenMP_CXX
   )
+

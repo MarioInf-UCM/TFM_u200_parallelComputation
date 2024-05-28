@@ -1,3 +1,5 @@
+//#include "/opt/xilinx/Vitis_HLS/2023.2/include/ap_int.h" 
+#include <ap_int.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -42,6 +44,11 @@
 #endif
 
 
+#define BUFFER_SIZE 64
+#define DATAWIDTH 512
+#define VECTOR_SIZE (DATAWIDTH / sizeof(typeData) )
+
+
 
 extern "C"{
 
@@ -71,7 +78,18 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = outD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
+        ap_uint<DATAWIDTH> loc_inD_A[BUFFER_SIZE];
+        ap_uint<DATAWIDTH> loc_inD_C4[BUFFER_SIZE];
+        ap_uint<DATAWIDTH> loc_outD_A[BUFFER_SIZE];
         typeData sum[SIZE_P];
+
+        int size_in16 = (SIZE_R * SIZE_P * SIZE_Q - 1) / VECTOR_SIZE + 1;
+
+
+
+        for (int iter = 0; iter < size_in16; iter += BUFFER_SIZE) {
+
+        }
 
         for (int r = 0; r < SIZE_R; r++){
             for (int q = 0; q < SIZE_Q; q++){

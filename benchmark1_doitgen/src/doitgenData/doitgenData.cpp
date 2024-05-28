@@ -258,6 +258,62 @@ string DoitgenData::printAll(){
 
 
 
+void DoitgenData::kernel_doitgen_CPU(){
+
+    vector<typeData> sum = vector<typeData>(get_SIZE_P(), 0.0);
+
+    for (int r = 0; r < get_SIZE_R(); r++){
+      for (int q = 0; q < get_SIZE_Q(); q++){
+        for (int p = 0; p < get_SIZE_P(); p++){
+          
+          for (int s = 0; s < get_SIZE_P(); s++){
+            sum[p]=0.0;
+            sum[p] += get_A()[r][q][s] * get_C4()[s][p];
+          }
+        }
+
+        for (int p = 0; p < get_SIZE_P(); p++){
+            get_resultCPU()[r][q][p] = sum[p];
+        }
+      }
+    }
+
+  return;
+}
+
+
+void DoitgenData::kernel_doitgen_CPU_opt() {
+    const auto& A = get_A();
+    const auto& C4 = get_C4();
+    const unsigned int SIZE_R = get_SIZE_R();
+    const unsigned int SIZE_Q = get_SIZE_Q();
+    const unsigned int SIZE_P = get_SIZE_P();
+    auto& resultCPU_opt = get_resultCPU_opt();
+    vector<typeData> sum(get_SIZE_P(), 0.0);
+
+    #pragma omp parallel for collapse(2) firstprivate(sum) shared(resultCPU_opt)
+    for (int r = 0; r < SIZE_R; r++) {
+        for (int q = 0; q < SIZE_Q; q++) {
+            for (int p = 0; p < SIZE_P; p++) {
+                sum[p] = 0.0;
+
+                #pragma omp simd
+                for (int s = 0; s < SIZE_P; s++) {
+                    sum[p] += A[r][q][s] * C4[s][p];
+                }
+            }
+
+            for (int p = 0; p < SIZE_P; p++) {
+                #pragma omp atomic write
+                    resultCPU_opt[r][q][p] = sum[p];
+            }
+        }
+    }
+}
+
+
+
+
 //*************************
 //* GET AND SET FUNCTIONS *
 //*************************

@@ -34,8 +34,6 @@ class DoitgenHost_mapOpt {
         static bool initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P);
         static void emsamble_dataToBuffers(DoitgenData& data, typeData *temp_A,  typeData *temp_C4, typeData *temp_resultDevice);
         static void emsamble_buffersToData(DoitgenData& data, typeData *temp_resultDevice);
-        static void kernel_doitgen_CPU(DoitgenData& data);
-        static void kernel_doitgen_CPU_opt(DoitgenData& data);
         static bool compareResults(DoitgenData& data);
 
 };

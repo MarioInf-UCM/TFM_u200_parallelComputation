@@ -82,8 +82,10 @@ int main(int argc, char** argv){
         }
 
         if(jsonConfiguration.get_testList()[i].get_generatePictures()){
-            result = externProgramConnection.execute_generatePyctures(jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile(), 
-                                                                jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile());
+            result = externProgramConnection.execute_generatePyctures(
+                jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile(), 
+                jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile());
+            
             if(!result){
                 fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile() );
             }

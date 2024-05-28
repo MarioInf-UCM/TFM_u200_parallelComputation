@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sstream>
 #include <vector>
+#include <omp.h>
 #include "doitgenHost_noOpt.hpp"
 
 using namespace std;
@@ -52,7 +53,7 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     fileWriter_logFile.writeln("STEP 2 - START: Running kernel in CPU");
     event.add("Running kernel in CPU");
 
-    kernel_doitgen_CPU(data);
+    data.kernel_doitgen_CPU();
 
     event.finish();
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
@@ -63,7 +64,7 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     fileWriter_logFile.writeln("STEP 3 - START: Running kernel in CPU optimizated");
     event.add("Running kernel in CPU optimizated");
 
-    kernel_doitgen_CPU_opt(data);
+    data.kernel_doitgen_CPU_opt();
 
     event.finish();
     fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
@@ -201,62 +202,6 @@ bool DoitgenHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsi
     return true;
 }
 
-
-
-void DoitgenHost_noOpt::kernel_doitgen_CPU(DoitgenData& data){
-
-    vector<typeData> sum = vector<typeData>(data.get_SIZE_P(), 0.0);
-
-    for (int r = 0; r < data.get_SIZE_R(); r++){
-      for (int q = 0; q < data.get_SIZE_Q(); q++){
-        for (int p = 0; p < data.get_SIZE_P(); p++){
-          
-          for (int s = 0; s < data.get_SIZE_P(); s++){
-            sum[p]=0.0;
-            sum[p] += data.get_A()[r][q][s] * data.get_C4()[s][p];
-          }
-        }
-
-        for (int p = 0; p < data.get_SIZE_P(); p++){
-            data.get_resultCPU()[r][q][p] = sum[p];
-        }
-      }
-    }
-
-  return;
-}
-
-
-void DoitgenHost_noOpt::kernel_doitgen_CPU_opt(DoitgenData& data) {
-    const auto& A = data.get_A();
-    const auto& C4 = data.get_C4();
-    auto& resultCPU_opt = data.get_resultCPU_opt();
-    const unsigned int SIZE_R = data.get_SIZE_R();
-    const unsigned int SIZE_Q = data.get_SIZE_Q();
-    const unsigned int SIZE_P = data.get_SIZE_P();
-    vector<typeData> sum(data.get_SIZE_P(), 0.0);
-
-    #pragma omp parallel for collapse(2) private(sum) shared(resultCPU_opt)
-    for (int r = 0; r < SIZE_R; r++) {
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
-                sum[p] = 0.0;
-
-                #pragma omp simd
-                for (int s = 0; s < SIZE_P; s++) {
-                    sum[p] += A[r][q][s] * C4[s][p];
-                }
-            }
-
-            for (int p = 0; p < SIZE_P; p++) {
-                #pragma omp atomic write
-                {
-                    resultCPU_opt[r][q][p] = sum[p];
-                }
-            }
-        }
-    }
-}
 
 
 bool DoitgenHost_noOpt::compareResults(DoitgenData& data){

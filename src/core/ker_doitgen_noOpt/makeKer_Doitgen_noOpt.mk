@@ -29,9 +29,8 @@ BOARD_CONFIG := $(CONNECTIVITY_ROUTE)/connectivity_u200.ini
 LINK_OPTS := --config $(CONNECTIVITY_ROUTE)/connectivity_u200.ini -I ./src/kernel
 IP_CACHE_DIR ?= ip_cache
 
-VPPLFLAGS := --jobs $(JOBS) --config $(CONNECTIVITY_ROUTE)/profile.ini
-VPPLFLAGS += --config $(BOARD_CONFIG)
-VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g
+VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS)
+VPPLFLAGS := --config $(CONNECTIVITY_ROUTE)/profile.ini --config $(BOARD_CONFIG)
 CUSTOMPARAMS_GENERAL :=
 
 

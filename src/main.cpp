@@ -101,7 +101,7 @@ int main(int argc, char** argv){
         fileWriter_logFile.writeln("\033[1;32m**********************************************\033[0m\n", true);
     }else{
         fileWriter_logFile.writeln("\033[1;31m**********************************************\033[0m\n", true);
-        fileWriter_logFile.writeln("\033[1;31m  " + to_string(numFailures) + "HAVE FAILED\033[0m\n", true);
+        fileWriter_logFile.writeln("\033[1;31m  " + to_string(numFailures) + " EXECUTION/S HAVE FAILED\033[0m\n", true);
         fileWriter_logFile.writeln("\033[1;31m**********************************************\033[0m\n", true);
     }
 

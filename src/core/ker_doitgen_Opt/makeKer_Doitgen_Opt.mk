@@ -29,9 +29,8 @@ BOARD_CONFIG := $(CONNECTIVITY_ROUTE)/connectivity_u200.ini
 LINK_OPTS := --config $(CONNECTIVITY_ROUTE)/connectivity_u200.ini -I ./src/kernel
 IP_CACHE_DIR ?= ip_cache
 
-VPPLFLAGS := --jobs $(JOBS) --config $(CONNECTIVITY_ROUTE)/profile.ini
-VPPLFLAGS += --config $(BOARD_CONFIG)
-VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g
+VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS)
+VPPLFLAGS := --config $(CONNECTIVITY_ROUTE)/profile.ini --config $(BOARD_CONFIG)
 CUSTOMPARAMS_GENERAL :=
 
 
@@ -42,11 +41,11 @@ CUSTOMPARAMS_GENERAL :=
 #********************************************
 MAKEFILE_NAME := makeKer_Doitgen_Opt.mk
 
-ker_doitgen_Opt_XOS := ker_doitgen_Opt_mini.xo
+#ker_doitgen_Opt_XOS := ker_doitgen_Opt_mini.xo
 ker_doitgen_Opt_XOS += ker_doitgen_Opt_small.xo
-ker_doitgen_Opt_XOS += ker_doitgen_Opt_medium.xo
-ker_doitgen_Opt_XOS += ker_doitgen_Opt_large.xo
-ker_doitgen_Opt_XOS += ker_doitgen_Opt_extralarge.xo
+#ker_doitgen_Opt_XOS += ker_doitgen_Opt_medium.xo
+#ker_doitgen_Opt_XOS += ker_doitgen_Opt_large.xo
+#ker_doitgen_Opt_XOS += ker_doitgen_Opt_extralarge.xo
 
 ker_doitgen_Opt_mini_KERNEL := ker_doitgen_Opt_mini
 ker_doitgen_Opt_small_KERNEL := ker_doitgen_Opt_small

@@ -8,7 +8,7 @@ KERNEL_DOITGEN_NOOPT_NAME=makeKer_Doitgen_noOpt.mk
 KERNEL_DOITGEN_OPT_SUBROUTE=ker_doitgen_Opt
 KERNEL_DOITGEN_OPT_NAME=makeKer_Doitgen_Opt.mk
 
-CONFIGFILE_ROUTE=../../config/configBenchmark_exec1.json
+CONFIGFILE_ROUTE=../../config/configBenchmark_exec3.json
 SCRIPTS_ROUTE=cmake/scripts/
 
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
@@ -20,21 +20,21 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 #**************************************
 # COMMANDS FOR KERNELS COMPILE
 #**************************************
-kernelBuild_sw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
-	make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=sw_emu build;
+kerDoitgen_build_sw_emu:
+#@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
+#make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=sw_emu build;
 #@cd $(CURRENT_DIR);
-#@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT_SUBROUTE}; \
-#make -f $(KERNEL_DOITGEN_OPT_NAME) TARGET=sw_emu build; \
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_OPT_NAME) TARGET=sw_emu build; \
 	
-kernelBuild_hw_emu:
+kerDoitgen_build_hw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
 	make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=hw_emu build;
 	@cd $(CURRENT_DIR);
 	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT_SUBROUTE}; \
 	make -f $(KERNEL_DOITGEN_OPT_NAME) TARGET=hw_emu build; \
 	
-kernelBuild_hw:
+kerDoitgen_build_hw:
 	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
 	make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=hw build;
 	@cd $(CURRENT_DIR);

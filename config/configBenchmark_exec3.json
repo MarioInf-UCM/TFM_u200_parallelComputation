@@ -4,14 +4,14 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "name":"test_noOpt",
-            "statsFile":"test_noOpt_results.csv",
+            "name":"test_Opt",
+            "statsFile":"test_Opt_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
                     "host": "doitgenHost_mapOpt",
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_small",
+                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt_small",
                     "dataSize": "small", 
                     "printResults": false,
                     "numExecutions": 1

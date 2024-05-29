@@ -147,27 +147,26 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
 
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
-        fileWriter_logFile.writeln("--------------- Key execution times ---------------");
-        fileWriter_logFile.write(event.getInfoEvents());
-        fileWriter_logFile.writeln("---------------------------------------------------");
-
-        results.push_back(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()); 
-        results.push_back(stod(event.getTimeEvents(1)));    //CPU execution time
-        results.push_back(stod(event.getTimeEvents(2)));    //CPU execution time optimizated
-        results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
-        results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
-        results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
-
-        if(exec.get_printResults()){
-           fileWriter_logFile.write(data.printAll());
-        }
-        return true;
+        result = true;
     }else{
         fileWriter_logFile.write("\033[1;31m***BAD, The results don't match***\033[0m\n");
-        return false;
+        result = false;
+    }
+    fileWriter_logFile.writeln("--------------- Key execution times ---------------");
+    fileWriter_logFile.write(event.getInfoEvents());
+    fileWriter_logFile.writeln("---------------------------------------------------");
+    results.push_back(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()); 
+    results.push_back(stod(event.getTimeEvents(1)));    //CPU execution time
+    results.push_back(stod(event.getTimeEvents(2)));    //CPU execution time optimizated
+    results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
+    results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
+    results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
+
+    if(exec.get_printResults()){
+        fileWriter_logFile.write(data.printAll());
     }
     
-  return 0;
+  return result;
 }
 //*************************************
 // MAIN FUNCTION - END

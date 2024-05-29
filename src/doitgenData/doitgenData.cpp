@@ -265,11 +265,10 @@ void DoitgenData::kernel_doitgen_CPU(){
     for (int r = 0; r < get_SIZE_R(); r++){
       for (int q = 0; q < get_SIZE_Q(); q++){
         for (int p = 0; p < get_SIZE_P(); p++){
-          
-          for (int s = 0; s < get_SIZE_P(); s++){
-            sum[p]=0.0;
-            sum[p] += get_A()[r][q][s] * get_C4()[s][p];
-          }
+            sum[p]=0.0; 
+            for (int s = 0; s < get_SIZE_P(); s++){
+                sum[p] += get_A()[r][q][s] * get_C4()[s][p];
+            }   
         }
 
         for (int p = 0; p < get_SIZE_P(); p++){
@@ -296,7 +295,7 @@ void DoitgenData::kernel_doitgen_CPU_opt() {
         for (int q = 0; q < SIZE_Q; q++) {
             for (int p = 0; p < SIZE_P; p++) {
                 sum[p] = 0.0;
-
+                
                 #pragma omp simd
                 for (int s = 0; s < SIZE_P; s++) {
                     sum[p] += A[r][q][s] * C4[s][p];

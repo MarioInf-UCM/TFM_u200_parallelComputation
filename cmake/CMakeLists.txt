@@ -19,30 +19,53 @@ endif()
 if (DEFINED TARGET)
   message(STATUS "Value for TARGET: ${TARGET}")
   
+
   if(${TARGET} STREQUAL "sw_emu")
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_sw_emu.xclbin COPYONLY)
     else()
-      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again")
+      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_noOpt_sw_emu.xclbin)")
     endif()
 
-  elseif (${TARGET} STREQUAL "hw_emu")
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw.xclbin")
-      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kernelPackage_doitgen_noOptimization_hw_emu.xclbin COPYONLY)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/sw_emu/kerPack_doitgen_Opt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/sw_emu/kerPack_doitgen_Opt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_Opt_sw_emu.xclbin COPYONLY)
     else()
-      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again")
+      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_Opt_sw_emu.xclbin)")
     endif()
+
+
+  elseif (${TARGET} STREQUAL "hw_emu")
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_hw_emu.xclbin COPYONLY)
+    else()
+      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_noOpt_hw_emu.xclbin)")
+    endif()
+
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw_emu/kerPack_doitgen_Opt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw_emu/kerPack_doitgen_Opt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_Opt_hw_emu.xclbin COPYONLY)
+    else()
+      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_Opt_hw_emu.xclbin)")
+    endif()
+
 
   elseif (${TARGET} STREQUAL "hw")
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw/kerPack_doitgen_noOpt_hw.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw/kerPack_doitgen_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_hw.xclbin COPYONLY)
     else()
-      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again")
+      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_noOpt_hw.xclbin)")
     endif()
+    
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw/kerPack_doitgen_Opt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw/kerPack_doitgen_Opt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_Opt_hw.xclbin COPYONLY)
+    else()
+      message(FATAL_ERROR "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_Opt_hw.xclbin)")
+    endif()
+
 
   else()
     message(FATAL_ERROR "ERROR: Invalid value for ENABLE_FEATURE: ${ENABLE_FEATURE}")
   endif()
+
 
 else()
   message(FATAL_ERROR "ERROR: TARGET not define.")

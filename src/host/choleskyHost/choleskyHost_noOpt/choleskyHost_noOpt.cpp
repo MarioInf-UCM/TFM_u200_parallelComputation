@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <omp.h>
-#include "doitgenHost_noOpt.hpp"
+#include "choleskyHost_noOpt.hpp"
 
 using namespace std;
 using cl::Event;
@@ -15,35 +15,34 @@ using cl::Buffer;
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
 //********************************
-DoitgenHost_noOpt::DoitgenHost_noOpt(){}
-DoitgenHost_noOpt::~DoitgenHost_noOpt(){}
+CholeskyHost_noOpt::CholeskyHost_noOpt(){}
+CholeskyHost_noOpt::~CholeskyHost_noOpt(){}
 
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+bool CholeskyHost_noOpt::choleskyHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
-    unsigned int SIZE_R=0, SIZE_Q=0, SIZE_P=0;    
-    bool result = initParameter(exec, SIZE_R, SIZE_Q, SIZE_P);
+    unsigned int SIZE_N=0;    
+    bool result = initParameter(exec, SIZE_N);
     if(!result){
         cout << "\033[1;31mERROR..:Entry params unexpected. Fanalizating execution.\033[0m\n"  << endl;
         return false;
     }
-    DoitgenData data = DoitgenData(SIZE_R, SIZE_Q, SIZE_P);
-    ostringstream stringToPrint;
+    CholeskyKernel data = CholeskyKernel(SIZE_N);
     EventTimer event;
     Event event_sp;
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
     event.add("Initializaton OpenCL and load kernels");
-
+/* 
     xilinx::example_utils::XilinxOclHelper xocl;
     xocl.initialize(exec.get_kernelPackage());
     CommandQueue q = xocl.get_command_queue();
     Kernel ker = xocl.get_kernel(exec.get_kernel());
-
+ */
     event.finish();
     fileWriter_logFile.write("STEP 1 - END: Initializaton OpenCL and load kernels (" + event.getInfoEvents(0));
     //STEP 1 - END: Initializaton OpenCL and load kernels"
@@ -53,13 +52,13 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
     fileWriter_logFile.writeln("STEP 2 - START: Running kernel in CPU");
     event.add("Running kernel in CPU");
 
-    data.kernel_doitgen_CPU();
-
+    data.kernel_cholesky_CPU();
+    fileWriter_logFile.write(data.printAll());
     event.finish();
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
     //STEP 2 - END: Running kernel in CPU"
 
-
+/*
     //STEP 3 - START: Running kernel in CPU optimizated"
     fileWriter_logFile.writeln("STEP 3 - START: Running kernel in CPU optimizated");
     event.add("Running kernel in CPU optimizated");
@@ -152,10 +151,11 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
         fileWriter_logFile.write("\033[1;31m***BAD, The results don't match***\033[0m\n");
         result = false;
     }
+    */
     fileWriter_logFile.writeln("--------------- Key execution times ---------------");
     fileWriter_logFile.write(event.getInfoEvents());
     fileWriter_logFile.writeln("---------------------------------------------------");
-    results.push_back(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()); 
+    results.push_back(data.get_SIZE_N()); 
     results.push_back(stod(event.getTimeEvents(1)));    //CPU execution time
     results.push_back(stod(event.getTimeEvents(2)));    //CPU execution time optimizated
     results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
@@ -166,6 +166,8 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
         fileWriter_logFile.write(data.printAll());
     }
     
+
+
   return result;
 }
 //*************************************
@@ -174,36 +176,26 @@ bool DoitgenHost_noOpt::doitgenHost_noOpt_exec(Execution exec, vector<double>& r
 
 
 
-bool DoitgenHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
+bool CholeskyHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_N){
     if(exec.get_dataSize() == "mini"){
-        SIZE_R=SIZE_R_MINI;
-        SIZE_Q=SIZE_Q_MINI;
-        SIZE_P=SIZE_P_MINI;
+        SIZE_N=CHOLESKY_N_MINI;
     }else if(exec.get_dataSize() == "small"){
-        SIZE_R=SIZE_R_SMALL;
-        SIZE_Q=SIZE_Q_SMALL;
-        SIZE_P=SIZE_P_SMALL;
+        SIZE_N=CHOLESKY_N_SMALL;
     }else if(exec.get_dataSize() == "medium"){
-        SIZE_R=SIZE_R_MEDIUM;
-        SIZE_Q=SIZE_Q_MEDIUM;
-        SIZE_P=SIZE_P_MEDIUM;
+        SIZE_N=CHOLESKY_N_MEDIUM;
     }else if(exec.get_dataSize() == "large"){
-        SIZE_R=SIZE_R_LARGE;
-        SIZE_Q=SIZE_Q_LARGE;
-        SIZE_P=SIZE_P_LARGE;
+        SIZE_N=CHOLESKY_N_LARGE;
     }else if(exec.get_dataSize() == "extralarge"){
-        SIZE_R=SIZE_R_EXTRALARGE;
-        SIZE_Q=SIZE_Q_EXTRALARGE;
-        SIZE_P=SIZE_P_EXTRALARGE;
+        SIZE_N=CHOLESKY_N_EXTRALARGE;
     }else{
         return false;
     }  
     return true;
 }
 
+/*
 
-
-bool DoitgenHost_noOpt::compareResults(DoitgenData& data){
+bool CholeskyHost_noOpt::compareResults(DoitgenKernel& data){
     for (int r = 0; r < data.get_SIZE_R(); r++){
       for (int q = 0; q < data.get_SIZE_Q(); q++){
         for (int p = 0; p < data.get_SIZE_P(); p++){
@@ -218,7 +210,7 @@ bool DoitgenHost_noOpt::compareResults(DoitgenData& data){
 
 
 
-void DoitgenHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
+void CholeskyHost_noOpt::emsamble_dataToBuffers(DoitgenKernel& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
 
     temp_A.clear();
     temp_resultDevice.clear();
@@ -242,7 +234,7 @@ void DoitgenHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeDat
 }
 
 
-void DoitgenHost_noOpt::emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice){
+void CholeskyHost_noOpt::emsamble_buffersToData(DoitgenKernel& data, vector<typeData>& temp_resultDevice){
     
     int i=0;
     for (int r = 0; r < data.get_SIZE_R(); r++) {
@@ -254,4 +246,4 @@ void DoitgenHost_noOpt::emsamble_buffersToData(DoitgenData& data, vector<typeDat
         }
     }
     return;
-}
+} */

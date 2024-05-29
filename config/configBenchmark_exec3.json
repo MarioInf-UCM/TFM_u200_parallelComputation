@@ -4,15 +4,15 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "name":"test_Opt",
-            "statsFile":"test_Opt_results.csv",
+            "name":"testCholesky_Opt",
+            "statsFile":"testCholesky_Opt_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "doitgenHost_mapOpt",
-                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt_small",
-                    "dataSize": "small", 
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_Opt_small",
+                    "dataSize": "mini", 
                     "printResults": false,
                     "numExecutions": 1
                 }

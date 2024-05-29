@@ -115,10 +115,15 @@ message(STATUS ${OpenMP_CXX_FLAGS})
 
 add_executable(benchmarkExec
   ../src/main.cpp
-  ../src/doitgenData/doitgenData.cpp
-  ../src/doitgenHost/doitgenHost.cpp
-  ../src/doitgenHost/doitgenHost_noOpt/doitgenHost_noOpt.cpp
-  ../src/doitgenHost/doitgenHost_mapOpt/doitgenHost_mapOpt.cpp
+  ../src/kernel/doitgenKernel/doitgenKernel.cpp
+  ../src/kernel/choleskyKernel/choleskyKernel.cpp
+  ../src/host/doitgenHost/doitgenHost.cpp
+  ../src/host/doitgenHost/doitgenHost_noOpt/doitgenHost_noOpt.cpp
+  ../src/host/doitgenHost/doitgenHost_mapOpt/doitgenHost_mapOpt.cpp
+  ../src/host/choleskyHost/choleskyHost.cpp
+  ../src/host/choleskyHost/choleskyHost_noOpt/choleskyHost_noOpt.cpp
+  ../src/host/gemmHost/gemmHost.cpp
+  ../src/host/gemmHost/gemmHost_noOpt/gemmHost_noOpt.cpp
   ../src/service/fileWriter_service/fileWriter_service.cpp
   ../src/service/json_service/json_service.cpp
   ../src/service/json_service/jsonConfiguration/jsonConfiguration.cpp

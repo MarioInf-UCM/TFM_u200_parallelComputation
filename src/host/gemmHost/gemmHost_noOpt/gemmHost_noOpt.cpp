@@ -3,7 +3,8 @@
 #include <string.h>
 #include <sstream>
 #include <vector>
-#include "doitgenHost_mapOpt.hpp"
+#include <omp.h>
+#include "gemmHost_noOpt.hpp"
 
 using namespace std;
 using cl::Event;
@@ -14,14 +15,14 @@ using cl::Buffer;
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
 //********************************
-DoitgenHost_mapOpt::DoitgenHost_mapOpt(){}
-DoitgenHost_mapOpt::~DoitgenHost_mapOpt(){}
-
+GemmHost_noOpt::GemmHost_noOpt(){}
+GemmHost_noOpt::~GemmHost_noOpt(){}
+/* 
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
-    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::DoitgenHost_mapOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
+bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_R=0, SIZE_Q=0, SIZE_P=0;    
     bool result = initParameter(exec, SIZE_R, SIZE_Q, SIZE_P);
@@ -33,7 +34,6 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
     ostringstream stringToPrint;
     EventTimer event;
     Event event_sp;
-
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
@@ -71,87 +71,68 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
     //STEP 3 - END: Running kernel in CPU optimizated"
 
 
-    //STEP 3 - START: Creating and mapping buffer 
-    fileWriter_logFile.writeln("STEP 3 - START: Creating and mapping buffer");
-    event.add("Creating and mapping buffer");
+    //STEP 4 - START: Creating buffer 
+    fileWriter_logFile.writeln("STEP 4 - START: Creating buffer");
+    event.add("Creating buffers");
 
-    int sizeA_Andresult = data.get_SIZE_R() * data.get_SIZE_P() * data.get_SIZE_Q() * sizeof(typeData);
-    int sizeC4 = data.get_SIZE_P() * data.get_SIZE_P() * sizeof(typeData);
-    
-    cl_mem_ext_ptr_t bankExpec_buff_A;
-    bankExpec_buff_A.flags = 0 | XCL_MEM_TOPOLOGY;
-    bankExpec_buff_A.obj   = NULL;
-    bankExpec_buff_A.param = 0;
-
-    cl_mem_ext_ptr_t bankExpec_buff_C4;
-    bankExpec_buff_C4.flags = 1 | XCL_MEM_TOPOLOGY;
-    bankExpec_buff_C4.obj   = NULL;
-    bankExpec_buff_C4.param = 0;
-
-    cl_mem_ext_ptr_t bankExpec_buff_resultDevice;
-    bankExpec_buff_resultDevice.flags = 2 | XCL_MEM_TOPOLOGY;
-    bankExpec_buff_resultDevice.obj   = NULL;
-    bankExpec_buff_resultDevice.param = 0;
-
+    vector<typeData> temp_A = vector<typeData>();
+    vector<typeData> temp_C4 = vector<typeData>();
+    vector<typeData> temp_resultDevice = vector<typeData>();
+    emsamble_dataToBuffers(data, temp_A, temp_C4, temp_resultDevice);
 
     Buffer sendBuff_A(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
-                        sizeA_Andresult,
-                        &bankExpec_buff_A,
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        temp_A.size() * sizeof(typeData),
+                        temp_A.data(),
                         NULL);
 
     Buffer sendBuff_C4(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
-                        sizeC4,
-                        &bankExpec_buff_C4,
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        temp_C4.size() * sizeof(typeData),
+                        temp_C4.data(),
                         NULL);
 
     Buffer recvBuff_resultDevice(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_EXT_PTR_XILINX),
-                        sizeA_Andresult,
-                        &bankExpec_buff_resultDevice,
+                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR),
+                        temp_resultDevice.size() * sizeof(typeData),
+                        temp_resultDevice.data(),
                         NULL);
 
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_C4);
     ker.setArg(2, recvBuff_resultDevice);
 
-    typeData *temp_A = (typeData *)q.enqueueMapBuffer(sendBuff_A, CL_TRUE, CL_MAP_WRITE, 0, sizeA_Andresult);
-    typeData *temp_C4 = (typeData *)q.enqueueMapBuffer(sendBuff_C4, CL_TRUE, CL_MAP_WRITE, 0, sizeC4);
-    typeData *temp_resultDevice = (typeData *)q.enqueueMapBuffer(recvBuff_resultDevice, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, sizeA_Andresult);
-    emsamble_dataToBuffers(data, temp_A, temp_C4, temp_resultDevice);
-
     event.finish();
-    fileWriter_logFile.write("STEP 3 - END: Creating and mapping buffer (" + event.getInfoEvents(2)); 
-    //STEP 3 - END: Creating and mapping buffer 
+    fileWriter_logFile.write("STEP 4 - END: Creating buffer (" + event.getInfoEvents(3)); 
+    //STEP 4 - END: Creating buffer 
 
 
-    //STEP 4 - START: Transmision data to device
-    fileWriter_logFile.writeln("STEP 4 - START: Transmision data to device");
+    //STEP 5 - START: Transmision data to device
+    fileWriter_logFile.writeln("STEP 5 - START: Transmision data to device");
     event.add("Transmision data to device");
 
     q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_C4}, 0, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
     event.finish();
-    fileWriter_logFile.write("4 - END: Transmision data to device (" + event.getInfoEvents(3));
-    //STEP 4 - END: Transmision data to device 
+    fileWriter_logFile.write("5 - END: Transmision data to device (" + event.getInfoEvents(4));
+    //STEP 5 - END: Transmision data to device 
 
 
-    //STEP 5 - START: Device execution
-    fileWriter_logFile.writeln("STEP 5 - START: Device execution");
+    //STEP 6 - START: Device execution
+    fileWriter_logFile.writeln("STEP 6 - START: Device execution");
     event.add("Device execution");
 
     q.enqueueTask(ker, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
     event.finish();
-    fileWriter_logFile.write("STEP 5 - END: Device execution (" + event.getInfoEvents(4));
-    //STEP 5 - END: Device execution
+    fileWriter_logFile.write("STEP 6 - END: Device execution (" + event.getInfoEvents(5));
+    //STEP 6 - END: Device execution
 
 
-    //STEP 6 - START: Transmision data from device
-    fileWriter_logFile.writeln("STEP 6 - START: Transmision data from device");
+    //STEP 7 - START: Transmision data from device
+    fileWriter_logFile.writeln("STEP 7 - START: Transmision data from device");
     event.add("Transmision data from device ");
 
     q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
@@ -160,19 +141,8 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
 
     emsamble_buffersToData(data, temp_resultDevice);
     event.finish();
-    fileWriter_logFile.write("STEP 6 - END: Transmision data from device (" + event.getInfoEvents(5));
-    //STEP 6 - END: Transmision data from device 
-
-
-    //STEP 7 - START: Unmap memory object
-    fileWriter_logFile.writeln("STEP 7 - START: Unmap memory object");
-
-    q.enqueueUnmapMemObject(sendBuff_A, temp_A);
-    q.enqueueUnmapMemObject(sendBuff_C4, temp_C4);
-    q.enqueueUnmapMemObject(recvBuff_resultDevice, temp_resultDevice);
-
-    fileWriter_logFile.writeln("STEP 7 - END: Unmap memory object");
-    //STEP 7 - END: Unmap memory object
+    fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
+    //STEP 7 - END: Transmision data from device 
 
 
     if(compareResults(data)){
@@ -195,7 +165,6 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
     if(exec.get_printResults()){
         fileWriter_logFile.write(data.printAll());
     }
-
     
   return result;
 }
@@ -205,7 +174,7 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
 
 
 
-bool DoitgenHost_mapOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
+bool GemmHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
     if(exec.get_dataSize() == "mini"){
         SIZE_R=SIZE_R_MINI;
         SIZE_Q=SIZE_Q_MINI;
@@ -234,7 +203,7 @@ bool DoitgenHost_mapOpt::initParameter(Execution exec, unsigned int &SIZE_R, uns
 
 
 
-bool DoitgenHost_mapOpt::compareResults(DoitgenData& data){
+bool GemmHost_noOpt::compareResults(DoitgenData& data){
     for (int r = 0; r < data.get_SIZE_R(); r++){
       for (int q = 0; q < data.get_SIZE_Q(); q++){
         for (int p = 0; p < data.get_SIZE_P(); p++){
@@ -248,23 +217,24 @@ bool DoitgenHost_mapOpt::compareResults(DoitgenData& data){
 }
 
 
-void DoitgenHost_mapOpt::emsamble_dataToBuffers(DoitgenData& data, typeData *temp_A,  typeData *temp_C4, typeData *temp_resultDevice){
-    int pos=0;
+
+void GemmHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
+
+    temp_A.clear();
+    temp_resultDevice.clear();
     for (int r = 0; r < data.get_SIZE_R(); r++) {
         for (int q = 0; q < data.get_SIZE_Q(); q++) {
             for (int p = 0; p < data.get_SIZE_P(); p++){
-                temp_A[pos] = data.get_A()[r][q][p];
-                temp_resultDevice[pos]=0.0;
-                pos++;
+                temp_A.push_back( data.get_A()[r][q][p] );
+                temp_resultDevice.push_back( 0.0 );
             }
         }
     }
 
-    pos=0;
+    temp_C4.clear();
     for (int p1 = 0; p1 < data.get_SIZE_P(); p1++) {
         for (int p2 = 0; p2 < data.get_SIZE_P(); p2++) {
-            temp_C4[pos] = data.get_C4()[p1][p2];
-            pos++;
+            temp_C4.push_back( data.get_C4()[p1][p2] );
         }
     }
 
@@ -272,15 +242,16 @@ void DoitgenHost_mapOpt::emsamble_dataToBuffers(DoitgenData& data, typeData *tem
 }
 
 
-void DoitgenHost_mapOpt::emsamble_buffersToData(DoitgenData& data, typeData *temp_resultDevice){
-    int pos=0;
+void GemmHost_noOpt::emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice){
+    
+    int i=0;
     for (int r = 0; r < data.get_SIZE_R(); r++) {
         for (int q = 0; q < data.get_SIZE_Q(); q++) {
             for (int p = 0; p < data.get_SIZE_P(); p++){
-                data.get_resultDevice()[r][q][p] = temp_resultDevice[pos];
-                pos++;
+                data.get_resultDevice()[r][q][p] = temp_resultDevice[i];
+                i++;
             }
         }
     }
     return;
-}
+} */

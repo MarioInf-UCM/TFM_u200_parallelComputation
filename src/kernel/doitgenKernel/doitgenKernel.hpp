@@ -1,14 +1,14 @@
-#ifndef _DOITGENDATA_HPP_
-#define _DOITGENDATA_HPP_
+#ifndef _DOITGENKERNEL_HPP_
+#define _DOITGENKERNEL_HPP_
 
 #include <vector>
 #include <iostream>
-#include "../config/config.hpp"
+#include "../../configParams/configParams.hpp"
 
 using namespace std;
 
 
-class DoitgenData{
+class DoitgenKernel{
 
     //*****************************
     //* DEFINITION ZONE ATRIBUTES *
@@ -34,8 +34,8 @@ class DoitgenData{
         //********************************
         //* CONSTRUCTORS AND DESTRUCTORS *
         //********************************
-        DoitgenData(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
-        ~DoitgenData();
+        DoitgenKernel(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
+        ~DoitgenKernel();
 
         void initData_A(unsigned int SIZE_R, unsigned int SIZE_Q, unsigned int SIZE_P);
         void initData_C4(unsigned int SIZE_P);

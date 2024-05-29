@@ -49,9 +49,6 @@ kerDoitgen_build_hw:
 hostBuild_sw_emu:
 	cd $(BUILD_DIRECTORY); \
 	echo '#!/bin/sh' > export_env.sh; \
-	echo 'export XCL_EMULATION_MODE="sw_emu"' >> export_env.sh; \
-	chmod +x export_env.sh; \
-	source ./export_env.sh; \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=sw_emu $(CMAKE_DIRECTORY); \
 	make -j

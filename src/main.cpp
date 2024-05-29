@@ -1,13 +1,17 @@
 #include <iostream>
 #include <unistd.h>
 #include <cmath>
-#include "config/config.hpp"
-#include "doitgenHost/doitgenHost.hpp"
+#include "configParams/configParams.hpp"
+#include "host/choleskyHost/choleskyHost.hpp"
+#include "host/doitgenHost/doitgenHost.hpp"
+#include "host/gemmHost/gemmHost.hpp"
 #include "utilities/dateAndTime/dateAndTime.hpp"
 #include "service/json_service/json_service.hpp"
 #include "service/json_service/jsonConfiguration/jsonConfiguration.hpp"
 #include "service/externProgramsConnection_service/externProgramsConnection_service.hpp"
 
+bool runExecution(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+void printFinalMessage(unsigned int numFailures, FileWriter_service fileWriter_logFile);
 using namespace std;
 
 
@@ -52,7 +56,7 @@ int main(int argc, char** argv){
                                             "*", true);
                 
                 executionResults.clear();
-                result = DoitgenHost::doitgenHost_exec(jsonConfiguration.get_testList()[i].get_executionList()[j], executionResults, fileWriter_logFile, fileWriter_statsFile);
+                result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], executionResults, fileWriter_logFile, fileWriter_statsFile);
                 if(!result){
                     numFailures++;
                 }
@@ -93,7 +97,34 @@ int main(int argc, char** argv){
 
     }
 
+    printFinalMessage(numFailures, fileWriter_logFile);
 
+    return 0;
+}
+//*************************************
+// MAIN FUNCTION - END
+//*************************************
+
+
+
+bool runExecution(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+
+    bool result = false;
+    if(exec.get_host().find("doitgen") != string::npos){
+        result = DoitgenHost::doitgenHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+    }else if(exec.get_host().find("cholesky") != string::npos){
+        result = CholeskyHost::choleskyHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+    }else{
+        fileWriter_logFile.writeln("ERROR..: Host name unknow.");
+        return false;
+    }
+    
+    return result;
+}
+
+
+
+void printFinalMessage(unsigned int numFailures, FileWriter_service fileWriter_logFile){
 
     if(numFailures==0){
         fileWriter_logFile.writeln("\033[1;32m**********************************************\033[0m\n", true);
@@ -105,5 +136,4 @@ int main(int argc, char** argv){
         fileWriter_logFile.writeln("\033[1;31m**********************************************\033[0m\n", true);
     }
 
-    return 0;
 }

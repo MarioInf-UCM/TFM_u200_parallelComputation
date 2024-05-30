@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath> 
+#include <omp.h>
 #include "choleskyKernel.hpp"
 
 using namespace std;
@@ -15,10 +16,10 @@ CholeskyKernel::CholeskyKernel(unsigned int SIZE_N):
     resultCPU_opt(vector< vector<typeData>>()),
     resultDevice(vector< vector<typeData>>())
 {
-    initData_A(SIZE_N);
-    initData_resultCPU(SIZE_N);
-    initData_resultCPU_opt(SIZE_N);
-    initData_resultDevice(SIZE_N);
+    initData_A();
+    initData_resultCPU();
+    initData_resultCPU_opt();
+    initData_resultDevice();
 }
 CholeskyKernel::~CholeskyKernel(){}
 
@@ -27,16 +28,13 @@ CholeskyKernel::~CholeskyKernel(){}
 //*********************
 //* GENERAL FUNCTIONS *
 //*********************
-void CholeskyKernel::initData_A(unsigned int SIZE_N){
+void CholeskyKernel::initData_A(){
     for (int n1 = 0; n1 < get_SIZE_N(); n1++) {
-        get_A().push_back(vector<typeData>(get_SIZE_N()));
-        for (int n2 = 0; n2 <= get_SIZE_N(); n2++){
-            get_A()[n1].push_back(0.0f);
-        }
+        get_A().push_back(vector<typeData>(get_SIZE_N(), 0.0f));
         for (int n2 = 0; n2 <= n1; n2++){
-            get_A()[n1][n2] = (typeData)(-n2 % SIZE_N) / SIZE_N + 1;
+            get_A()[n1][n2] = (typeData)(-n2 % get_SIZE_N()) / get_SIZE_N() + 1;
         }
-        for (int n2 = n1+1; n2 < SIZE_N; n2++) {
+        for (int n2 = n1+1; n2 < get_SIZE_N(); n2++) {
             get_A()[n1][n2] = 0.0f;
         }
         get_A()[n1][n1] = 1.0f;
@@ -45,7 +43,7 @@ void CholeskyKernel::initData_A(unsigned int SIZE_N){
 }
 
 
-void CholeskyKernel::initData_resultCPU(unsigned int SIZE_N){
+void CholeskyKernel::initData_resultCPU(){
     for (int n1 = 0; n1 < get_SIZE_N(); n1++) {
         get_resultCPU().push_back(vector<typeData>(get_SIZE_N()));
         for (int n2 = 0; n2 <= get_SIZE_N(); n2++){
@@ -56,7 +54,7 @@ void CholeskyKernel::initData_resultCPU(unsigned int SIZE_N){
 }
 
 
-void CholeskyKernel::initData_resultCPU_opt(unsigned int SIZE_N){
+void CholeskyKernel::initData_resultCPU_opt(){
     for (int n1 = 0; n1 < get_SIZE_N(); n1++) {
         get_resultCPU_opt().push_back(vector<typeData>(get_SIZE_N()));
         for (int n2 = 0; n2 <= get_SIZE_N(); n2++){
@@ -67,7 +65,7 @@ void CholeskyKernel::initData_resultCPU_opt(unsigned int SIZE_N){
 }
 
 
-void CholeskyKernel::initData_resultDevice(unsigned int SIZE_N){
+void CholeskyKernel::initData_resultDevice(){
     for (int n1 = 0; n1 < get_SIZE_N(); n1++) {
         get_resultDevice().push_back(vector<typeData>(get_SIZE_N()));
         for (int n2 = 0; n2 <= get_SIZE_N(); n2++){
@@ -82,7 +80,7 @@ void CholeskyKernel::initData_resultDevice(unsigned int SIZE_N){
 string CholeskyKernel::printData_A(){
     string result="";
     for (int n1 = 0; n1 < get_A().size(); n1++) {
-        for (int n2 = 0; n2 <= get_A()[n1].size(); n2++){
+        for (int n2 = 0; n2 < get_A()[n1].size(); n2++){
             result += to_string(get_A()[n1][n2]) + "  ";
         }
         result += "\n";
@@ -95,7 +93,7 @@ string CholeskyKernel::printData_A(){
 string CholeskyKernel::printData_resultCPU(){
     string result="";
     for (int n1 = 0; n1 < get_resultCPU().size(); n1++) {
-        for (int n2 = 0; n2 <= get_resultCPU()[n1].size(); n2++){
+        for (int n2 = 0; n2 < get_resultCPU()[n1].size(); n2++){
             result += to_string(get_resultCPU()[n1][n2]) + "  ";
         }
         result += "\n";
@@ -107,7 +105,7 @@ string CholeskyKernel::printData_resultCPU(){
 string CholeskyKernel::printData_resultCPU_opt(){
     string result="";
     for (int n1 = 0; n1 < get_resultCPU_opt().size(); n1++) {
-        for (int n2 = 0; n2 <= get_resultCPU_opt()[n1].size(); n2++){
+        for (int n2 = 0; n2 < get_resultCPU_opt()[n1].size(); n2++){
             result += to_string(get_resultCPU_opt()[n1][n2]) + "  ";
         }
         result += "\n";
@@ -119,7 +117,7 @@ string CholeskyKernel::printData_resultCPU_opt(){
 string CholeskyKernel::printData_resultDevice(){
     string result="";
     for (int n1 = 0; n1 < get_resultDevice().size(); n1++) {
-        for (int n2 = 0; n2 <= get_resultDevice()[n1].size(); n2++){
+        for (int n2 = 0; n2 < get_resultDevice()[n1].size(); n2++){
             result += to_string(get_resultDevice()[n1][n2]) + "  ";
         }
         result += "\n";
@@ -156,7 +154,7 @@ void CholeskyKernel::kernel_cholesky_CPU(){
     for (int i = 0; i < get_SIZE_N(); i++) {
         for (int j = 0; j < i; j++) {
             for (int k = 0; k < j; k++) {
-            get_resultCPU()[i][j] -= get_A()[i][k] * get_A()[j][k];
+                get_resultCPU()[i][j] -= get_A()[i][k] * get_A()[j][k];
             }
             get_resultCPU()[i][j] /= get_A()[j][j];
         }
@@ -170,36 +168,35 @@ void CholeskyKernel::kernel_cholesky_CPU(){
 }
 
 
+
 void CholeskyKernel::kernel_cholesky_CPU_opt() {
-/*
-    const auto& A = get_A();
-    const auto& C4 = get_C4();
-    const unsigned int SIZE_R = get_SIZE_R();
-    const unsigned int SIZE_Q = get_SIZE_Q();
-    const unsigned int SIZE_P = get_SIZE_P();
-    auto& resultCPU_opt = get_resultCPU_opt();
-    vector<typeData> sum(get_SIZE_P(), 0.0);
 
-    #pragma omp parallel for collapse(2) firstprivate(sum) shared(resultCPU_opt)
-    for (int r = 0; r < SIZE_R; r++) {
-        for (int q = 0; q < SIZE_Q; q++) {
-            for (int p = 0; p < SIZE_P; p++) {
-                sum[p] = 0.0;
-                
-                #pragma omp simd
-                for (int s = 0; s < SIZE_P; s++) {
-                    sum[p] += A[r][q][s] * C4[s][p];
-                }
-            }
+    int SIZE_N = get_SIZE_N();
+    auto resultCPU_opt = get_resultCPU_opt();
+    auto A = get_A();
 
-            for (int p = 0; p < SIZE_P; p++) {
-                #pragma omp atomic write
-                    resultCPU_opt[r][q][p] = sum[p];
+    #pragma omp parallel for schedule(static)
+    for (int i=0; i<SIZE_N; i++) {
+        for (int j=0; j<i; j++) {
+            double sum=0.0;
+
+            #pragma omp parallel for reduction(+:sum) schedule(static)
+            for (int k = 0; k < j; k++) {
+                sum += A[i][k] * A[j][k];
             }
+            resultCPU_opt[i][j]-=sum;
+            resultCPU_opt[i][j]/=A[j][j];
         }
+
+        double sum = 0.0;
+        #pragma omp parallel for reduction(+:sum) schedule(static)
+        for (int k = 0; k < i; k++) {
+            sum += A[i][k] * A[i][k];
+        }
+        resultCPU_opt[i][i]-=sum;
+        resultCPU_opt[i][i]=sqrt(A[i][i]);
     }
 
-*/
     return;
 }
 

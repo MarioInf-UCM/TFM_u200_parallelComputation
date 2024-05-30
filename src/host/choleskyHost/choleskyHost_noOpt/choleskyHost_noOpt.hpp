@@ -33,9 +33,9 @@ class CholeskyHost_noOpt {
 
     private:
         static bool initParameter(Execution exec, unsigned int &SIZE_N);
-        //static void emsamble_dataToBuffers(DoitgenData& data, vector<typeData>& temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice);
-        //static void emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice);
-        //static bool compareResults(DoitgenData& data);
+        static void emsamble_dataToBuffers(CholeskyKernel& data, vector<typeData>& temp_A, vector<typeData>& temp_resultDevice);
+        static void emsamble_buffersToData(CholeskyKernel& data, vector<typeData>& temp_resultDevice);
+        static bool compareResults(CholeskyKernel& data);
  
 };
 #endif

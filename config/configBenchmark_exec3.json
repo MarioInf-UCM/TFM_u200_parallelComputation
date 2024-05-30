@@ -11,8 +11,8 @@
                 {
                     "host": "choleskyHost_noOpt",
                     "kernelPackage": "kerPack_cholesky_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_cholesky_Opt_small",
-                    "dataSize": "mini", 
+                    "kernel": "ker_cholesky_noOpt_medium",
+                    "dataSize": "medium", 
                     "printResults": false,
                     "numExecutions": 1
                 }

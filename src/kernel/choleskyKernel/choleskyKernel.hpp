@@ -34,10 +34,10 @@ class CholeskyKernel{
         CholeskyKernel(unsigned int SIZE_N);
         ~CholeskyKernel();
 
-        void initData_A(unsigned int SIZE_N);
-        void initData_resultCPU(unsigned int SIZE_N);
-        void initData_resultCPU_opt(unsigned int SIZE_N);
-        void initData_resultDevice(unsigned int SIZE_N);
+        void initData_A();
+        void initData_resultCPU();
+        void initData_resultCPU_opt();
+        void initData_resultDevice();
         
         string printData_A();
         string printData_resultCPU();

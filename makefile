@@ -12,7 +12,7 @@ KERNEL_CHOLESKY_NOOPT_SUBROUTE=ker_cholesky_noOpt
 KERNEL_CHOLESKY_NOOPT_NAME=makeKer_cholesky_noOpt.mk
 
 
-CONFIGFILE_ROUTE=../../config/configBenchmark_exec2.json
+CONFIGFILE_ROUTE=../../config/configBenchmark_exec1.json
 SCRIPTS_ROUTE=cmake/scripts/
 
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
@@ -25,9 +25,9 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 # COMMANDS FOR DOITGEN KERNELS COMPILE
 #**************************************
 kerDoitgen_build_sw_emu:
-#@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
-#make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=sw_emu build;
-#@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=sw_emu build;
+	@cd $(CURRENT_DIR);
 	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT_SUBROUTE}; \
 	make -f $(KERNEL_DOITGEN_OPT_NAME) TARGET=sw_emu build; \
 	

@@ -4,8 +4,8 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "name":"test_noOpt",
-            "statsFile":"test_noOpt_results.csv",
+            "name":"test_doitgen_noOpt",
+            "statsFile":"test_doitgen_noOpt_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
@@ -51,12 +51,12 @@
             ]
         },
         {
-            "name":"test_mapOpt",
-            "statsFile":"test_mapOpt_results.csv",
+            "name":"test_doitgen_Opt",
+            "statsFile":"test_doitgen_Opt_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "doitgenHost_mapOpt",
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_Opt_mini",
                     "dataSize": "mini", 
@@ -64,7 +64,7 @@
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_mapOpt",
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_Opt_small",
                     "dataSize": "small", 
@@ -72,25 +72,56 @@
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_mapOpt",
+                    "host": "doitgenHost_noOpt",
                     "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
                     "kernel": "ker_doitgen_Opt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
                     "numExecutions": 1
+                }
+            ]
+        },
+        {
+            "name":"test_cholesky_noOpt",
+            "statsFile":"test_cholesky_noOpt_results.csv",
+            "generatePictures": true,
+            "executionList":[
+                {
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_noOpt_mini",
+                    "dataSize": "mini", 
+                    "printResults": false,
+                    "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_mapOpt",
-                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt_large",
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_noOpt_small",
+                    "dataSize": "small", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_noOpt_medium",
+                    "dataSize": "medium", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_noOpt_large",
                     "dataSize": "large", 
                     "printResults": false,
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_mapOpt",
-                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt_extralarge",
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_noOpt_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
                     "numExecutions": 1

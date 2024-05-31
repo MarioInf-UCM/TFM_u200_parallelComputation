@@ -39,7 +39,7 @@ CUSTOMPARAMS_GENERAL :=
 #********************************************
 #* COMPILATION OF kerDoitgen_noOptimization *
 #********************************************
-MAKEFILE_NAME := makeKer_Doitgen_noOpt.mk
+MAKEFILE_NAME := makeKer_doitgen_noOpt.mk
 
 ker_doitgen_noOpt_XOS := ker_doitgen_noOpt_mini.xo
 ker_doitgen_noOpt_XOS += ker_doitgen_noOpt_small.xo

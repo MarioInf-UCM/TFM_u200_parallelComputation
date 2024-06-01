@@ -6,6 +6,8 @@
 #include "../../../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../../../utilities/event_timer/event_timer.hpp"
 #include "../../../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
+#include "../../../kernel/gemmKernel/gemmKernel.hpp"
+#include "../../../configParams/configParams.hpp"
 
 
 class GemmHost_noOpt {
@@ -29,11 +31,11 @@ class GemmHost_noOpt {
 
 
     private:
-/*         
-        static bool initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P);
-        static void emsamble_dataToBuffers(DoitgenData& data, vector<typeData>& temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice);
-        static void emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice);
-        static bool compareResults(DoitgenData& data);
- */
+         
+        static bool initParameter(Execution exec, unsigned int &SIZE_I, unsigned int &SIZE_J, unsigned int &SIZE_K);
+        static void emsamble_dataToBuffers(GemmKernel& data, vector<typeData>& temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice);
+        static void emsamble_buffersToData(GemmKernel& data, vector<typeData>& temp_resultDevice);
+        static bool compareResults(GemmKernel& data);
+ 
 };
 #endif

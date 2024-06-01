@@ -112,8 +112,13 @@ bool runExecution(Execution exec, vector<double>& results, FileWriter_service fi
     bool result = false;
     if(exec.get_host().find("doitgen") != string::npos){
         result = DoitgenHost::doitgenHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+
     }else if(exec.get_host().find("cholesky") != string::npos){
         result = CholeskyHost::choleskyHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+    
+    }else if(exec.get_host().find("gemm") != string::npos){
+        result = GemmHost::gemmHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+    
     }else{
         fileWriter_logFile.writeln("ERROR..: Host name unknow.");
         return false;

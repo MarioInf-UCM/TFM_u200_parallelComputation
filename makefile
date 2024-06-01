@@ -20,11 +20,15 @@ KERNEL_GEMM_NOOPT_SUBROUTE=ker_gemm_noOpt
 KERNEL_GEMM_NOOPT_NAME=makeKer_gemm_noOpt.mk
 KERNEL_GEMM_OPT_SUBROUTE=ker_gemm_Opt
 KERNEL_GEMM_OPT_NAME=makeKer_gemm_Opt.mk
+KERNEL_GEMM_PER_NOOPT_SUBROUTE=ker_gemm_per_noOpt
+KERNEL_GEMM_PER_NOOPT_NAME=makeKer_gemm_per_noOpt.mk
+KERNEL_GEMM_PER_OPT_SUBROUTE=ker_gemm_per_Opt
+KERNEL_GEMM_PER_OPT_NAME=makeKer_gemm_per_Opt.mk
 #***********************************
 #Kernel url specification - END
 
 
-CONFIGFILE_ROUTE=../../config/configBenchmark_exec2.json
+CONFIGFILE_ROUTE=../../config/configBenchmark_exec3.json
 SCRIPTS_ROUTE=cmake/scripts/
 
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
@@ -94,7 +98,13 @@ kerGemm_build_sw_emu:
 	make -f $(KERNEL_GEMM_NOOPT_NAME) TARGET=sw_emu build;
 #@cd $(CURRENT_DIR);
 #@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT_SUBROUTE}; \
-#make -f $(KERNEL_GEMM_OPT_NAME) TARGET=sw_emu build; \
+#make -f $(KERNEL_GEMM_OPT_NAME) TARGET=sw_emu build;
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=sw_emu build;
+#@cd $(CURRENT_DIR);
+#@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+#make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=sw_emu build; \
 
 	
 kerGemm_build_hw_emu:
@@ -103,6 +113,13 @@ kerGemm_build_hw_emu:
 	@cd $(CURRENT_DIR);
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT_SUBROUTE}; \
 	make -f $(KERNEL_GEMM_OPT_NAME) TARGET=hw_emu build; \
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=hw_emu build;
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=hw_emu build; \
+
 	
 kerGemm_build_hw:
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_NOOPT_SUBROUTE}; \
@@ -110,7 +127,11 @@ kerGemm_build_hw:
 	@cd $(CURRENT_DIR);
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT_SUBROUTE}; \
 	make -f $(KERNEL_GEMM_OPT_NAME) TARGET=hw build; \
-
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=hw build;
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=hw build; \
 
 
 #**************************************

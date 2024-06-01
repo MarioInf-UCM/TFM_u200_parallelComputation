@@ -49,4 +49,28 @@
     #endif
 
 
+    //DEFINE PARAMS FOR GEMM KERNEL
+    //**********************************
+    #if !defined(GEMM_NI) && !defined(GEMM_NJ) && !defined(GEMM_NK)
+        #define GEMM_I_MINI 20
+        #define GEMM_J_MINI 25
+        #define GEMM_K_MINI 30
+
+        #define GEMM_I_SMALL 60
+        #define GEMM_J_SMALL 70
+        #define GEMM_K_SMALL 80
+
+        #define GEMM_I_MEDIUM 200
+        #define GEMM_J_MEDIUM 220
+        #define GEMM_K_MEDIUM 240
+
+        #define GEMM_I_LARGE 1000
+        #define GEMM_J_LARGE 1100
+        #define GEMM_K_LARGE 1200
+
+        #define GEMM_I_EXTRALARGE 2000
+        #define GEMM_J_EXTRALARGE 2300
+        #define GEMM_K_EXTRALARGE 2600
+    #endif
+
 #endif

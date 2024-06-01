@@ -17,20 +17,19 @@ using cl::Buffer;
 //********************************
 GemmHost_noOpt::GemmHost_noOpt(){}
 GemmHost_noOpt::~GemmHost_noOpt(){}
-/* 
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
 bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
-    unsigned int SIZE_R=0, SIZE_Q=0, SIZE_P=0;    
-    bool result = initParameter(exec, SIZE_R, SIZE_Q, SIZE_P);
+    unsigned int SIZE_I=0, SIZE_J=0, SIZE_K=0;    
+    bool result = initParameter(exec, SIZE_I, SIZE_J, SIZE_K);
     if(!result){
         cout << "\033[1;31mERROR..:Entry params unexpected. Fanalizating execution.\033[0m\n"  << endl;
         return false;
     }
-    DoitgenData data = DoitgenData(SIZE_R, SIZE_Q, SIZE_P);
+    GemmKernel data = GemmKernel(SIZE_I, SIZE_J, SIZE_K);
     ostringstream stringToPrint;
     EventTimer event;
     Event event_sp;
@@ -48,12 +47,13 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     fileWriter_logFile.write("STEP 1 - END: Initializaton OpenCL and load kernels (" + event.getInfoEvents(0));
     //STEP 1 - END: Initializaton OpenCL and load kernels"
 
+    fileWriter_logFile.writeln(data.printAll(), true);
 
     //STEP 2 - START: Running kernel in CPU"
     fileWriter_logFile.writeln("STEP 2 - START: Running kernel in CPU");
     event.add("Running kernel in CPU");
 
-    data.kernel_doitgen_CPU();
+    data.kernel_gemm_CPU();
 
     event.finish();
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
@@ -64,12 +64,13 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     fileWriter_logFile.writeln("STEP 3 - START: Running kernel in CPU optimizated");
     event.add("Running kernel in CPU optimizated");
 
-    data.kernel_doitgen_CPU_opt();
+    data.kernel_gemm_CPU_opt();
 
     event.finish();
     fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
     //STEP 3 - END: Running kernel in CPU optimizated"
 
+/* 
 
     //STEP 4 - START: Creating buffer 
     fileWriter_logFile.writeln("STEP 4 - START: Creating buffer");
@@ -144,6 +145,7 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
     //STEP 7 - END: Transmision data from device 
 
+*/
 
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
@@ -155,7 +157,7 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     fileWriter_logFile.writeln("--------------- Key execution times ---------------");
     fileWriter_logFile.write(event.getInfoEvents());
     fileWriter_logFile.writeln("---------------------------------------------------");
-    results.push_back(data.get_SIZE_P() * data.get_SIZE_Q() * data.get_SIZE_R()); 
+    results.push_back(data.get_SIZE_I() * data.get_SIZE_J()); 
     results.push_back(stod(event.getTimeEvents(1)));    //CPU execution time
     results.push_back(stod(event.getTimeEvents(2)));    //CPU execution time optimizated
     results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
@@ -165,7 +167,6 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     if(exec.get_printResults()){
         fileWriter_logFile.write(data.printAll());
     }
-    
   return result;
 }
 //*************************************
@@ -174,27 +175,27 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
 
 
 
-bool GemmHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
+bool GemmHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_I, unsigned int &SIZE_J, unsigned int &SIZE_K){
     if(exec.get_dataSize() == "mini"){
-        SIZE_R=SIZE_R_MINI;
-        SIZE_Q=SIZE_Q_MINI;
-        SIZE_P=SIZE_P_MINI;
+        SIZE_I=GEMM_I_MINI;
+        SIZE_J=GEMM_J_MINI;
+        SIZE_K=GEMM_K_MINI;
     }else if(exec.get_dataSize() == "small"){
-        SIZE_R=SIZE_R_SMALL;
-        SIZE_Q=SIZE_Q_SMALL;
-        SIZE_P=SIZE_P_SMALL;
+        SIZE_I=GEMM_I_SMALL;
+        SIZE_J=GEMM_J_SMALL;
+        SIZE_K=GEMM_K_SMALL;
     }else if(exec.get_dataSize() == "medium"){
-        SIZE_R=SIZE_R_MEDIUM;
-        SIZE_Q=SIZE_Q_MEDIUM;
-        SIZE_P=SIZE_P_MEDIUM;
+        SIZE_I=GEMM_I_MEDIUM;
+        SIZE_J=GEMM_J_MEDIUM;
+        SIZE_K=GEMM_K_MEDIUM;
     }else if(exec.get_dataSize() == "large"){
-        SIZE_R=SIZE_R_LARGE;
-        SIZE_Q=SIZE_Q_LARGE;
-        SIZE_P=SIZE_P_LARGE;
+        SIZE_I=GEMM_I_LARGE;
+        SIZE_J=GEMM_J_LARGE;
+        SIZE_K=GEMM_K_LARGE;
     }else if(exec.get_dataSize() == "extralarge"){
-        SIZE_R=SIZE_R_EXTRALARGE;
-        SIZE_Q=SIZE_Q_EXTRALARGE;
-        SIZE_P=SIZE_P_EXTRALARGE;
+        SIZE_I=GEMM_I_EXTRALARGE;
+        SIZE_J=GEMM_J_EXTRALARGE;
+        SIZE_K=GEMM_K_EXTRALARGE;
     }else{
         return false;
     }  
@@ -203,13 +204,11 @@ bool GemmHost_noOpt::initParameter(Execution exec, unsigned int &SIZE_R, unsigne
 
 
 
-bool GemmHost_noOpt::compareResults(DoitgenData& data){
-    for (int r = 0; r < data.get_SIZE_R(); r++){
-      for (int q = 0; q < data.get_SIZE_Q(); q++){
-        for (int p = 0; p < data.get_SIZE_P(); p++){
-          if(data.get_resultCPU()[r][q][p] != data.get_resultDevice()[r][q][p]){
-              return false;
-          }
+bool GemmHost_noOpt::compareResults(GemmKernel& data){
+    for (int i = 0; i < data.get_SIZE_I(); i++){
+      for (int j = 0; j < data.get_SIZE_J(); j++){
+        if(data.get_resultCPU()[i][j] != data.get_resultDevice()[i][j]){
+            return false;
         }
       }
     }
@@ -218,7 +217,7 @@ bool GemmHost_noOpt::compareResults(DoitgenData& data){
 
 
 
-void GemmHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
+/* void GemmHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
 
     temp_A.clear();
     temp_resultDevice.clear();

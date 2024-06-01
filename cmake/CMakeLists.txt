@@ -20,7 +20,8 @@ if (DEFINED TARGET)
   message(STATUS "Value for TARGET: ${TARGET}")
   
 
-
+  # SW_EMU kernels
+  #*********************
   if(${TARGET} STREQUAL "sw_emu")
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_sw_emu.xclbin COPYONLY)
@@ -40,8 +41,21 @@ if (DEFINED TARGET)
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_noOpt_sw_emu.xclbin)")
     endif()
 
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_noOpt/sw_emu/kerPack_gemm_noOpt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_noOpt/sw_emu/kerPack_gemm_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_noOpt_sw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_noOpt_sw_emu.xclbin)")
+    endif()
+
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/sw_emu/kerPack_gemm_per_noOpt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/sw_emu/kerPack_gemm_per_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_noOpt_sw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_noOpt_sw_emu.xclbin)")
+    endif()
 
 
+  # HW_EMU kernels
+  #*********************
   elseif (${TARGET} STREQUAL "hw_emu")
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_hw_emu.xclbin COPYONLY)
@@ -61,8 +75,15 @@ if (DEFINED TARGET)
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_noOpt_hw_emu.xclbin)")
     endif()
 
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw_emu/kerPack_gemm_per_noOpt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw_emu/kerPack_gemm_per_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_noOpt_hw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_noOpt_hw_emu.xclbin)")
+    endif()
 
 
+  # HW kernels
+  #*********************
   elseif (${TARGET} STREQUAL "hw")
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw/kerPack_doitgen_noOpt_hw.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw/kerPack_doitgen_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_hw.xclbin COPYONLY)
@@ -80,6 +101,12 @@ if (DEFINED TARGET)
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_noOpt/hw/kerPack_cholesky_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_cholesky_noOpt_hw.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_noOpt_hw.xclbin)")
+    endif()
+
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw/kerPack_gemm_per_noOpt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw/kerPack_gemm_per_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_noOpt_hw.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_noOpt_hw.xclbin)")
     endif()
 
 
@@ -139,6 +166,7 @@ add_executable(benchmarkExec
   ../src/main.cpp
   ../src/kernel/doitgenKernel/doitgenKernel.cpp
   ../src/kernel/choleskyKernel/choleskyKernel.cpp
+  ../src/kernel/gemmKernel/gemmKernel.cpp
   ../src/host/doitgenHost/doitgenHost.cpp
   ../src/host/doitgenHost/doitgenHost_noOpt/doitgenHost_noOpt.cpp
   ../src/host/doitgenHost/doitgenHost_mapOpt/doitgenHost_mapOpt.cpp

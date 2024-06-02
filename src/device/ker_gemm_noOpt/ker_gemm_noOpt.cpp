@@ -75,9 +75,9 @@ extern "C"{
 
         for (int i=0 ; i<NI ; i++){
             for (int j=0; j<NJ; j++){
-                outD_result[(i*NI)+j] = inD_C[(i*NI)+j] * inD_beta;
+                outD_result[(i*NJ)+j] = inD_C[(i*NJ)+j] * inD_beta;
                 for (int k=0; k<NK; ++k){
-                    outD_result[(i*NI)+j] += inD_alpha * inD_A[(i*NI)+k] * inD_B[(k*NI)+j];
+                    outD_result[(i*NJ)+j] += inD_alpha * inD_A[(i*NK)+k] * inD_B[(k*NJ)+j];
                 }
             }
         }

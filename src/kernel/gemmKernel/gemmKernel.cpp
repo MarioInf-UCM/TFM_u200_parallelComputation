@@ -9,7 +9,9 @@ using namespace std;
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
 //********************************
-GemmKernel::GemmKernel(unsigned int SIZE_I, unsigned int SIZE_J, unsigned int SIZE_K):
+GemmKernel::GemmKernel(typeData alpha, typeData beta, unsigned int SIZE_I, unsigned int SIZE_J, unsigned int SIZE_K):
+    alpha(alpha),
+    beta(beta),
     SIZE_I(SIZE_I),
     SIZE_J(SIZE_J),
     SIZE_K(SIZE_K),
@@ -46,10 +48,10 @@ void GemmKernel::initData_A(){
 
 
 void GemmKernel::initData_B(){
-    for (int i=0; i<get_SIZE_K(); i++) {
+    for (int k=0; k<get_SIZE_K(); k++) {
         get_B().push_back(vector<typeData>(get_SIZE_J(), 0.0f));
-        for (int k=0; k<get_SIZE_J(); k++){
-            get_B()[i][k] = (typeData)(i*(k+2) % get_SIZE_K()) / get_SIZE_K();
+        for (int j=0; j<get_SIZE_J(); j++){
+            get_B()[k][j] = (typeData)(k*(j+2) % get_SIZE_J()) / get_SIZE_J();
         }
     }
     return;
@@ -207,14 +209,13 @@ void GemmKernel::kernel_gemm_CPU(){
 }
 
 
-
 void GemmKernel::kernel_gemm_CPU_opt() {
     int SIZE_I = get_SIZE_I();
     int SIZE_J = get_SIZE_J();
     int SIZE_K = get_SIZE_K();
     double beta = get_beta();
     double alpha = get_alpha();
-    auto result = get_resultCPU();
+    auto result = get_resultCPU_opt();
     auto C = get_C();
     auto A = get_A();
     auto B = get_B();
@@ -231,11 +232,46 @@ void GemmKernel::kernel_gemm_CPU_opt() {
     return;
 }
 
+
 void GemmKernel::kernel_gemm_per_CPU(){
+
+    for (int i = 0; i < get_SIZE_I(); i++) {
+        for (int j = 0; j < get_SIZE_J(); j++){
+            get_resultCPU()[i][j] *= get_beta();
+        }
+        for (int k = 0; k < get_SIZE_K(); k++){
+            for (int j = 0; j < get_SIZE_J(); j++){
+                get_resultCPU()[i][j] += get_alpha() * get_A()[i][k] * get_B()[k][j];
+            }
+        }
+    }
 
     return;
 }
+
+
 void GemmKernel::kernel_gemm_per_CPU_opt(){
+    int size_i = get_SIZE_I();
+    int size_j = get_SIZE_J();
+    int size_k = get_SIZE_K();
+    double beta = get_beta();
+    double alpha = get_alpha();
+    auto result = get_resultCPU_opt();
+    auto A = get_A();
+    auto B = get_B();
+
+    #pragma omp parallel for
+    for (int i = 0; i < size_i; i++) {
+        for (int j = 0; j < size_j; j++) {
+            result[i][j] *= beta;
+        }
+        
+        for (int k = 0; k < size_k; k++) {
+            for (int j = 0; j < size_j; j++) {
+                result[i][j] += alpha * A[i][k] * B[k][j];
+            }
+        }
+    }
 
     return;
 }

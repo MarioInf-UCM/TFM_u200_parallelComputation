@@ -21,7 +21,7 @@ GemmHost_noOpt::~GemmHost_noOpt(){}
 // MAIN FUNCTION - START
 //*************************************
 bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
-    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
+    fileWriter_logFile.writeln("Executing host function \"GemmHost::gemmHost_noOpt_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_I=0, SIZE_J=0, SIZE_K=0;    
     bool result = initParameter(exec, SIZE_I, SIZE_J, SIZE_K);
@@ -29,7 +29,7 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
         cout << "\033[1;31mERROR..:Entry params unexpected. Fanalizating execution.\033[0m\n"  << endl;
         return false;
     }
-    GemmKernel data = GemmKernel(SIZE_I, SIZE_J, SIZE_K);
+    GemmKernel data = GemmKernel(GEMM_ALPHA, GEMM_BETA, SIZE_I, SIZE_J, SIZE_K);
     ostringstream stringToPrint;
     EventTimer event;
     Event event_sp;
@@ -47,13 +47,18 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     fileWriter_logFile.write("STEP 1 - END: Initializaton OpenCL and load kernels (" + event.getInfoEvents(0));
     //STEP 1 - END: Initializaton OpenCL and load kernels"
 
-    fileWriter_logFile.writeln(data.printAll(), true);
 
     //STEP 2 - START: Running kernel in CPU"
     fileWriter_logFile.writeln("STEP 2 - START: Running kernel in CPU");
     event.add("Running kernel in CPU");
 
-    data.kernel_gemm_CPU();
+    if(exec.get_kernel().find("_per_") != string::npos){
+        fileWriter_logFile.writeln("Execution of kernel_gemm_per_CPU");
+        data.kernel_gemm_per_CPU();
+    }else{
+        fileWriter_logFile.writeln("Execution of kernel_gemm_CPU");
+        data.kernel_gemm_CPU();
+    }
 
     event.finish();
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
@@ -64,22 +69,28 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     fileWriter_logFile.writeln("STEP 3 - START: Running kernel in CPU optimizated");
     event.add("Running kernel in CPU optimizated");
 
-    data.kernel_gemm_CPU_opt();
+    if(exec.get_kernel().find("_per_") != string::npos){
+        fileWriter_logFile.writeln("Execution of kernel_gemm_per_CPU_opt");
+        data.kernel_gemm_per_CPU_opt();
+    }else{
+        fileWriter_logFile.writeln("Execution of kernel_gemm_CPU_opt");
+        data.kernel_gemm_CPU_opt();
+    }
 
     event.finish();
     fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
     //STEP 3 - END: Running kernel in CPU optimizated"
-
-/* 
+    
 
     //STEP 4 - START: Creating buffer 
     fileWriter_logFile.writeln("STEP 4 - START: Creating buffer");
     event.add("Creating buffers");
 
     vector<typeData> temp_A = vector<typeData>();
-    vector<typeData> temp_C4 = vector<typeData>();
+    vector<typeData> temp_B = vector<typeData>();
+    vector<typeData> temp_C = vector<typeData>();
     vector<typeData> temp_resultDevice = vector<typeData>();
-    emsamble_dataToBuffers(data, temp_A, temp_C4, temp_resultDevice);
+    emsamble_dataToBuffers(data, temp_A, temp_B, temp_C, temp_resultDevice);
 
     Buffer sendBuff_A(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
@@ -87,10 +98,16 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
                         temp_A.data(),
                         NULL);
 
-    Buffer sendBuff_C4(xocl.get_context(),
+    Buffer sendBuff_B(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_C4.size() * sizeof(typeData),
-                        temp_C4.data(),
+                        temp_B.size() * sizeof(typeData),
+                        temp_B.data(),
+                        NULL);
+
+    Buffer sendBuff_C(xocl.get_context(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        temp_C.size() * sizeof(typeData),
+                        temp_C.data(),
                         NULL);
 
     Buffer recvBuff_resultDevice(xocl.get_context(),
@@ -99,9 +116,12 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
                         temp_resultDevice.data(),
                         NULL);
 
-    ker.setArg(0, sendBuff_A);
-    ker.setArg(1, sendBuff_C4);
-    ker.setArg(2, recvBuff_resultDevice);
+    ker.setArg(0, data.get_alpha());
+    ker.setArg(1, data.get_beta());
+    ker.setArg(2, sendBuff_A);
+    ker.setArg(3, sendBuff_B);
+    ker.setArg(4, sendBuff_C);
+    ker.setArg(5, recvBuff_resultDevice);
 
     event.finish();
     fileWriter_logFile.write("STEP 4 - END: Creating buffer (" + event.getInfoEvents(3)); 
@@ -112,7 +132,7 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     fileWriter_logFile.writeln("STEP 5 - START: Transmision data to device");
     event.add("Transmision data to device");
 
-    q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_C4}, 0, NULL, &event_sp);
+    q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_B, sendBuff_C}, 0, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
     event.finish();
@@ -139,14 +159,15 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
     q.finish();
-
     emsamble_buffersToData(data, temp_resultDevice);
     event.finish();
     fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
     //STEP 7 - END: Transmision data from device 
 
-*/
 
+    if(exec.get_printResults()){
+        fileWriter_logFile.write(data.printAll());
+    }
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
         result = true;
@@ -164,9 +185,6 @@ bool GemmHost_noOpt::gemmHost_noOpt_exec(Execution exec, vector<double>& results
     results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
     results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
 
-    if(exec.get_printResults()){
-        fileWriter_logFile.write(data.printAll());
-    }
   return result;
 }
 //*************************************
@@ -217,23 +235,30 @@ bool GemmHost_noOpt::compareResults(GemmKernel& data){
 
 
 
-/* void GemmHost_noOpt::emsamble_dataToBuffers(DoitgenData& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
+void GemmHost_noOpt::emsamble_dataToBuffers(GemmKernel& data, vector<typeData> &temp_A, vector<typeData>& temp_B, vector<typeData>& temp_C, vector<typeData>& temp_resultDevice){
 
     temp_A.clear();
     temp_resultDevice.clear();
-    for (int r = 0; r < data.get_SIZE_R(); r++) {
-        for (int q = 0; q < data.get_SIZE_Q(); q++) {
-            for (int p = 0; p < data.get_SIZE_P(); p++){
-                temp_A.push_back( data.get_A()[r][q][p] );
-                temp_resultDevice.push_back( 0.0 );
-            }
+    for (int i = 0; i < data.get_SIZE_I(); i++) {
+        for (int k = 0; k < data.get_SIZE_K(); k++) {
+            temp_A.push_back(data.get_A()[i][k]);
+            temp_resultDevice.push_back( 0.0f );
         }
     }
 
-    temp_C4.clear();
-    for (int p1 = 0; p1 < data.get_SIZE_P(); p1++) {
-        for (int p2 = 0; p2 < data.get_SIZE_P(); p2++) {
-            temp_C4.push_back( data.get_C4()[p1][p2] );
+    temp_B.clear();
+    for (int k = 0; k < data.get_SIZE_K(); k++) {
+        for (int j = 0; j < data.get_SIZE_J(); j++) {
+            temp_B.push_back( data.get_B()[k][j] );
+        }
+    }
+
+    temp_C.clear();
+    temp_resultDevice.clear();
+    for (int i = 0; i < data.get_SIZE_I(); i++) {
+        for (int j = 0; j < data.get_SIZE_J(); j++) {
+            temp_C.push_back(data.get_C()[i][j]);
+            temp_resultDevice.push_back( 0.0f );
         }
     }
 
@@ -241,16 +266,14 @@ bool GemmHost_noOpt::compareResults(GemmKernel& data){
 }
 
 
-void GemmHost_noOpt::emsamble_buffersToData(DoitgenData& data, vector<typeData>& temp_resultDevice){
+void GemmHost_noOpt::emsamble_buffersToData(GemmKernel& data, vector<typeData>& temp_resultDevice){
     
-    int i=0;
-    for (int r = 0; r < data.get_SIZE_R(); r++) {
-        for (int q = 0; q < data.get_SIZE_Q(); q++) {
-            for (int p = 0; p < data.get_SIZE_P(); p++){
-                data.get_resultDevice()[r][q][p] = temp_resultDevice[i];
-                i++;
-            }
+    int pos=0;
+    for (int i = 0; i < data.get_SIZE_I(); i++) {
+        for (int j = 0; j < data.get_SIZE_J(); j++) {
+            data.get_resultDevice()[i][j] = temp_resultDevice[pos];
+            pos++;
         }
     }
     return;
-} */
+}

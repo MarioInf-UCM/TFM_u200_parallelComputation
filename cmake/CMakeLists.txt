@@ -23,92 +23,184 @@ if (DEFINED TARGET)
   # SW_EMU kernels
   #*********************
   if(${TARGET} STREQUAL "sw_emu")
+
+    # kerPack_doitgen_noOpt_sw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/sw_emu/kerPack_doitgen_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_sw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_noOpt_sw_emu.xclbin)")
     endif()
 
+    # kerPack_doitgen_Opt_sw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/sw_emu/kerPack_doitgen_Opt_sw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/sw_emu/kerPack_doitgen_Opt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_Opt_sw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_Opt_sw_emu.xclbin)")
     endif()
 
+    # kerPack_cholesky_noOpt_sw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_noOpt/sw_emu/kerPack_cholesky_noOpt_sw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_noOpt/sw_emu/kerPack_cholesky_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_cholesky_noOpt_sw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_noOpt_sw_emu.xclbin)")
     endif()
 
+    # kerPack_cholesky_Opt_sw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_Opt/sw_emu/kerPack_cholesky_Opt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_Opt/sw_emu/kerPack_cholesky_Opt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_cholesky_Opt_sw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_Opt_sw_emu.xclbin)")
+    endif()
+
+    # kerPack_gemm_noOpt_sw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_noOpt/sw_emu/kerPack_gemm_noOpt_sw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_noOpt/sw_emu/kerPack_gemm_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_noOpt_sw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_noOpt_sw_emu.xclbin)")
     endif()
 
+    # kerPack_gemm_Opt_sw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_Opt/sw_emu/kerPack_gemm_Opt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_Opt/sw_emu/kerPack_gemm_Opt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_Opt_sw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_Opt_sw_emu.xclbin)")
+    endif()
+
+    # kerPack_gemm_per_noOpt_sw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/sw_emu/kerPack_gemm_per_noOpt_sw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/sw_emu/kerPack_gemm_per_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_noOpt_sw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_noOpt_sw_emu.xclbin)")
     endif()
 
+    # kerPack_gemm_per_Opt_sw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_Opt/sw_emu/kerPack_gemm_per_Opt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_Opt/sw_emu/kerPack_gemm_per_Opt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_Opt_sw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_Opt_sw_emu.xclbin)")
+    endif()
+
 
   # HW_EMU kernels
   #*********************
   elseif (${TARGET} STREQUAL "hw_emu")
+
+    # kerPack_doitgen_noOpt_hw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw_emu/kerPack_doitgen_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_hw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_noOpt_hw_emu.xclbin)")
     endif()
 
+    # kerPack_doitgen_Opt_hw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw_emu/kerPack_doitgen_Opt_hw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw_emu/kerPack_doitgen_Opt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_Opt_hw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_Opt_hw_emu.xclbin)")
     endif()
 
+    # kerPack_cholesky_noOpt_hw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_noOpt/hw_emu/kerPack_cholesky_noOpt_hw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_noOpt/hw_emu/kerPack_cholesky_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_cholesky_noOpt_hw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_noOpt_hw_emu.xclbin)")
     endif()
 
+    # kerPack_cholesky_Opt_hw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_Opt/hw_emu/kerPack_cholesky_Opt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_Opt/hw_emu/kerPack_cholesky_Opt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_cholesky_Opt_hw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_Opt_hw_emu.xclbin)")
+    endif()
+
+    # kerPack_gemm_noOpt_hw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_noOpt/hw_emu/kerPack_gemm_noOpt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_noOpt/hw_emu/kerPack_gemm_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_noOpt_hw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_noOpt_hw_emu.xclbin)")
+    endif()
+
+    # kerPack_gemm_Opt_hw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_Opt/hw_emu/kerPack_gemm_Opt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_Opt/hw_emu/kerPack_gemm_Opt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_Opt_hw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_Opt_hw_emu.xclbin)")
+    endif()
+
+    # kerPack_gemm_per_noOpt_hw_emu
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw_emu/kerPack_gemm_per_noOpt_hw_emu.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw_emu/kerPack_gemm_per_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_noOpt_hw_emu.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_noOpt_hw_emu.xclbin)")
     endif()
 
+    # kerPack_gemm_per_Opt_hw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_Opt/hw_emu/kerPack_gemm_per_Opt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_Opt/hw_emu/kerPack_gemm_per_Opt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_Opt_hw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_Opt_hw_emu.xclbin)")
+    endif()
+
 
   # HW kernels
   #*********************
   elseif (${TARGET} STREQUAL "hw")
+
+    # kerPack_doitgen_noOpt_hw
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw/kerPack_doitgen_noOpt_hw.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_noOpt/hw/kerPack_doitgen_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_noOpt_hw.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_noOpt_hw.xclbin)")
     endif()
     
+    # kerPack_doitgen_Opt_hw
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw/kerPack_doitgen_Opt_hw.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_doitgen_Opt/hw/kerPack_doitgen_Opt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_doitgen_Opt_hw.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_doitgen_Opt_hw.xclbin)")
     endif()
 
+    # kerPack_cholesky_noOpt_hw
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_noOpt/hw/kerPack_cholesky_noOpt_hw.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_noOpt/hw/kerPack_cholesky_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_cholesky_noOpt_hw.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_noOpt_hw.xclbin)")
     endif()
 
+    # kerPack_cholesky_Opt_hw
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_Opt/hw/kerPack_cholesky_Opt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_cholesky_Opt/hw/kerPack_cholesky_Opt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_cholesky_Opt_hw.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_cholesky_Opt_hw.xclbin)")
+    endif()
+
+    # kerPack_gemm_per_noOpt_hw
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw/kerPack_gemm_per_noOpt_hw.xclbin")
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw/kerPack_gemm_per_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_noOpt_hw.xclbin COPYONLY)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_noOpt_hw.xclbin)")
     endif()
 
+    # kerPack_gemm_Opt_hw
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_Opt/hw/kerPack_gemm_Opt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_Opt/hw/kerPack_gemm_Opt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_Opt_hw.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_Opt_hw.xclbin)")
+    endif()
+
+    # kerPack_gemm_per_noOpt_hw
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw/kerPack_gemm_per_noOpt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_noOpt/hw/kerPack_gemm_per_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_noOpt_hw.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_noOpt_hw.xclbin)")
+    endif()
+
+    # kerPack_gemm_per_Opt_hw
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_Opt/hw/kerPack_gemm_per_Opt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_gemm_per_Opt/hw/kerPack_gemm_per_Opt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_gemm_per_Opt_hw.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_Opt_hw.xclbin)")
+    endif()
 
 
   else()

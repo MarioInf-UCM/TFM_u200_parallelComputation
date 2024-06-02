@@ -33,6 +33,7 @@ def generate_plot(csv_url, image_location):
     plt.ylabel('Time (ms)')
     plt.legend()
     plt.xscale('log')
+    plt.yscale('log')
 
     # Anotar los puntos con sus valores exactos
     for i in range(len(x)):
@@ -42,14 +43,6 @@ def generate_plot(csv_url, image_location):
         plt.annotate(f'{y4[i]:.2f}', (x[i], y4[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.2'))
         plt.annotate(f'{y5[i]:.2f}', (x[i], y5[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='aquamarine', edgecolor='black', boxstyle='round,pad=0.2'))
 
-    image_locationTemp = image_location +".jpg"
-    plt.savefig(image_locationTemp, format='jpg', dpi=600)
-    image_locationTemp = image_location +".png"
-    plt.savefig(image_locationTemp, format='png', dpi=600)
-    image_locationTemp = image_location +".eps"
-    plt.savefig(image_locationTemp, format='eps', dpi=600)
-
-    plt.yscale('log')
     image_locationTemp = image_location +".log.jpg"
     plt.savefig(image_locationTemp, format='jpg', dpi=600)
     image_locationTemp = image_location +".log.png"

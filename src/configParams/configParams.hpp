@@ -51,6 +51,9 @@
 
     //DEFINE PARAMS FOR GEMM KERNEL
     //**********************************
+    #define GEMM_ALPHA 1.5
+    #define GEMM_BETA 1.2
+
     #if !defined(GEMM_NI) && !defined(GEMM_NJ) && !defined(GEMM_NK)
         #define GEMM_I_MINI 20
         #define GEMM_J_MINI 25

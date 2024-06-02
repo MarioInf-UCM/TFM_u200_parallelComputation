@@ -10,8 +10,8 @@
             "executionList":[
                 {
                     "host": "gemmHost_noOpt",
-                    "kernelPackage": "kerPack_gemm_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_gemm_noOpt_mini",
+                    "kernelPackage": "kerPack_gemm_per_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_gemm_per_noOpt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
                     "numExecutions": 1

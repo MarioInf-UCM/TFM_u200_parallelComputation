@@ -33,9 +33,8 @@ class GemmHost_noOpt {
     private:
          
         static bool initParameter(Execution exec, unsigned int &SIZE_I, unsigned int &SIZE_J, unsigned int &SIZE_K);
-        static void emsamble_dataToBuffers(GemmKernel& data, vector<typeData>& temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice);
+        static void emsamble_dataToBuffers(GemmKernel& data, vector<typeData> &temp_A, vector<typeData>& temp_B, vector<typeData>& temp_C, vector<typeData>& temp_resultDevice);
         static void emsamble_buffersToData(GemmKernel& data, vector<typeData>& temp_resultDevice);
         static bool compareResults(GemmKernel& data);
- 
 };
 #endif

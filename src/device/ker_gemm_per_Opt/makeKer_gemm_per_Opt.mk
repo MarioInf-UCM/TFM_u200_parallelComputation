@@ -29,7 +29,7 @@ BOARD_CONFIG := $(CONNECTIVITY_ROUTE)/connectivity_u200.ini
 LINK_OPTS := --config $(CONNECTIVITY_ROUTE)/connectivity_u200.ini -I ./src/kernel
 IP_CACHE_DIR ?= ip_cache
 
-VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS)
+VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
 VPPLFLAGS := --config $(CONNECTIVITY_ROUTE)/profile.ini --config $(BOARD_CONFIG)
 CUSTOMPARAMS_GENERAL :=
 
@@ -44,8 +44,8 @@ MAKEFILE_NAME := makeKer_gemm_per_Opt.mk
 ker_gemm_per_Opt_XOS := ker_gemm_per_Opt_mini.xo
 ker_gemm_per_Opt_XOS += ker_gemm_per_Opt_small.xo
 ker_gemm_per_Opt_XOS += ker_gemm_per_Opt_medium.xo
-ker_gemm_per_Opt_XOS += ker_gemm_per_Opt_large.xo
-ker_gemm_per_Opt_XOS += ker_gemm_per_Opt_extralarge.xo
+#ker_gemm_per_Opt_XOS += ker_gemm_per_Opt_large.xo
+#ker_gemm_per_Opt_XOS += ker_gemm_per_Opt_extralarge.xo
 
 ker_gemm_per_Opt_mini_KERNEL := ker_gemm_per_Opt_mini
 ker_gemm_per_Opt_small_KERNEL := ker_gemm_per_Opt_small

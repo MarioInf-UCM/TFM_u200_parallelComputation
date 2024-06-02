@@ -39,7 +39,7 @@ class GemmKernel{
         //********************************
         //* CONSTRUCTORS AND DESTRUCTORS *
         //********************************
-        GemmKernel(unsigned int SIZE_I, unsigned int SIZE_J, unsigned int SIZE_K);
+        GemmKernel(typeData alpha, typeData beta, unsigned int SIZE_I, unsigned int SIZE_J, unsigned int SIZE_K);
         ~GemmKernel();
 
         void initData_A();

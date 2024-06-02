@@ -47,39 +47,41 @@
 extern "C"{
 
     #ifdef MINI_DATASET
-        void ker_gemm_per_Opt_mini(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *outD_C)
+        void ker_gemm_per_Opt_mini(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *inD_C, typeData *outD_result)
     #elif defined(SMALL_DATASET)
-        void ker_gemm_per_Opt_small(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *outD_C)
+        void ker_gemm_per_Opt_small(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *inD_C, typeData *outD_result)
     #elif defined(MEDIUM_DATASET)
-        void ker_gemm_per_Opt_medium(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *outD_C)
+        void ker_gemm_per_Opt_medium(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *inD_C, typeData *outD_result)
     #elif defined(LARGE_DATASET)
-        void ker_gemm_per_Opt_large(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *outD_C)
+        void ker_gemm_per_Opt_large(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *inD_C, typeData *outD_result)
     #elif defined(EXTRALARGE_DATASET)
-        void ker_gemm_per_Opt_extralarge(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *outD_C)
+        void ker_gemm_per_Opt_extralarge(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *inD_C, typeData *outD_result)
     #else
-        void ker_gemm_per_Opt(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *outD_C)
+        void ker_gemm_per_Opt(typeData inD_alpha, typeData inD_beta, typeData *inD_A, typeData *inD_B, typeData *inD_C, typeData *outD_result)
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_B offset = slave bundle = gmem
-        #pragma HLS INTERFACE m_axi port = outD_C offset = slave bundle = gmem 
+        #pragma HLS INTERFACE m_axi port = inD_C offset = slave bundle = gmem 
+        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem 
 
         #pragma HLS INTERFACE s_axilite port = inD_alpha bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_beta bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_B bundle = control
-        #pragma HLS INTERFACE s_axilite port = outD_C bundle = control
+        #pragma HLS INTERFACE s_axilite port = inD_C bundle = control
+        #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
         for (int i = 0; i < NI; i++) {
             #pragma HLS pipeline
             #pragma HLS LOOP_TRIPCOUNT min=NI max=NI
             for (int j = 0; j < NJ; j++){
-                outD_C[(i*NI)+j] *= inD_beta;
+                outD_result[(i*NJ)+j] *= inD_beta;
             }
             for (int k = 0; k < NK; k++){
                 for (int j = 0; j < NJ; j++){
-                    outD_C[(i*NI)+j] += inD_alpha * inD_A[(i*NI)+k] * inD_B[(k*NI)+j];
+                    outD_result[(i*NJ)+j] += inD_alpha * inD_A[(i*NK)+k] * inD_B[(k*NJ)+j];
                 }
             }
         }

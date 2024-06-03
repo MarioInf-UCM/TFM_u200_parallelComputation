@@ -72,4 +72,25 @@
         #define GEMM_K_EXTRALARGE 2600
     #endif
 
+
+    //DEFINE PARAMS FOR JACOBI_2D KERNEL
+    //**********************************
+    # if !defined(TSTEPS) && !defined(N)
+        #define JACOBI2D_TSTEPS_MINI 20
+        #define JACOBI2D_N_MINI 30
+        
+        #define JACOBI2D_TSTEPS_SMALL 40
+        #define JACOBI2D_N_SMALL 90
+        
+        #define JACOBI2D_TSTEPS_MEDIUM 100
+        #define JACOBI2D_N_MEDIUM 250
+        
+        #define JACOBI2D_TSTEPS_LARGE 500
+        #define JACOBI2D_N_LARGE 1300
+        
+        #define JACOBI2D_TSTEPS_EXTRALARGE 1000
+        #define JACOBI2D_N_EXTRALARGE 2800
+    #endif
+
+
 #endif

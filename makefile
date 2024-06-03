@@ -144,9 +144,9 @@ kerGemm_build_hw:
 # COMMANDS FOR JACOBI_2D KERNELS COMPILE
 #**************************************
 kerJacobi_2d_build_sw_emu:
-#@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_NOOPT_SUBROUTE}; \
-#make -f $(KERNEL_JACOBI_2D_NOOPT_NAME) TARGET=sw_emu build;
-#@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_JACOBI_2D_NOOPT_NAME) TARGET=sw_emu build;
+	@cd $(CURRENT_DIR);
 	@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_OPT_SUBROUTE}; \
 	make -f $(KERNEL_JACOBI_2D_OPT_NAME) TARGET=sw_emu build; \
 

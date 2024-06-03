@@ -36,12 +36,14 @@
 *.log
 *.out
 *.toc
-*.pdf
 .vscode
+.private
 .Xil
 _x
 *.xo
-build/*
+**/build/*
+**/out/*
+**/venv/
 *.ltx
 *.xclbin
 *.info

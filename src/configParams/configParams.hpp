@@ -3,13 +3,9 @@
 
     //DEFINE TYPE OF DATA
     //******************************
-    #if defined(TYPEDATA_INT)
-        typedef int typeData;
-    #elif defined(TYPEDATA_FP)
+    namespace globalConfiguration_typeData{
         typedef float typeData;
-    #else
-        typedef float typeData;
-    #endif
+    }
 
 
 

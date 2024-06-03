@@ -4,6 +4,7 @@
 #include <omp.h>
 #include "choleskyKernel.hpp"
 
+using globalConfiguration_typeData::typeData;
 using namespace std;
 
 //********************************

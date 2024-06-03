@@ -13,7 +13,7 @@
                     "kernelPackage": "kerPack_gemm_noOpt_sw_emu.xclbin",
                     "kernel": "ker_gemm_noOpt_mini",
                     "dataSize": "mini", 
-                    "printResults": true,
+                    "printResults": false,
                     "numExecutions": 1
                 },
                 {
@@ -21,7 +21,7 @@
                     "kernelPackage": "kerPack_gemm_noOpt_sw_emu.xclbin",
                     "kernel": "ker_gemm_noOpt_small",
                     "dataSize": "small", 
-                    "printResults": true,
+                    "printResults": false,
                     "numExecutions": 1
                 },
                 {

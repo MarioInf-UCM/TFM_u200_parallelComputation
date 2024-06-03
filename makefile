@@ -28,7 +28,7 @@ KERNEL_GEMM_PER_OPT_NAME=makeKer_gemm_per_Opt.mk
 #Kernel url specification - END
 
 
-CONFIGFILE_ROUTE=../../config/configBenchmark_exec2.json
+CONFIGFILE_ROUTE=../../config/configTest_gemm_per.json
 SCRIPTS_ROUTE=cmake/scripts/
 
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
@@ -94,14 +94,14 @@ kerCholesky_build_hw:
 # COMMANDS FOR GEMM KERNELS COMPILE
 #**************************************
 kerGemm_build_sw_emu:
-#@cd ${KERNELS_ROUTE}${KERNEL_GEMM_NOOPT_SUBROUTE}; \
-#make -f $(KERNEL_GEMM_NOOPT_NAME) TARGET=sw_emu build;
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_NOOPT_NAME) TARGET=sw_emu build;
 #@cd $(CURRENT_DIR);
 #@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT_SUBROUTE}; \
 #make -f $(KERNEL_GEMM_OPT_NAME) TARGET=sw_emu build;
 #@cd $(CURRENT_DIR);
-	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
-	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=sw_emu build;
+#@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+#make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=sw_emu build;
 #@cd $(CURRENT_DIR);
 #@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_OPT_SUBROUTE}; \
 #make -f $(KERNEL_GEMM_PER_OPT_NAME) TARGET=sw_emu build; \

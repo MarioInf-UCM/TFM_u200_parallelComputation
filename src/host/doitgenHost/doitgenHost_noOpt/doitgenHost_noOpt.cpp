@@ -7,6 +7,8 @@
 #include "doitgenHost_noOpt.hpp"
 
 using namespace std;
+using globalConfiguration_typeData::typeData;
+
 using cl::Event;
 using cl::CommandQueue;
 using cl::Kernel;

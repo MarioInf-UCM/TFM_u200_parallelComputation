@@ -4,6 +4,7 @@
 #include <omp.h>
 #include "gemmKernel.hpp"
 
+
 using namespace std;
 
 //********************************
@@ -38,9 +39,9 @@ GemmKernel::~GemmKernel(){}
 //*********************
 void GemmKernel::initData_A(){
     for (int i=0; i<get_SIZE_I(); i++) {
-        get_A().push_back(vector<typeData>(get_SIZE_J(), 0.0f));
-        for (int j=0; j<get_SIZE_J(); j++){
-            get_A()[i][j] = (typeData)(i*(j+1) % get_SIZE_J()) / get_SIZE_J();
+        get_A().push_back(vector<typeData>(get_SIZE_K(), 0.0f));
+        for (int k=0; k<get_SIZE_K(); k++){
+            get_A()[i][k] = (typeData)(i*(k+1) % get_SIZE_K()) / get_SIZE_K();
         }
     }
     return;
@@ -59,10 +60,10 @@ void GemmKernel::initData_B(){
 
 
 void GemmKernel::initData_C(){
-    for (int k=0; k<get_SIZE_I(); k++) {
+    for (int i=0; i<get_SIZE_I(); i++) {
         get_C().push_back(vector<typeData>(get_SIZE_J(), 0.0f));
         for (int j=0; j<get_SIZE_J(); j++){
-            get_C()[k][j] = (typeData)(k*(j+2) % get_SIZE_J()) / get_SIZE_J();
+            get_C()[i][j] = (typeData)((i*j+1) % get_SIZE_I()) / get_SIZE_I();
         }
     }
     return;
@@ -215,7 +216,7 @@ void GemmKernel::kernel_gemm_CPU_opt() {
     int SIZE_K = get_SIZE_K();
     double beta = get_beta();
     double alpha = get_alpha();
-    auto result = get_resultCPU_opt();
+    auto& result = get_resultCPU_opt();
     auto C = get_C();
     auto A = get_A();
     auto B = get_B();
@@ -223,9 +224,9 @@ void GemmKernel::kernel_gemm_CPU_opt() {
     #pragma omp parallel for collapse(2)
     for (int i = 0; i < SIZE_I; i++) {
         for (int j = 0; j < SIZE_J; j++) {
-            result[i][j] = C[i][j] * beta;
+            get_resultCPU_opt()[i][j] = C[i][j] * beta;
             for (int k = 0; k < SIZE_K; k++) {
-                result[i][j] += alpha * A[i][k] * B[k][j];
+                get_resultCPU_opt()[i][j] += alpha * A[i][k] * B[k][j];
             }
         }
     }
@@ -263,12 +264,12 @@ void GemmKernel::kernel_gemm_per_CPU_opt(){
     #pragma omp parallel for
     for (int i = 0; i < size_i; i++) {
         for (int j = 0; j < size_j; j++) {
-            result[i][j] *= beta;
+            get_resultCPU_opt()[i][j] *= beta;
         }
         
         for (int k = 0; k < size_k; k++) {
             for (int j = 0; j < size_j; j++) {
-                result[i][j] += alpha * A[i][k] * B[k][j];
+                get_resultCPU_opt()[i][j] += alpha * A[i][k] * B[k][j];
             }
         }
     }

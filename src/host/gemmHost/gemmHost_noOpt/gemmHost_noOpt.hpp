@@ -9,6 +9,7 @@
 #include "../../../kernel/gemmKernel/gemmKernel.hpp"
 #include "../../../configParams/configParams.hpp"
 
+using globalConfiguration_typeData::typeData;
 
 class GemmHost_noOpt {
 

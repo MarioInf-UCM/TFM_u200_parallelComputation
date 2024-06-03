@@ -10,6 +10,7 @@
 #include "../../../configParams/configParams.hpp"
 #include "../../../kernel/choleskyKernel/choleskyKernel.hpp"
 
+using globalConfiguration_typeData::typeData;
 
 class CholeskyHost_noOpt {
 

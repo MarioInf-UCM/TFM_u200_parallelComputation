@@ -5,10 +5,17 @@
 #include <iostream>
 #include "../../configParams/configParams.hpp"
 
-using namespace std;
+/* namespace gemmConfiguration_typeData{
+    typedef double typeData;
+} */
 
+using namespace std;
+using globalConfiguration_typeData::typeData;
+//using namespace gemmConfiguration_typeData;
 
 class GemmKernel{
+
+
 
     //*****************************
     //* DEFINITION ZONE ATRIBUTES *

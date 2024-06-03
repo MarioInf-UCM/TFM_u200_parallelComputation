@@ -3,6 +3,7 @@
 #include <math.h>
 #include "doitgenKernel.hpp"
 
+using globalConfiguration_typeData::typeData;
 using namespace std;
 
 //********************************

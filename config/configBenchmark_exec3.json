@@ -4,16 +4,16 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "name":"testGemm_noOpt",
-            "statsFile":"testGemm_noOpt_results.csv",
+            "name":"testDoitgen_noOpt",
+            "statsFile":"testDoitgen_noOpt_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "gemmHost_noOpt",
-                    "kernelPackage": "kerPack_gemm_per_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_gemm_per_noOpt_mini",
+                    "host": "doitgenHost_noOpt",
+                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_noOpt_mini",
                     "dataSize": "mini", 
-                    "printResults": false,
+                    "printResults": true,
                     "numExecutions": 1
                 }
             ]

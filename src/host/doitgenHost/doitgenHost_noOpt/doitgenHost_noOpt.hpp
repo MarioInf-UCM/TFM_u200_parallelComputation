@@ -9,6 +9,8 @@
 #include "../../../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
 #include "../../../configParams/configParams.hpp"
 
+using globalConfiguration_typeData::typeData;
+
 
 class DoitgenHost_noOpt {
 

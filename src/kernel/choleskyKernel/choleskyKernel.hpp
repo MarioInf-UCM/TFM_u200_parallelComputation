@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../../configParams/configParams.hpp"
 
+using globalConfiguration_typeData::typeData;
 using namespace std;
 
 

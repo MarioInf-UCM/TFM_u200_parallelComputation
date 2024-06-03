@@ -4,14 +4,7 @@
 
 // TYPEDATA COMPILATOR VARIABLE
 //**********************************
-#if defined(TYPEDATA_INT)
-    typedef int typeData;
-#elif defined(TYPEDATA_FP)
-    typedef float typeData;
-#else
-    typedef float typeData;
-#endif
-
+typedef float typeData;
 
 
 // DATASIZE COMPILATOR VARIABLE

@@ -9,6 +9,8 @@
 #include "../../../utilities/event_timer/event_timer.hpp"
 #include "../../../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
 
+using globalConfiguration_typeData::typeData;
+
 
 class DoitgenHost_mapOpt {
 

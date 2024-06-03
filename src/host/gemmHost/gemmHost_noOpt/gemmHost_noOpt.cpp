@@ -7,10 +7,13 @@
 #include "gemmHost_noOpt.hpp"
 
 using namespace std;
+using globalConfiguration_typeData::typeData;
+
 using cl::Event;
 using cl::CommandQueue;
 using cl::Kernel;
 using cl::Buffer;
+
 
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *

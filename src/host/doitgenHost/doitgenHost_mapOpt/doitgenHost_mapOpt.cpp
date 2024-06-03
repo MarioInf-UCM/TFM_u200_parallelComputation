@@ -177,6 +177,9 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
     //STEP 7 - END: Unmap memory object
 
 
+    if(exec.get_printResults()){
+        fileWriter_logFile.write(data.printAll());
+    }
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
         result = true;
@@ -193,11 +196,6 @@ bool DoitgenHost_mapOpt::doitgenHost_mapOpt_exec(Execution exec, vector<double>&
     results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
     results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
     results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
-
-    if(exec.get_printResults()){
-        fileWriter_logFile.write(data.printAll());
-    }
-
     
   return result;
 }

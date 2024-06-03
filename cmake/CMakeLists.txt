@@ -79,6 +79,21 @@ if (DEFINED TARGET)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_Opt_sw_emu.xclbin)")
     endif()
+    
+    # kerPack_jacobi_2d_noOpt_sw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_noOpt/sw_emu/kerPack_jacobi_2d_noOpt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_noOpt/sw_emu/kerPack_jacobi_2d_noOpt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_jacobi_2d_noOpt_sw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_jacobi_2d_noOpt_sw_emu.xclbin)")
+    endif()
+
+    # kerPack_jacobi_2d_Opt_sw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_Opt/sw_emu/kerPack_jacobi_2d_Opt_sw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_Opt/sw_emu/kerPack_jacobi_2d_Opt_sw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_jacobi_2d_Opt_sw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_jacobi_2d_Opt_sw_emu.xclbin)")
+    endif()
+
 
 
   # HW_EMU kernels
@@ -140,6 +155,21 @@ if (DEFINED TARGET)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_Opt_hw_emu.xclbin)")
     endif()
+    
+    # kerPack_jacobi_2d_noOpt_hw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_noOpt/hw_emu/kerPack_jacobi_2d_noOpt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_noOpt/hw_emu/kerPack_jacobi_2d_noOpt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_jacobi_2d_noOpt_hw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_jacobi_2d_noOpt_hw_emu.xclbin)")
+    endif()
+
+    # kerPack_jacobi_2d_Opt_hw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_Opt/hw_emu/kerPack_jacobi_2d_Opt_hw_emu.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_Opt/hw_emu/kerPack_jacobi_2d_Opt_hw_emu.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_jacobi_2d_Opt_hw_emu.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_jacobi_2d_Opt_hw_emu.xclbin)")
+    endif()
+
 
 
   # HW kernels
@@ -201,13 +231,26 @@ if (DEFINED TARGET)
     else()
       message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_gemm_per_Opt_hw.xclbin)")
     endif()
+    
+    # kerPack_jacobi_2d_noOpt_hw
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_noOpt/hw/kerPack_jacobi_2d_noOpt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_noOpt/hw/kerPack_jacobi_2d_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_jacobi_2d_noOpt_hw.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_jacobi_2d_noOpt_hw.xclbin)")
+    endif()
+
+    # kerPack_jacobi_2d_Opt_hw_emu
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_Opt/hw/kerPack_jacobi_2d_noOpt_hw.xclbin")
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../build/kernelBuild/ker_jacobi_2d_Opt/hw/kerPack_jacobi_2d_noOpt_hw.xclbin ${CMAKE_CURRENT_BINARY_DIR}/kerPack_jacobi_2d_noOpt_hw.xclbin COPYONLY)
+    else()
+      message(STATUS "Kernels aren't compiled. Compile the kernels and try again (kerPack_jacobi_2d_noOpt_hw.xclbin)")
+    endif()
+
 
 
   else()
     message(FATAL_ERROR "ERROR: Invalid value for ENABLE_FEATURE: ${ENABLE_FEATURE}")
   endif()
-
-
 else()
   message(FATAL_ERROR "ERROR: TARGET not define.")
 endif()
@@ -259,11 +302,14 @@ add_executable(benchmarkExec
   ../src/kernel/doitgenKernel/doitgenKernel.cpp
   ../src/kernel/choleskyKernel/choleskyKernel.cpp
   ../src/kernel/gemmKernel/gemmKernel.cpp
+  ../src/kernel/jacobi_2dKernel/jacobi_2dKernel.cpp
   ../src/host/doitgenHost/doitgenHost.cpp
   ../src/host/doitgenHost/doitgenHost_noOpt/doitgenHost_noOpt.cpp
   ../src/host/doitgenHost/doitgenHost_mapOpt/doitgenHost_mapOpt.cpp
   ../src/host/choleskyHost/choleskyHost.cpp
   ../src/host/choleskyHost/choleskyHost_noOpt/choleskyHost_noOpt.cpp
+  ../src/host/jacobi_2dHost/jacobi_2dHost.cpp
+  ../src/host/jacobi_2dHost/jacobi_2dHost_noOpt/jacobi_2dHost_noOpt.cpp
   ../src/host/gemmHost/gemmHost.cpp
   ../src/host/gemmHost/gemmHost_noOpt/gemmHost_noOpt.cpp
   ../src/service/fileWriter_service/fileWriter_service.cpp

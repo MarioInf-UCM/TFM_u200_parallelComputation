@@ -9,7 +9,7 @@ using globalConfiguration_typeData::typeData;
 using namespace std;
 
 
-class Jacobi_2d{
+class Jacobi_2dKernel{
 
     //*****************************
     //* DEFINITION ZONE ATRIBUTES *
@@ -34,8 +34,8 @@ class Jacobi_2d{
         //********************************
         //* CONSTRUCTORS AND DESTRUCTORS *
         //********************************
-        Jacobi_2d(unsigned int STEPS, unsigned int SIZE_N);
-        ~Jacobi_2d();
+        Jacobi_2dKernel(unsigned int STEPS, unsigned int SIZE_N);
+        ~Jacobi_2dKernel();
 
         void initData_A(unsigned int SIZE_N);
         void initData_B(unsigned int SIZE_N);

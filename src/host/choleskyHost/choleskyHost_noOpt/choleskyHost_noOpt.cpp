@@ -139,6 +139,9 @@ bool CholeskyHost_noOpt::choleskyHost_noOpt_exec(Execution exec, vector<double>&
     //STEP 7 - END: Transmision data from device 
 
 
+    if(exec.get_printResults()){
+        fileWriter_logFile.write(data.printAll());
+    }
     if(compareResults(data)){
         fileWriter_logFile.write("\033[1;32m***WELL, The results match***\033[0m\n");
         result = true;
@@ -146,7 +149,6 @@ bool CholeskyHost_noOpt::choleskyHost_noOpt_exec(Execution exec, vector<double>&
         fileWriter_logFile.write("\033[1;31m***BAD, The results don't match***\033[0m\n");
         result = false;
     }
-    
     fileWriter_logFile.writeln("--------------- Key execution times ---------------");
     fileWriter_logFile.write(event.getInfoEvents());
     fileWriter_logFile.writeln("---------------------------------------------------");
@@ -156,12 +158,6 @@ bool CholeskyHost_noOpt::choleskyHost_noOpt_exec(Execution exec, vector<double>&
     results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
     results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
     results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
-
-    if(exec.get_printResults()){
-        fileWriter_logFile.write(data.printAll());
-    }
-    
-
 
   return result;
 }

@@ -9,7 +9,7 @@ using namespace std;
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
 //********************************
-Jacobi_2d::Jacobi_2d(unsigned int STEPS, unsigned int SIZE_N):
+Jacobi_2dKernel::Jacobi_2dKernel(unsigned int STEPS, unsigned int SIZE_N):
     STEPS(STEPS),
     SIZE_N(SIZE_N),
     A(vector< vector<typeData>>()),
@@ -24,15 +24,16 @@ Jacobi_2d::Jacobi_2d(unsigned int STEPS, unsigned int SIZE_N):
     initData_resultCPU_opt(SIZE_N);
     initData_resultDevice(SIZE_N);
 }
-Jacobi_2d::~Jacobi_2d(){}
+Jacobi_2dKernel::~Jacobi_2dKernel(){}
 
 
 
 //*********************
 //* GENERAL FUNCTIONS *
 //*********************
-void Jacobi_2d::initData_A(unsigned int SIZE_N){
+void Jacobi_2dKernel::initData_A(unsigned int SIZE_N){
     for(int n1=0 ; n1<get_SIZE_N() ; n1++){
+        get_A().push_back(vector<typeData>(get_SIZE_N()));
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
             get_A()[n1][n2] = ((typeData) n1*(n2+2) +2) / get_SIZE_N();
         }
@@ -41,8 +42,9 @@ void Jacobi_2d::initData_A(unsigned int SIZE_N){
 }
 
 
-void Jacobi_2d::initData_B(unsigned int SIZE_N){
+void Jacobi_2dKernel::initData_B(unsigned int SIZE_N){
     for(int n1=0 ; n1<get_SIZE_N() ; n1++){
+        get_B().push_back(vector<typeData>(get_SIZE_N()));
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
             get_B()[n1][n2] = ((typeData) n1*(n2+3) +3) / get_SIZE_N();
         }
@@ -51,30 +53,30 @@ void Jacobi_2d::initData_B(unsigned int SIZE_N){
 }
 
 
-void Jacobi_2d::initData_resultCPU(unsigned int SIZE_N){
-    for (int n = 0; n < SIZE_N; n++) {
+void Jacobi_2dKernel::initData_resultCPU(unsigned int SIZE_N){
+    for (int n = 0; n < (get_SIZE_N()*2) ; n++) {
         get_resultCPU().push_back(vector<typeData>(get_SIZE_N(), 0.0f));
     }
     return;
 }
 
-void Jacobi_2d::initData_resultCPU_opt(unsigned int SIZE_N){
-    for (int n = 0; n < SIZE_N; n++) {
+void Jacobi_2dKernel::initData_resultCPU_opt(unsigned int SIZE_N){
+    for (int n = 0; n < (get_SIZE_N()*2) ; n++) {
         get_resultCPU_opt().push_back(vector<typeData>(get_SIZE_N(), 0.0f));
     }
     return;
 }
 
-void Jacobi_2d::initData_resultDevice(unsigned int SIZE_N){
-    for (int n = 0; n < SIZE_N; n++) {
-        get_resultCPU_opt().push_back(vector<typeData>(get_SIZE_N(), 0.0f));
+void Jacobi_2dKernel::initData_resultDevice(unsigned int SIZE_N){
+    for (int n = 0; n < (get_SIZE_N()*2) ; n++) {
+        get_resultDevice().push_back(vector<typeData>(get_SIZE_N(), 0.0f));
     }
     return;
 }
 
 
 
-string Jacobi_2d::printData_A(){
+string Jacobi_2dKernel::printData_A(){
     string result="";
     for(int n1=0 ; n1<get_SIZE_N() ; n1++){
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
@@ -86,7 +88,7 @@ string Jacobi_2d::printData_A(){
 }
 
 
-string Jacobi_2d::printData_B(){
+string Jacobi_2dKernel::printData_B(){
     string result="";
     for(int n1=0 ; n1<get_SIZE_N() ; n1++){
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
@@ -98,10 +100,10 @@ string Jacobi_2d::printData_B(){
 }
 
 
-string Jacobi_2d::printData_resultCPU(){
+string Jacobi_2dKernel::printData_resultCPU(){
     string result="";
-    for(int n1=0 ; n1<get_SIZE_N() ; n1++){
-        for(int n2=0 ; n2<get_SIZE_N() ; n2++){
+    for(int n1=0 ; n1<get_resultCPU().size() ; n1++){
+        for(int n2=0 ; n2<get_resultCPU()[n1].size() ; n2++){
             result += std::to_string(get_resultCPU()[n1][n2]) + "  ";
         }
         result += "\n";
@@ -110,10 +112,10 @@ string Jacobi_2d::printData_resultCPU(){
 }
 
 
-string Jacobi_2d::printData_resultCPU_opt(){
+string Jacobi_2dKernel::printData_resultCPU_opt(){
     string result="";
-    for(int n1=0 ; n1<get_SIZE_N() ; n1++){
-        for(int n2=0 ; n2<get_SIZE_N() ; n2++){
+    for(int n1=0 ; n1<get_resultCPU_opt().size() ; n1++){
+        for(int n2=0 ; n2<get_resultCPU_opt()[n1].size() ; n2++){
             result += std::to_string(get_resultCPU_opt()[n1][n2]) + "  ";
         }
         result += "\n";
@@ -122,10 +124,10 @@ string Jacobi_2d::printData_resultCPU_opt(){
 }
 
 
-string Jacobi_2d::printData_resultDevice(){
+string Jacobi_2dKernel::printData_resultDevice(){
     string result="";
-    for(int n1=0 ; n1<get_SIZE_N() ; n1++){
-        for(int n2=0 ; n2<get_SIZE_N() ; n2++){
+    for(int n1=0 ; n1<get_resultDevice().size() ; n1++){
+        for(int n2=0 ; n2<get_resultDevice()[n1].size() ; n2++){
             result += std::to_string(get_resultDevice()[n1][n2]) + "  ";
         }
         result += "\n";
@@ -134,7 +136,7 @@ string Jacobi_2d::printData_resultDevice(){
 }
 
 
-string Jacobi_2d::printAll(){
+string Jacobi_2dKernel::printAll(){
     string result="";
     result += "RESULTS ARRAY A\n";
     result += "=====================\n";
@@ -161,17 +163,19 @@ string Jacobi_2d::printAll(){
 
 
 
-void Jacobi_2d::kernel_jacobi_2d_CPU(){
+void Jacobi_2dKernel::kernel_jacobi_2d_CPU(){
 
     for (int t=0; t<get_STEPS() ; t++){
         for (int i = 1; i < get_SIZE_N() - 1 ; i++){
             for (int j = 1; j < get_SIZE_N() - 1 ; j++){
-                B[i][j] = 0.2 * (A[i][j] + A[i][j-1] + A[i][1+j] + A[1+i][j] + A[i-1][j]);
+                get_B()[i][j] = 0.2 * (get_A()[i][j] + get_A()[i][j-1] + get_A()[i][1+j] + get_A()[1+i][j] + get_A()[i-1][j]);
+                get_resultCPU()[i][j] = get_B()[i][j];
             }
         }
         for (int i = 1; i < get_SIZE_N() - 1 ; i++){
             for (int j = 1; j < get_SIZE_N() - 1 ; j++){
-                A[i][j] = 0.2 * (B[i][j] + B[i][j-1] + B[i][1+j] + B[1+i][j] + B[i-1][j]);
+                get_A()[i][j] = 0.2 * (get_B()[i][j] + get_B()[i][j-1] + get_B()[i][1+j] + get_B()[1+i][j] + get_B()[i-1][j]);
+                get_resultCPU()[get_SIZE_N()+i][j] = get_A()[i][j];
             }
         }
     }
@@ -180,7 +184,7 @@ void Jacobi_2d::kernel_jacobi_2d_CPU(){
 }
 
 
-void Jacobi_2d::kernel_jacobi_2d_CPU() {
+void Jacobi_2dKernel::kernel_jacobi_2d_CPU_opt() {
     const int STEPS = get_STEPS();
     const int SIZE_N = get_SIZE_N();
 
@@ -189,12 +193,14 @@ void Jacobi_2d::kernel_jacobi_2d_CPU() {
         for (int i = 1; i < SIZE_N - 1; i++) {
             for (int j = 1; j < SIZE_N - 1; j++) {
                 B[i][j] = 0.2 * (A[i][j] + A[i][j - 1] + A[i][j + 1] + A[i + 1][j] + A[i - 1][j]);
+                resultCPU_opt[i][j] = B[i][j];
             }
         }
         #pragma omp parallel for collapse(2) shared(A, B)
         for (int i = 1; i < SIZE_N - 1; i++) {
             for (int j = 1; j < SIZE_N - 1; j++) {
                 A[i][j] = 0.2 * (B[i][j] + B[i][j - 1] + B[i][j + 1] + B[i + 1][j] + B[i - 1][j]);
+                resultCPU_opt[SIZE_N+i][j] = A[i][j];
             }
         }
     }
@@ -206,16 +212,16 @@ void Jacobi_2d::kernel_jacobi_2d_CPU() {
 //*************************
 //* GET AND SET FUNCTIONS *
 //*************************
-unsigned int Jacobi_2d::get_SIZE_N(){ return SIZE_N; }
-void Jacobi_2d::set_SIZE_N(unsigned int data){ SIZE_N=data; }
+unsigned int Jacobi_2dKernel::get_SIZE_N(){ return SIZE_N; }
+void Jacobi_2dKernel::set_SIZE_N(unsigned int data){ SIZE_N=data; }
 
 
-unsigned int Jacobi_2d::get_STEPS(){ return STEPS; }
-void Jacobi_2d::set_STEPS(unsigned int data){ STEPS=data; }
+unsigned int Jacobi_2dKernel::get_STEPS(){ return STEPS; }
+void Jacobi_2dKernel::set_STEPS(unsigned int data){ STEPS=data; }
 
 
-vector< vector<typeData>>& Jacobi_2d::get_A(){ return A; }
-void Jacobi_2d::set_A(vector< vector<typeData>> newList){
+vector< vector<typeData>>& Jacobi_2dKernel::get_A(){ return A; }
+void Jacobi_2dKernel::set_A(vector< vector<typeData>> newList){
     get_A().clear();
     for(int n1=0 ; n1<get_SIZE_N() ; n1++){
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
@@ -226,8 +232,8 @@ void Jacobi_2d::set_A(vector< vector<typeData>> newList){
 }
 
 
-vector< vector<typeData>>& Jacobi_2d::get_B(){ return B; }
-void Jacobi_2d::set_A(vector< vector<typeData>> newList){
+vector< vector<typeData>>& Jacobi_2dKernel::get_B(){ return B; }
+void Jacobi_2dKernel::set_B(vector< vector<typeData>> newList){
     get_B().clear();
     for(int n1=0 ; n1<get_SIZE_N() ; n1++){
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
@@ -238,9 +244,9 @@ void Jacobi_2d::set_A(vector< vector<typeData>> newList){
 }
 
 
-vector< vector<typeData>>& Jacobi_2d::get_resultCPU(){ return resultCPU; }
-void Jacobi_2d::set_resultCPU(vector< vector<typeData>> newList){
-    for(int n1=0 ; n1<get_SIZE_N() ; n1++){
+vector< vector<typeData>>& Jacobi_2dKernel::get_resultCPU(){ return resultCPU; }
+void Jacobi_2dKernel::set_resultCPU(vector< vector<typeData>> newList){
+    for(int n1=0 ; n1<get_SIZE_N()*2 ; n1++){
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
             get_resultCPU()[n1][n2]=newList[n1][n2];
         }
@@ -249,9 +255,9 @@ void Jacobi_2d::set_resultCPU(vector< vector<typeData>> newList){
 }
 
 
-vector< vector<typeData>>& Jacobi_2d::get_resultCPU_opt(){ return resultCPU_opt; }
-void Jacobi_2d::set_resultCPU_opt(vector< vector<typeData>> newList){
-    for(int n1=0 ; n1<get_SIZE_N() ; n1++){
+vector< vector<typeData>>& Jacobi_2dKernel::get_resultCPU_opt(){ return resultCPU_opt; }
+void Jacobi_2dKernel::set_resultCPU_opt(vector< vector<typeData>> newList){
+    for(int n1=0 ; n1<get_SIZE_N()*2 ; n1++){
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
             get_resultCPU_opt()[n1][n2]=newList[n1][n2];
         }
@@ -260,9 +266,9 @@ void Jacobi_2d::set_resultCPU_opt(vector< vector<typeData>> newList){
 }
 
 
-vector< vector<typeData>>& Jacobi_2d::get_resultDevice(){ return resultDevice; }
-void Jacobi_2d::set_resultDevice(vector< vector<typeData>> newList){
-    for(int n1=0 ; n1<get_SIZE_N() ; n1++){
+vector< vector<typeData>>& Jacobi_2dKernel::get_resultDevice(){ return resultDevice; }
+void Jacobi_2dKernel::set_resultDevice(vector< vector<typeData>> newList){
+    for(int n1=0 ; n1<get_SIZE_N()*2 ; n1++){
         for(int n2=0 ; n2<get_SIZE_N() ; n2++){
             get_resultDevice()[n1][n2]=newList[n1][n2];
         }

@@ -24,11 +24,16 @@ KERNEL_GEMM_PER_NOOPT_SUBROUTE=ker_gemm_per_noOpt
 KERNEL_GEMM_PER_NOOPT_NAME=makeKer_gemm_per_noOpt.mk
 KERNEL_GEMM_PER_OPT_SUBROUTE=ker_gemm_per_Opt
 KERNEL_GEMM_PER_OPT_NAME=makeKer_gemm_per_Opt.mk
+
+KERNEL_JACOBI_2D_NOOPT_SUBROUTE=ker_jacobi_2d_noOpt
+KERNEL_JACOBI_2D_NOOPT_NAME=makeKer_jacobi_2d_noOpt.mk
+KERNEL_JACOBI_2D_OPT_SUBROUTE=ker_jacobi_2d_Opt
+KERNEL_JACOBI_2D_OPT_NAME=makeKer_jacobi_2d_Opt.mk
 #***********************************
 #Kernel url specification - END
 
 
-CONFIGFILE_ROUTE=../../config/configTest_gemm_per.json
+CONFIGFILE_ROUTE=../../config/configTest_jacobi_2d.json
 SCRIPTS_ROUTE=cmake/scripts/
 
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
@@ -96,15 +101,15 @@ kerCholesky_build_hw:
 kerGemm_build_sw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_NOOPT_SUBROUTE}; \
 	make -f $(KERNEL_GEMM_NOOPT_NAME) TARGET=sw_emu build;
-#@cd $(CURRENT_DIR);
-#@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT_SUBROUTE}; \
-#make -f $(KERNEL_GEMM_OPT_NAME) TARGET=sw_emu build;
-#@cd $(CURRENT_DIR);
-#@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
-#make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=sw_emu build;
-#@cd $(CURRENT_DIR);
-#@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_OPT_SUBROUTE}; \
-#make -f $(KERNEL_GEMM_PER_OPT_NAME) TARGET=sw_emu build; \
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_OPT_NAME) TARGET=sw_emu build;
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=sw_emu build;
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_OPT_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_PER_OPT_NAME) TARGET=sw_emu build; \
 
 	
 kerGemm_build_hw_emu:
@@ -132,6 +137,34 @@ kerGemm_build_hw:
 	@cd $(CURRENT_DIR);
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_PER_NOOPT_SUBROUTE}; \
 	make -f $(KERNEL_GEMM_PER_NOOPT_NAME) TARGET=hw build; \
+
+
+
+#**************************************
+# COMMANDS FOR JACOBI_2D KERNELS COMPILE
+#**************************************
+kerJacobi_2d_build_sw_emu:
+#@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_NOOPT_SUBROUTE}; \
+#make -f $(KERNEL_JACOBI_2D_NOOPT_NAME) TARGET=sw_emu build;
+#@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_OPT_SUBROUTE}; \
+	make -f $(KERNEL_JACOBI_2D_OPT_NAME) TARGET=sw_emu build; \
+
+	
+kerJacobi_2d_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_JACOBI_2D_NOOPT_NAME) TARGET=hw_emu build;
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_OPT_SUBROUTE}; \
+	make -f $(KERNEL_JACOBI_2D_OPT_NAME) TARGET=hw_emu build; \
+	
+kerJacobi_2d_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_NOOPT_SUBROUTE}; \
+	make -f $(KERNEL_JACOBI_2D_NOOPT_NAME) TARGET=hw build;
+	@cd $(CURRENT_DIR);
+	@cd ${KERNELS_ROUTE}${KERNEL_JACOBI_2D_OPT_SUBROUTE}; \
+	make -f $(KERNEL_JACOBI_2D_OPT_NAME) TARGET=hw build; \
+
 
 
 #**************************************

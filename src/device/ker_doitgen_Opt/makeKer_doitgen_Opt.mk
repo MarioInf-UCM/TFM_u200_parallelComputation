@@ -42,8 +42,8 @@ CUSTOMPARAMS_GENERAL :=
 MAKEFILE_NAME := makeKer_doitgen_Opt.mk
 
 ker_doitgen_Opt_XOS := ker_doitgen_Opt_mini.xo
-ker_doitgen_Opt_XOS += ker_doitgen_Opt_small.xo
-ker_doitgen_Opt_XOS += ker_doitgen_Opt_medium.xo
+#ker_doitgen_Opt_XOS += ker_doitgen_Opt_small.xo
+#ker_doitgen_Opt_XOS += ker_doitgen_Opt_medium.xo
 #ker_doitgen_Opt_XOS += ker_doitgen_Opt_large.xo
 #ker_doitgen_Opt_XOS += ker_doitgen_Opt_extralarge.xo
 

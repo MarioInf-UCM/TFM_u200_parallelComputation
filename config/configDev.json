@@ -1,0 +1,23 @@
+{
+    "verbose": true,
+    "outDir": "../../out",
+    "logFile": "logFile.txt",
+    "testList":[
+        {
+            "name":"testDoitgen_Opt",
+            "statsFile":"testDoitgen_Opt_results.csv",
+            "generatePictures": true,
+            "executionList":[
+                {
+                    "host": "doitgenHost_Opt",
+                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt_mini",
+                    "dataSize": "mini", 
+                    "printResults": true,
+                    "numExecutions": 1
+                }
+            ]
+        }
+    ]
+ 
+}  

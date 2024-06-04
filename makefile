@@ -33,7 +33,7 @@ KERNEL_JACOBI_2D_OPT_NAME=makeKer_jacobi_2d_Opt.mk
 #Kernel url specification - END
 
 
-CONFIGFILE_ROUTE=../../config/configTest_jacobi_2d.json
+CONFIGFILE_ROUTE=../../config/configDev.json
 SCRIPTS_ROUTE=cmake/scripts/
 
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
@@ -46,9 +46,9 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 # COMMANDS FOR DOITGEN KERNELS COMPILE
 #**************************************
 kerDoitgen_build_sw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
-	make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=sw_emu build;
-	@cd $(CURRENT_DIR);
+#@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_NOOPT_SUBROUTE}; \
+#make -f $(KERNEL_DOITGEN_NOOPT_NAME) TARGET=sw_emu build;
+#@cd $(CURRENT_DIR);
 	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT_SUBROUTE}; \
 	make -f $(KERNEL_DOITGEN_OPT_NAME) TARGET=sw_emu build; \
 	

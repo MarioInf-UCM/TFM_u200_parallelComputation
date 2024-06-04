@@ -305,7 +305,7 @@ add_executable(benchmarkExec
   ../src/kernel/jacobi_2dKernel/jacobi_2dKernel.cpp
   ../src/host/doitgenHost/doitgenHost.cpp
   ../src/host/doitgenHost/doitgenHost_noOpt/doitgenHost_noOpt.cpp
-  ../src/host/doitgenHost/doitgenHost_mapOpt/doitgenHost_mapOpt.cpp
+  ../src/host/doitgenHost/doitgenHost_Opt/doitgenHost_Opt.cpp
   ../src/host/choleskyHost/choleskyHost.cpp
   ../src/host/choleskyHost/choleskyHost_noOpt/choleskyHost_noOpt.cpp
   ../src/host/jacobi_2dHost/jacobi_2dHost.cpp
@@ -325,6 +325,9 @@ target_include_directories(benchmarkExec PRIVATE
   ${XRT_INCLUDE_DIRS}
   ${OpenCL_INCLUDE_DIRS}
   ${jsoncpp_INCLUDE_DIRS} 
+  /opt/xilinx/xrt/include
+  /opt/xilinx/Vitis/2023.2/include
+  /opt/xilinx/Vitis_HLS/2023.2/include
   )
 
 target_link_libraries(benchmarkExec PRIVATE

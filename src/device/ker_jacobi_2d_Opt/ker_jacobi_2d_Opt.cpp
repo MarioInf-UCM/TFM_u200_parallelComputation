@@ -65,18 +65,30 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
     
+
+        #pragma HLS DATAFLOW
+
         for (int t=0; t<STEPS ; t++){
-            #pragma HLS pipeline
             #pragma HLS LOOP_TRIPCOUNT min=STEPS max=STEPS
             
             for (int i = 1; i < SIZE_N - 1 ; i++){
+                #pragma HLS LOOP_TRIPCOUNT min=SIZE_N max=SIZE_N
+
                 for (int j = 1; j < SIZE_N - 1 ; j++){
+                    #pragma HLS LOOP_TRIPCOUNT min=SIZE_N max=SIZE_N
+                    #pragma HLS UNROLL factor=8
+                    #pragma HLS PIPELINE II=2
                     inD_B[(i*SIZE_N)+j] = 0.2 * (inD_A[(i*SIZE_N)+j] + inD_A[(i*SIZE_N)+(j-1)] + inD_A[(i*SIZE_N)+(j+1)] + inD_A[((i+1)*SIZE_N)+j] + inD_A[((i-1)*SIZE_N)+j]);
                     outD_result[(i*SIZE_N)+j] = inD_B[(i*SIZE_N)+j];
                 }
             }
             for (int i = 1; i < SIZE_N - 1 ; i++){
+                #pragma HLS LOOP_TRIPCOUNT min=SIZE_N max=SIZE_N
+
                 for (int j = 1; j < SIZE_N - 1 ; j++){
+                    #pragma HLS LOOP_TRIPCOUNT min=SIZE_N max=SIZE_N
+                    #pragma HLS UNROLL factor=8
+                    #pragma HLS PIPELINE II=2
                     inD_A[(i*SIZE_N)+j] = 0.2 * (inD_B[(i*SIZE_N)+j] + inD_B[(i*SIZE_N)+(j-1)] + inD_B[(i*SIZE_N)+(j+1)] + inD_B[((i+1)*SIZE_N)+j] + inD_B[((i-1)*SIZE_N)+j]);
                     outD_result[(SIZE_N*SIZE_N)+(i*SIZE_N)+j] = inD_A[(i*SIZE_N)+j];
                 }

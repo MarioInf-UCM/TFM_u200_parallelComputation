@@ -1,5 +1,5 @@
-#ifndef _DOITGENHOST_MAPOPT_HPP_
-#define _DOITGENHOST_MAPOPT_HPP_
+#ifndef _DOITGENHOST_OPT_HPP_
+#define _DOITGENHOST_OPT_HPP_
 
 #include <iostream>
 #include "../../../configParams/configParams.hpp"
@@ -10,9 +10,10 @@
 #include "../../../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
 
 using globalConfiguration_typeData::typeData;
+using globalConfiguration_typeData::typeData_fixed;
 
 
-class DoitgenHost_mapOpt {
+class DoitgenHost_Opt {
 
 
     //*****************************
@@ -26,16 +27,16 @@ class DoitgenHost_mapOpt {
     //* DEFINITION ZONE FUNCTIONS *
     //*****************************
     public:
-        DoitgenHost_mapOpt();
-        ~DoitgenHost_mapOpt();
+        DoitgenHost_Opt();
+        ~DoitgenHost_Opt();
 
-        static bool doitgenHost_mapOpt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+        static bool doitgenHost_Opt_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:
         static bool initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P);
-        static void emsamble_dataToBuffers(DoitgenKernel& data, typeData *temp_A,  typeData *temp_C4, typeData *temp_resultDevice);
-        static void emsamble_buffersToData(DoitgenKernel& data, typeData *temp_resultDevice);
+        static void emsamble_dataToBuffers(DoitgenKernel& data, vector<typeData_fixed> &temp_A,  vector<typeData_fixed> &temp_C4, vector<typeData_fixed> &temp_resultDevice);
+        static void emsamble_buffersToData(DoitgenKernel& data, vector<typeData_fixed> &temp_resultDevice);
         static bool compareResults(DoitgenKernel& data);
 
 };

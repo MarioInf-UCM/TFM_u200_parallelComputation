@@ -54,18 +54,32 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = outD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
+
+        #pragma HLS DATAFLOW
+
         for (int i = 0; i < SIZE_N; i++) {
-            #pragma HLS pipeline
             #pragma HLS LOOP_TRIPCOUNT min=SIZE_N max=SIZE_N
+            #pragma HLS UNROLL factor=8
+
             for (int j = 0; j < i; j++) {
+                #pragma HLS LOOP_TRIPCOUNT min=0 max=SIZE_N
+                #pragma HLS UNROLL factor=8
+            
                 for (int k = 0; k < j; k++) {
+                    #pragma HLS PIPELINE II=1
                     outD_A[(i*SIZE_N) + j] -= inD_A[(i*SIZE_N) + k] * inD_A[(j*SIZE_N) + k];
                 }
+
                 outD_A[(i*SIZE_N) + j] /= inD_A[(j*SIZE_N) + j];
             }
+
             for (int k = 0; k < i; k++) {
+                #pragma HLS LOOP_TRIPCOUNT min=0 max=SIZE_N
+                #pragma HLS UNROLL factor=8
+                #pragma HLS PIPELINE II=1
                 outD_A[(i*SIZE_N) + i] -= inD_A[(i*SIZE_N) + k] * inD_A[(i*SIZE_N) + k];
             }
+
             outD_A[(i*SIZE_N) + i] = sqrt(inD_A[(i*SIZE_N) + i]);
         }
         

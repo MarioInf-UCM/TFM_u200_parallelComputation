@@ -14,7 +14,7 @@
                     "kernel": "ker_doitgen_noOpt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "doitgenHost_noOpt",
@@ -22,7 +22,7 @@
                     "kernel": "ker_doitgen_noOpt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "doitgenHost_noOpt",
@@ -30,7 +30,7 @@
                     "kernel": "ker_doitgen_noOpt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "doitgenHost_noOpt",
@@ -38,7 +38,7 @@
                     "kernel": "ker_doitgen_noOpt_large",
                     "dataSize": "large", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "doitgenHost_noOpt",
@@ -46,7 +46,7 @@
                     "kernel": "ker_doitgen_noOpt_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -61,7 +61,7 @@
                     "kernel": "ker_doitgen_Opt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "doitgenHost_noOpt",
@@ -69,7 +69,7 @@
                     "kernel": "ker_doitgen_Opt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "doitgenHost_noOpt",
@@ -77,7 +77,7 @@
                     "kernel": "ker_doitgen_Opt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -92,7 +92,7 @@
                     "kernel": "ker_cholesky_noOpt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "choleskyHost_noOpt",
@@ -100,7 +100,7 @@
                     "kernel": "ker_cholesky_noOpt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "choleskyHost_noOpt",
@@ -108,7 +108,7 @@
                     "kernel": "ker_cholesky_noOpt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "choleskyHost_noOpt",
@@ -116,7 +116,7 @@
                     "kernel": "ker_cholesky_noOpt_large",
                     "dataSize": "large", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "choleskyHost_noOpt",
@@ -124,7 +124,7 @@
                     "kernel": "ker_cholesky_noOpt_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -139,7 +139,7 @@
                     "kernel": "ker_cholesky_Opt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "choleskyHost_noOpt",
@@ -147,7 +147,7 @@
                     "kernel": "ker_cholesky_Opt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "choleskyHost_noOpt",
@@ -155,7 +155,7 @@
                     "kernel": "ker_cholesky_Opt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -170,7 +170,7 @@
                     "kernel": "ker_gemm_noOpt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -178,7 +178,7 @@
                     "kernel": "ker_gemm_noOpt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -186,7 +186,7 @@
                     "kernel": "ker_gemm_noOpt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -194,7 +194,7 @@
                     "kernel": "ker_gemm_noOpt_large",
                     "dataSize": "large", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -202,7 +202,7 @@
                     "kernel": "ker_gemm_noOpt_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -217,7 +217,7 @@
                     "kernel": "ker_gemm_Opt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -225,7 +225,7 @@
                     "kernel": "ker_gemm_Opt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -233,7 +233,7 @@
                     "kernel": "ker_gemm_Opt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -248,7 +248,7 @@
                     "kernel": "ker_gemm_per_noOpt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -256,7 +256,7 @@
                     "kernel": "ker_gemm_per_noOpt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -264,7 +264,7 @@
                     "kernel": "ker_gemm_per_noOpt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -272,7 +272,7 @@
                     "kernel": "ker_gemm_per_noOpt_large",
                     "dataSize": "large", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -280,7 +280,7 @@
                     "kernel": "ker_gemm_per_noOpt_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -295,7 +295,7 @@
                     "kernel": "ker_gemm_per_Opt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -303,7 +303,7 @@
                     "kernel": "ker_gemm_per_Opt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "gemmHost_noOpt",
@@ -311,7 +311,7 @@
                     "kernel": "ker_gemm_per_Opt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -326,7 +326,7 @@
                     "kernel": "ker_jacobi_2d_noOpt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "jacobi_2dHost_noOpt",
@@ -334,7 +334,7 @@
                     "kernel": "ker_jacobi_2d_noOpt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "jacobi_2dHost_noOpt",
@@ -342,7 +342,7 @@
                     "kernel": "ker_jacobi_2d_noOpt_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "jacobi_2dHost_noOpt",
@@ -350,7 +350,7 @@
                     "kernel": "ker_jacobi_2d_noOpt_large",
                     "dataSize": "large", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "jacobi_2dHost_noOpt",
@@ -358,7 +358,7 @@
                     "kernel": "ker_jacobi_2d_noOpt_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         },
@@ -373,7 +373,7 @@
                     "kernel": "ker_jacobi_2d_Opt_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 },
                 {
                     "host": "jacobi_2dHost_Opt",
@@ -381,7 +381,7 @@
                     "kernel": "ker_jacobi_2d_Opt_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 10
+                    "numExecutions": 1
                 }
             ]
         }

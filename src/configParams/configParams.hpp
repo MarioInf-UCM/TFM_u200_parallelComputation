@@ -1,10 +1,14 @@
 #ifndef _CONFIGPARAMS_HPP_
 #define _CONFIGPARAMS_HPP_
 
+#include <ap_fixed.h>
     //DEFINE TYPE OF DATA
     //******************************
     namespace globalConfiguration_typeData{
         typedef float typeData;
+        #define TYPEDATA_BITS_SIZE 32
+        #define TYPEDATA_BITS_INT 8
+        typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData_fixed;
     }
 
 

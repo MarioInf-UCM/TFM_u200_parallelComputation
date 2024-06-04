@@ -4,17 +4,10 @@
 
 // TYPEDATA COMPILATOR VARIABLE
 //**********************************
-#if defined(TYPEDATA_INT)
-    typedef int typeData;
-#elif defined(TYPEDATA_FP)
-    typedef float typeData;
-#else
-    #define TYPEDATA_BITS_SIZE 32
-    #define TYPEDATA_BITS_INT 8
-    typedef float typeData;
-    //typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
-#endif
-
+#define TYPEDATA_BITS_SIZE 32
+#define TYPEDATA_BITS_INT 8
+//typedef float typeData;
+typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 
 
 // DATASIZE COMPILATOR VARIABLE
@@ -79,18 +72,30 @@ extern "C"{
 
         typeData sum[SIZE_P];
 
+        #pragma HLS DATAFLOW
+        
         for (int r = 0; r < SIZE_R; r++){
-            #pragma HLS pipeline
             #pragma HLS LOOP_TRIPCOUNT min=SIZE_R max=SIZE_R
+            #pragma HLS UNROLL factor=8
+
             for (int q = 0; q < SIZE_Q; q++){
+                #pragma HLS LOOP_TRIPCOUNT min=SIZE_Q max=SIZE_Q
+                #pragma HLS UNROLL factor=8
+
                 for (int p = 0; p < SIZE_P; p++){
+                    #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
                     sum[p] = 0.0;
+
                     for (int s = 0; s < SIZE_P; s++){
+                        #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
+                        #pragma HLS PIPELINE II=1
                         sum[p] += inD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+s] * inD_C4[(s*SIZE_P)+p];
                     }
                 }
 
                 for (int p = 0; p < SIZE_P; p++){
+                    #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
+                    #pragma HLS PIPELINE II=1
                     outD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p] = sum[p];
                 }
             }

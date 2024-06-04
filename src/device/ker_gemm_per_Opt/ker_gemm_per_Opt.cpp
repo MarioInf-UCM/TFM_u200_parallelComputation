@@ -67,14 +67,26 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
+
+        #pragma HLS DATAFLOW
+
         for (int i = 0; i < NI; i++) {
-            #pragma HLS pipeline
             #pragma HLS LOOP_TRIPCOUNT min=NI max=NI
+
             for (int j = 0; j < NJ; j++){
+                #pragma HLS LOOP_TRIPCOUNT min=NJ max=NJ
+                #pragma HLS UNROLL factor=8
+                #pragma HLS PIPELINE II=1
                 outD_result[(i*NJ)+j] *= inD_beta;
             }
+
             for (int k = 0; k < NK; k++){
+                #pragma HLS LOOP_TRIPCOUNT min=NK max=NK
+
                 for (int j = 0; j < NJ; j++){
+                    #pragma HLS LOOP_TRIPCOUNT min=NJ max=NJ
+                    #pragma HLS UNROLL factor=8
+                    #pragma HLS PIPELINE II=1
                     outD_result[(i*NJ)+j] += inD_alpha * inD_A[(i*NK)+k] * inD_B[(k*NJ)+j];
                 }
             }

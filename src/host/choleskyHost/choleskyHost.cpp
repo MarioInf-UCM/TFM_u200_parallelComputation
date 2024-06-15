@@ -8,22 +8,24 @@ CholeskyHost::~CholeskyHost(){};
 
 
 
-bool CholeskyHost::choleskyHost_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+bool CholeskyHost::exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     
     bool result = false;
-    if(exec.get_host() == "choleskyHost_noOpt"){
-        fileWriter_logFile.writeln("KernelPackage selected matches with \"choleskyHost_noOpt\" host version");
-        result = CholeskyHost_noOpt::choleskyHost_noOpt_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+    string hostName = exec.get_host();
+    for (char& c : hostName) {
+        c = tolower(c);
+    } 
+
+    if(hostName == Helper::getNameOfType(typeid(CholeskyHost_Opt0_1).name())){
+        fileWriter_logFile.writeln("KernelPackage selected matches with" + Helper::getNameOfType(typeid(CholeskyHost_Opt0_1).name()) + "host version");
+        result = CholeskyHost_Opt0_1::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
         
-    }else if(exec.get_host() == "choleskyHost_mapOpt"){
-        //fileWriter_logFile.writeln("KernelPackage selected matches with \"choleskyHost_mapOpt\" host version");
-        //result = CholeskyHost ::choleskyHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
-
-    }else if(exec.get_kernelPackage().find("") != string::npos){
-
-    }else if(exec.get_kernelPackage().find("") != string::npos){
+    }else if(hostName == Helper::getNameOfType(typeid(CholeskyHost_Opt2).name())){
+        fileWriter_logFile.writeln("KernelPackage selected matches with " + Helper::getNameOfType(typeid(CholeskyHost_Opt2).name()) + " host version");
+        result = CholeskyHost_Opt2::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
 
     }else{
+        fileWriter_logFile.writeln("ERROR..: Doitgen host name unknow (" + hostName + ").");
         return false;
     }
 

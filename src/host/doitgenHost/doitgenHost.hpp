@@ -5,9 +5,9 @@
 #include <vector>
 #include "../../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../../service/fileWriter_service/fileWriter_service.hpp"
-#include "doitgenHost_noOpt/doitgenHost_noOpt.hpp"
-#include "doitgenHost_Opt/doitgenHost_Opt.hpp"
-
+#include "../../utilities/helper/helper.hpp"
+#include "doitgenHost_Opt0_1/doitgenHost_Opt0_1.hpp"
+#include "doitgenHost_Opt2/doitgenHost_Opt2.hpp"
 
 class DoitgenHost {
 
@@ -30,7 +30,7 @@ class DoitgenHost {
         DoitgenHost();
         ~DoitgenHost();
 
-        static bool doitgenHost_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+        static bool exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:

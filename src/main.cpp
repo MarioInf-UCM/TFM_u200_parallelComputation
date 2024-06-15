@@ -5,7 +5,7 @@
 #include "host/choleskyHost/choleskyHost.hpp"
 #include "host/doitgenHost/doitgenHost.hpp"
 #include "host/gemmHost/gemmHost.hpp"
-#include "host/jacobi_2dHost/jacobi_2dHost.hpp"
+#include "host/jacobi2dHost/jacobi2dHost.hpp"
 #include "utilities/dateAndTime/dateAndTime.hpp"
 #include "service/json_service/json_service.hpp"
 #include "service/json_service/jsonConfiguration/jsonConfiguration.hpp"
@@ -112,16 +112,16 @@ bool runExecution(Execution exec, vector<double>& results, FileWriter_service fi
 
     bool result = false;
     if(exec.get_host().find("doitgen") != string::npos){
-        result = DoitgenHost::doitgenHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+        result = DoitgenHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
 
     }else if(exec.get_host().find("cholesky") != string::npos){
-        result = CholeskyHost::choleskyHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        result = CholeskyHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
     
     }else if(exec.get_host().find("gemm") != string::npos){
-        result = GemmHost::gemmHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        result = GemmHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
     
-    }else if(exec.get_host().find("jacobi_2d") != string::npos){
-        result = Jacobi_2dHost::jacobi_2dHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+    }else if(exec.get_host().find("jacobi2d") != string::npos){
+        result = Jacobi2dHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
     
     }else{
         fileWriter_logFile.writeln("ERROR..: Host name unknow.");

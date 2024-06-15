@@ -4,46 +4,46 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "name":"test_doitgen_noOpt",
-            "statsFile":"test_doitgen_noOpt_results.csv",
+            "name":"test_doitgen_Opt0",
+            "statsFile":"test_doitgen_Opt0_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_mini",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt0_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt0_mini",
                     "dataSize": "mini", 
                     "printResults": false,
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_small",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt0_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt0_small",
                     "dataSize": "small", 
                     "printResults": false,
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_medium",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt0_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt0_medium",
                     "dataSize": "medium", 
                     "printResults": false,
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_large",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt0_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt0_large",
                     "dataSize": "large", 
                     "printResults": false,
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_noOpt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_noOpt_extralarge",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt0_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt0_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
                     "numExecutions": 1
@@ -51,31 +51,47 @@
             ]
         },
         {
-            "name":"test_doitgen_Opt",
-            "statsFile":"test_doitgen_Opt_results.csv",
+            "name":"test_doitgen_Opt1",
+            "statsFile":"test_doitgen_Opt1_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt_mini",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt1_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt1_mini",
                     "dataSize": "mini", 
                     "printResults": false,
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt_small",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt1_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt1_small",
                     "dataSize": "small", 
                     "printResults": false,
                     "numExecutions": 1
                 },
                 {
-                    "host": "doitgenHost_noOpt",
-                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt_medium",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt1_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt1_medium",
                     "dataSize": "medium", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt1_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt1_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt1_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt1_extralarge",
+                    "dataSize": "extralarge", 
                     "printResults": false,
                     "numExecutions": 1
                 }
@@ -156,6 +172,22 @@
                     "dataSize": "medium", 
                     "printResults": false,
                     "numExecutions": 1
+                },
+                {
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_Opt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_Opt_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "choleskyHost_noOpt",
+                    "kernelPackage": "kerPack_cholesky_Opt_sw_emu.xclbin",
+                    "kernel": "ker_cholesky_Opt_extralarge",
+                    "dataSize": "extralarge", 
+                    "printResults": false,
+                    "numExecutions": 1
                 }
             ]
         },
@@ -232,6 +264,22 @@
                     "kernelPackage": "kerPack_gemm_Opt_sw_emu.xclbin",
                     "kernel": "ker_gemm_Opt_medium",
                     "dataSize": "medium", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_noOpt",
+                    "kernelPackage": "kerPack_gemm_Opt_sw_emu.xclbin",
+                    "kernel": "ker_gemm_Opt_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_noOpt",
+                    "kernelPackage": "kerPack_gemm_Opt_sw_emu.xclbin",
+                    "kernel": "ker_gemm_Opt_extralarge",
+                    "dataSize": "extralarge", 
                     "printResults": false,
                     "numExecutions": 1
                 }
@@ -312,6 +360,22 @@
                     "dataSize": "medium", 
                     "printResults": false,
                     "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_noOpt",
+                    "kernelPackage": "kerPack_gemm_per_Opt_sw_emu.xclbin",
+                    "kernel": "ker_gemm_per_Opt_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_noOpt",
+                    "kernelPackage": "kerPack_gemm_per_Opt_sw_emu.xclbin",
+                    "kernel": "ker_gemm_per_Opt_extralarge",
+                    "dataSize": "extralarge", 
+                    "printResults": false,
+                    "numExecutions": 1
                 }
             ]
         },
@@ -368,7 +432,7 @@
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "jacobi_2dHost_Opt",
+                    "host": "jacobi_2dHost_noOpt",
                     "kernelPackage": "kerPack_jacobi_2d_Opt_sw_emu.xclbin",
                     "kernel": "ker_jacobi_2d_Opt_mini",
                     "dataSize": "mini", 
@@ -376,10 +440,34 @@
                     "numExecutions": 1
                 },
                 {
-                    "host": "jacobi_2dHost_Opt",
+                    "host": "jacobi_2dHost_noOpt",
                     "kernelPackage": "kerPack_jacobi_2d_Opt_sw_emu.xclbin",
                     "kernel": "ker_jacobi_2d_Opt_small",
                     "dataSize": "small", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "jacobi_2dHost_noOpt",
+                    "kernelPackage": "kerPack_jacobi_2d_Opt_sw_emu.xclbin",
+                    "kernel": "ker_jacobi_2d_Opt_medium",
+                    "dataSize": "medium", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "jacobi_2dHost_noOpt",
+                    "kernelPackage": "kerPack_jacobi_2d_Opt_sw_emu.xclbin",
+                    "kernel": "ker_jacobi_2d_Opt_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "jacobi_2dHost_noOpt",
+                    "kernelPackage": "kerPack_jacobi_2d_Opt_sw_emu.xclbin",
+                    "kernel": "ker_jacobi_2d_Opt_extralarge",
+                    "dataSize": "extralarge", 
                     "printResults": false,
                     "numExecutions": 1
                 }

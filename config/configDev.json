@@ -4,16 +4,16 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "name":"testDoitgen_Opt",
-            "statsFile":"testDoitgen_Opt_results.csv",
+            "name":"test_doitgen_Opt0",
+            "statsFile":"test_doitgen_Opt0_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "doitgenHost_Opt",
-                    "kernelPackage": "kerPack_doitgen_Opt_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt_mini",
+                    "host": "doitgenHost_Opt0_1",
+                    "kernelPackage": "kerPack_doitgen_Opt0_mini_sw_emu.xclbin",
+                    "kernel": "ker_doitgen_Opt0_mini",
                     "dataSize": "mini", 
-                    "printResults": true,
+                    "printResults": false,
                     "numExecutions": 1
                 }
             ]

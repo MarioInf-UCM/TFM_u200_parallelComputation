@@ -136,27 +136,39 @@ target_include_directories(example_utils PUBLIC
 
 add_executable(benchmarkExec
   ../src/main.cpp
+
   ../src/kernel/doitgenKernel/doitgenKernel.cpp
   ../src/kernel/choleskyKernel/choleskyKernel.cpp
   ../src/kernel/gemmKernel/gemmKernel.cpp
   ../src/kernel/jacobi_2dKernel/jacobi_2dKernel.cpp
+
   ../src/host/doitgenHost/doitgenHost.cpp
-  ../src/host/doitgenHost/doitgenHost_Opt0_1/doitgenHost_Opt0_1.cpp
+  ../src/host/doitgenHost/doitgenHost_Opt0/doitgenHost_Opt0.cpp
+  ../src/host/doitgenHost/doitgenHost_Opt1/doitgenHost_Opt1.cpp
   ../src/host/doitgenHost/doitgenHost_Opt2/doitgenHost_Opt2.cpp
+
   ../src/host/choleskyHost/choleskyHost.cpp
-  ../src/host/choleskyHost/choleskyHost_Opt0_1/choleskyHost_Opt0_1.cpp
+  ../src/host/choleskyHost/choleskyHost_Opt0/choleskyHost_Opt0.cpp
+  ../src/host/choleskyHost/choleskyHost_Opt1/choleskyHost_Opt1.cpp
   ../src/host/choleskyHost/choleskyHost_Opt2/choleskyHost_Opt2.cpp
+
   ../src/host/jacobi2dHost/jacobi2dHost.cpp
-  ../src/host/jacobi2dHost/jacobi2dHost_Opt0_1/jacobi2dHost_Opt0_1.cpp
+  ../src/host/jacobi2dHost/jacobi2dHost_Opt0/jacobi2dHost_Opt0.cpp
+  ../src/host/jacobi2dHost/jacobi2dHost_Opt1/jacobi2dHost_Opt1.cpp
   ../src/host/jacobi2dHost/jacobi2dHost_Opt2/jacobi2dHost_Opt2.cpp
+
   ../src/host/gemmHost/gemmHost.cpp
-  ../src/host/gemmHost/gemmHost_Opt0_1/gemmHost_Opt0_1.cpp
+  ../src/host/gemmHost/gemmHost_Opt0/gemmHost_Opt0.cpp
+  ../src/host/gemmHost/gemmHost_Opt1/gemmHost_Opt1.cpp
   ../src/host/gemmHost/gemmHost_Opt2/gemmHost_Opt2.cpp
+
   ../src/service/fileWriter_service/fileWriter_service.cpp
+
   ../src/service/json_service/json_service.cpp
   ../src/service/json_service/jsonConfiguration/jsonConfiguration.cpp
   ../src/service/json_service/jsonConfiguration/execution/execution.cpp
   ../src/service/json_service/jsonConfiguration/test/test.cpp
+  
   ../src/service/externProgramsConnection_service/externProgramsConnection_service.cpp
   )
 

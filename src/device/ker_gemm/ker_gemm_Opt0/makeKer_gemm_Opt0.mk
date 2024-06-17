@@ -26,20 +26,29 @@ PLATFORM ?= xilinx_u200_gen3x16_xdma_2_202110_1
 PLATFORM_REPO_PATHS ?= /opt/xilinx/platforms
 PFM := $(PLATFORM_REPO_PATHS)/$(PLATFORM)/$(PLATFORM).xpfm
 IP_CACHE_DIR ?= ip_cache
+VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
+
 
 
 BUILD_DIR := ../../../../build/kernelBuild
+
 CONNECTIVITY_FOLDER := ../gemm_connectivityConfig/
-CONNECTIVITY_NAME := gemm_connec.ini
-CONNECTIVITY_URL := $(CONNECTIVITY_FOLDER)$(CONNECTIVITY_NAME)
+CONNECTIVITY_NAME_MINI := gemm_Opt0_mini_connec.ini
+CONNECTIVITY_NAME_SMALL := gemm_Opt0_small_connec.ini
+CONNECTIVITY_NAME_MEDIUM := gemm_Opt0_medium_connec.ini
+CONNECTIVITY_NAME_LARGE := gemm_Opt0_large_connec.ini
+CONNECTIVITY_NAME_EXTRALARGE := gemm_Opt0_extralarge_connec.ini
 
 PROFILE_FOLDER := ../gemm_connectivityConfig/
 PROFILE_NAME := profile.ini
-PROFILE_URL := $(CONNECTIVITY_FOLDER)$(PROFILE_NAME)
 
-VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
-VPPLFLAGS := --config $(CONNECTIVITY_NAME) --config $(PROFILE_NAME) 
-CUSTOMPARAMS_GENERAL :=
+
+
+VPPLFLAGS_SPECIFIC_MINI := --config $(CONNECTIVITY_NAME_MINI) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_SMALL := --config $(CONNECTIVITY_NAME_SMALL) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_MEDIUM := --config $(CONNECTIVITY_NAME_MEDIUM) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_LARGE := --config $(CONNECTIVITY_NAME_LARGE) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_EXTRALARGE := --config $(CONNECTIVITY_NAME_EXTRALARGE) --config $(PROFILE_NAME) 
 
 
 
@@ -87,8 +96,12 @@ build: copy_files
 copy_files:
 	mkdir -p ${BUILD_DIR};
 	mkdir -p ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-	cp -r ${CONNECTIVITY_URL} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-	cp -r ${PROFILE_URL} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_MINI} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_SMALL} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_MEDIUM} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_LARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_EXTRALARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${PROFILE_FOLDER}${PROFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	cp -r ${ker_gemm_Opt0_SRC} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	cp -r ${MAKEFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	$(foreach val,$(PackKerList), \
@@ -109,69 +122,69 @@ copy_files:
 
 
 
-kerPack_gemm_Opt0_mini_sw_emu.xclbin: $(ker_gemm_Opt0_mini_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_mini_sw_emu.xclbin: $(ker_gemm_Opt0_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_gemm_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_small_sw_emu.xclbin: $(ker_gemm_Opt0_small_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_small_sw_emu.xclbin: $(ker_gemm_Opt0_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_gemm_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_medium_sw_emu.xclbin: $(ker_gemm_Opt0_medium_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_medium_sw_emu.xclbin: $(ker_gemm_Opt0_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_gemm_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_large_sw_emu.xclbin: $(ker_gemm_Opt0_large_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_large_sw_emu.xclbin: $(ker_gemm_Opt0_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_gemm_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_extralarge_sw_emu.xclbin: $(ker_gemm_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-
-
-kerPack_gemm_Opt0_mini_hw_emu.xclbin: $(ker_gemm_Opt0_mini_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_gemm_Opt0_small_hw_emu.xclbin: $(ker_gemm_Opt0_small_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_gemm_Opt0_medium_hw_emu.xclbin: $(ker_gemm_Opt0_medium_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_gemm_Opt0_large_hw_emu.xclbin: $(ker_gemm_Opt0_large_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_gemm_Opt0_extralarge_hw_emu.xclbin: $(ker_gemm_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_extralarge_sw_emu.xclbin: $(ker_gemm_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_gemm_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
 
 
-kerPack_gemm_Opt0_mini_hw.xclbin: $(ker_gemm_Opt0_mini_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_mini_hw_emu.xclbin: $(ker_gemm_Opt0_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_gemm_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_small_hw.xclbin: $(ker_gemm_Opt0_small_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_small_hw_emu.xclbin: $(ker_gemm_Opt0_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_gemm_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_medium_hw.xclbin: $(ker_gemm_Opt0_medium_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_medium_hw_emu.xclbin: $(ker_gemm_Opt0_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_gemm_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_large_hw.xclbin: $(ker_gemm_Opt0_large_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_large_hw_emu.xclbin: $(ker_gemm_Opt0_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_gemm_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_gemm_Opt0_extralarge_hw.xclbin: $(ker_gemm_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_gemm_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_gemm_Opt0_extralarge_hw_emu.xclbin: $(ker_gemm_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_gemm_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+
+
+kerPack_gemm_Opt0_mini_hw.xclbin: $(ker_gemm_Opt0_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_gemm_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_gemm_Opt0_small_hw.xclbin: $(ker_gemm_Opt0_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_gemm_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_gemm_Opt0_medium_hw.xclbin: $(ker_gemm_Opt0_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_gemm_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_gemm_Opt0_large_hw.xclbin: $(ker_gemm_Opt0_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_gemm_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_gemm_Opt0_extralarge_hw.xclbin: $(ker_gemm_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_gemm_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
 
 
 
 ker_gemm_Opt0_mini.xo: $(ker_gemm_Opt0_SRC) $(ker_gemm_Opt0_HEADER)
-	v++ --kernel $(ker_gemm_Opt0_mini_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_gemm_Opt0_mini_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
+	v++ --kernel $(ker_gemm_Opt0_mini_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) $(ker_gemm_Opt0_mini_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
 
 ker_gemm_Opt0_small.xo: $(ker_gemm_Opt0_SRC) $(ker_gemm_Opt0_HEADER)
-	v++ --kernel $(ker_gemm_Opt0_small_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_gemm_Opt0_small_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
+	v++ --kernel $(ker_gemm_Opt0_small_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) $(ker_gemm_Opt0_small_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
 
 ker_gemm_Opt0_medium.xo: $(ker_gemm_Opt0_SRC) $(ker_gemm_Opt0_HEADER)
-	v++ --kernel $(ker_gemm_Opt0_medium_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_gemm_Opt0_medium_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
+	v++ --kernel $(ker_gemm_Opt0_medium_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) $(ker_gemm_Opt0_medium_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
 
 ker_gemm_Opt0_large.xo: $(ker_gemm_Opt0_SRC) $(ker_gemm_Opt0_HEADER)
-	v++ --kernel $(ker_gemm_Opt0_large_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_gemm_Opt0_large_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
+	v++ --kernel $(ker_gemm_Opt0_large_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) $(ker_gemm_Opt0_large_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
 
 ker_gemm_Opt0_extralarge.xo: $(ker_gemm_Opt0_SRC) $(ker_gemm_Opt0_HEADER)
-	v++ --kernel $(ker_gemm_Opt0_extralarge_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_gemm_Opt0_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<
+	v++ --kernel $(ker_gemm_Opt0_extralarge_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) $(ker_gemm_Opt0_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_gemm_Opt0_SRC) $<

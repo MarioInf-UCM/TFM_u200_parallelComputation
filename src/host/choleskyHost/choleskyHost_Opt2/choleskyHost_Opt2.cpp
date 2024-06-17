@@ -26,6 +26,7 @@ CholeskyHost_Opt2::~CholeskyHost_Opt2(){}
 bool CholeskyHost_Opt2::exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"CholeskyHost::choleskyHost_Opt2_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
+/*              ***** WORK IN PROGRESS *****
     unsigned int SIZE_N=0;    
     bool result = initParameter(exec, SIZE_N);
     if(!result){
@@ -35,6 +36,7 @@ bool CholeskyHost_Opt2::exec(Execution exec, vector<double>& results, FileWriter
     CholeskyKernel data = CholeskyKernel(SIZE_N);
     EventTimer event;
     Event event_sp;
+
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
@@ -158,8 +160,8 @@ bool CholeskyHost_Opt2::exec(Execution exec, vector<double>& results, FileWriter
     results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
     results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
     results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
-
-  return result;
+ */
+  return false;
 }
 //*************************************
 // MAIN FUNCTION - END

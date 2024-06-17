@@ -4,14 +4,14 @@
     "logFile": "logFile.txt",
     "testList":[
         {
-            "name":"test_doitgen_Opt0",
-            "statsFile":"test_doitgen_Opt0_results.csv",
+            "name":"test_jacobi2d_Opt1_sw_emu",
+            "statsFile":"test_jacobi2d_Opt1_sw_emu_results.csv",
             "generatePictures": true,
             "executionList":[
                 {
-                    "host": "doitgenHost_Opt0_1",
-                    "kernelPackage": "kerPack_doitgen_Opt0_mini_sw_emu.xclbin",
-                    "kernel": "ker_doitgen_Opt0_mini",
+                    "host": "jacobi2dHost_Opt1",
+                    "kernelPackage": "kerPack_jacobi2d_Opt1_mini_sw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt1_mini",
                     "dataSize": "mini", 
                     "printResults": false,
                     "numExecutions": 1

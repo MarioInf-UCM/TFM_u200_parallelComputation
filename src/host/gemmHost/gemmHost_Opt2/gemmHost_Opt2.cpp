@@ -26,6 +26,7 @@ GemmHost_Opt2::~GemmHost_Opt2(){}
 bool GemmHost_Opt2::exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"GemmHost::GemmHost_Opt2_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
+/*                  ***** WORK IN PROGRESS ***** 
     unsigned int SIZE_I=0, SIZE_J=0, SIZE_K=0;    
     bool result = initParameter(exec, SIZE_I, SIZE_J, SIZE_K);
     if(!result){
@@ -187,8 +188,8 @@ bool GemmHost_Opt2::exec(Execution exec, vector<double>& results, FileWriter_ser
     results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
     results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
     results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
-
-  return result;
+ */
+  return false;
 }
 //*************************************
 // MAIN FUNCTION - END

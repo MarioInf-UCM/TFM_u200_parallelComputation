@@ -8,9 +8,14 @@ else ifeq ($(TARGET),hw_emu)
 else ifeq ($(TARGET),hw)
 	KERNEL_BUILD_SUBFOLDER := ker_doitgen_Opt2/hw/
 else
-    @echo "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|he_emu|hw"
-    $(error "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|he_emu|hw")
+    @echo "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|hw_emu|hw"
+    $(error "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|hw_emu|hw")
 	exit -1
+endif
+
+ifndef JOBS
+	NCPUS := $(shell grep -c ^processor /proc/cpuinfo)
+	JOBS := $(shell expr $(NCPUS) - 1)
 endif
 
 
@@ -20,32 +25,50 @@ endif
 PLATFORM ?= xilinx_u200_gen3x16_xdma_2_202110_1
 PLATFORM_REPO_PATHS ?= /opt/xilinx/platforms
 PFM := $(PLATFORM_REPO_PATHS)/$(PLATFORM)/$(PLATFORM).xpfm
-NCPUS := $(shell grep -c ^processor /proc/cpuinfo)
-JOBS := $(shell expr $(NCPUS) - 1)
+IP_CACHE_DIR ?= ip_cache
+VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
+
+
 
 BUILD_DIR := ../../../../build/kernelBuild
-CONNECTIVITY_ROUTE := ../doitgen_connectivityConfig
-BOARD_CONFIG := $(CONNECTIVITY_ROUTE)/connectivity_u200.ini
-LINK_Opt2S := --config $(CONNECTIVITY_ROUTE)/connectivity_u200.ini -I ./src/kernel
-IP_CACHE_DIR ?= ip_cache
 
-VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
-VPPLFLAGS := --config $(CONNECTIVITY_ROUTE)/profile.ini --config $(BOARD_CONFIG)
-CUSTOMPARAMS_GENERAL :=
+CONNECTIVITY_FOLDER := ../doitgen_connectivityConfig/
+CONNECTIVITY_NAME_MINI := doitgen_Opt2_mini_connec.ini
+CONNECTIVITY_NAME_SMALL := doitgen_Opt2_small_connec.ini
+CONNECTIVITY_NAME_MEDIUM := doitgen_Opt2_medium_connec.ini
+CONNECTIVITY_NAME_LARGE := doitgen_Opt2_large_connec.ini
+CONNECTIVITY_NAME_EXTRALARGE := doitgen_Opt2_extralarge_connec.ini
 
+PROFILE_FOLDER := ../doitgen_connectivityConfig/
+PROFILE_NAME := profile.ini
+
+
+
+VPPLFLAGS_SPECIFIC_MINI := --config $(CONNECTIVITY_NAME_MINI) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_SMALL := --config $(CONNECTIVITY_NAME_SMALL) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_MEDIUM := --config $(CONNECTIVITY_NAME_MEDIUM) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_LARGE := --config $(CONNECTIVITY_NAME_LARGE) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_EXTRALARGE := --config $(CONNECTIVITY_NAME_EXTRALARGE) --config $(PROFILE_NAME) 
 
 
 
 #********************************************
-#* COMPILATION OF ker_doitgen_Opt2 *
+#* COMPILATION OF kerdoitgen_Opt2imization *
 #********************************************
 MAKEFILE_NAME := makeKer_doitgen_Opt2.mk
 
-ker_doitgen_Opt2_XOS := ker_doitgen_Opt2_mini.xo
-ker_doitgen_Opt2_XOS += ker_doitgen_Opt2_small.xo
-ker_doitgen_Opt2_XOS += ker_doitgen_Opt2_medium.xo
-ker_doitgen_Opt2_XOS += ker_doitgen_Opt2_large.xo
-ker_doitgen_Opt2_XOS += ker_doitgen_Opt2_extralarge.xo
+PackKerList := kerPack_doitgen_Opt2_mini
+PackKerList += kerPack_doitgen_Opt2_small
+PackKerList += kerPack_doitgen_Opt2_medium
+PackKerList += kerPack_doitgen_Opt2_large
+PackKerList += kerPack_doitgen_Opt2_extralarge
+
+
+ker_doitgen_Opt2_mini_XOS := ker_doitgen_Opt2_mini.xo
+ker_doitgen_Opt2_small_XOS := ker_doitgen_Opt2_small.xo
+ker_doitgen_Opt2_medium_XOS := ker_doitgen_Opt2_medium.xo
+ker_doitgen_Opt2_large_XOS := ker_doitgen_Opt2_large.xo
+ker_doitgen_Opt2_extralarge_XOS := ker_doitgen_Opt2_extralarge.xo
 
 ker_doitgen_Opt2_mini_KERNEL := ker_doitgen_Opt2_mini
 ker_doitgen_Opt2_small_KERNEL := ker_doitgen_Opt2_small
@@ -61,11 +84,8 @@ ker_doitgen_Opt2_large_CUSTOMPARAMS := -DLARGE_DATASET
 ker_doitgen_Opt2_extralarge_CUSTOMPARAMS := -DEXTRALARGE_DATASET
 
 
-ker_doitgen_Opt2_FOLDER := ./
 ker_doitgen_Opt2_SRC := ker_doitgen_Opt2.cpp
-ker_doitgen_Opt2_SRC_ROUTE := $(ker_doitgen_Opt2_FOLDER)ker_doitgen_Opt2.cpp
 ker_doitgen_Opt2_HEADER :=
-ker_doitgen_Opt2_HEADER_ROUTE :=
 
 
 #********************
@@ -76,44 +96,95 @@ build: copy_files
 copy_files:
 	mkdir -p ${BUILD_DIR};
 	mkdir -p ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-	cp -r ${CONNECTIVITY_ROUTE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER}/..;
-	cp ${ker_doitgen_Opt2_SRC_ROUTE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-	cp ${MAKEFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-ifeq ($(TARGET),sw_emu)
-	cd ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER}; \
-	make -f $(MAKEFILE_NAME) TARGET=$(TARGET) kerPack_doitgen_Opt2_sw_emu.xclbin
-else ifeq ($(TARGET),hw_emu)
-	cd ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER}; \
-	make -f $(MAKEFILE_NAME) TARGET=$(TARGET) kerPack_doitgen_Opt2_hw_emu.xclbin
-else ifeq ($(TARGET),hw)
-	cd ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER}; \
-	make -f $(MAKEFILE_NAME) TARGET=$(TARGET) kerPack_doitgen_Opt2_hw.xclbin
-endif
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_MINI} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_SMALL} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_MEDIUM} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_LARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_EXTRALARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${PROFILE_FOLDER}${PROFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${ker_doitgen_Opt2_SRC} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${MAKEFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	$(foreach val,$(PackKerList), \
+		$(if $(filter $(TARGET),sw_emu), \
+			cd ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER}; \
+			make -f $(MAKEFILE_NAME) TARGET=$(TARGET) $(val)_sw_emu.xclbin;, \
+		$(if $(filter $(TARGET),hw_emu), \
+			cd ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER}; \
+			make -f $(MAKEFILE_NAME) TARGET=$(TARGET) $(val)_hw_emu.xclbin;, \
+		$(if $(filter $(TARGET),hw), \
+			cd ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER}; \
+			make -f $(MAKEFILE_NAME) TARGET=$(TARGET) $(val)_hw.xclbin;, \
+		$(error Error: TARGET $(TARGET) is not recognized.) \
+	))))
 
 
 
-kerPack_doitgen_Opt2_sw_emu.xclbin: $(ker_doitgen_Opt2_XOS) $(BOARD_CONFIG)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_doitgen_Opt2_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_doitgen_Opt2_hw_emu.xclbin: $(ker_doitgen_Opt2_XOS) $(BOARD_CONFIG)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_doitgen_Opt2_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_doitgen_Opt2_hw.xclbin: $(ker_doitgen_Opt2_XOS) $(BOARD_CONFIG)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_doitgen_Opt2_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_mini_sw_emu.xclbin: $(ker_doitgen_Opt2_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_doitgen_Opt2_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_small_sw_emu.xclbin: $(ker_doitgen_Opt2_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_doitgen_Opt2_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_medium_sw_emu.xclbin: $(ker_doitgen_Opt2_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_doitgen_Opt2_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_large_sw_emu.xclbin: $(ker_doitgen_Opt2_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_doitgen_Opt2_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_extralarge_sw_emu.xclbin: $(ker_doitgen_Opt2_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_doitgen_Opt2_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+
+
+kerPack_doitgen_Opt2_mini_hw_emu.xclbin: $(ker_doitgen_Opt2_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_doitgen_Opt2_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_small_hw_emu.xclbin: $(ker_doitgen_Opt2_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_doitgen_Opt2_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_medium_hw_emu.xclbin: $(ker_doitgen_Opt2_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_doitgen_Opt2_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_large_hw_emu.xclbin: $(ker_doitgen_Opt2_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_doitgen_Opt2_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_extralarge_hw_emu.xclbin: $(ker_doitgen_Opt2_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_doitgen_Opt2_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+
+
+kerPack_doitgen_Opt2_mini_hw.xclbin: $(ker_doitgen_Opt2_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_doitgen_Opt2_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_small_hw.xclbin: $(ker_doitgen_Opt2_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_doitgen_Opt2_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_medium_hw.xclbin: $(ker_doitgen_Opt2_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_doitgen_Opt2_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_large_hw.xclbin: $(ker_doitgen_Opt2_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_doitgen_Opt2_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_doitgen_Opt2_extralarge_hw.xclbin: $(ker_doitgen_Opt2_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_doitgen_Opt2_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
 
 
 
 ker_doitgen_Opt2_mini.xo: $(ker_doitgen_Opt2_SRC) $(ker_doitgen_Opt2_HEADER)
-	v++ --kernel $(ker_doitgen_Opt2_mini_KERNEL) $(VPPFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_doitgen_Opt2_mini_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
+	v++ --kernel $(ker_doitgen_Opt2_mini_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) $(ker_doitgen_Opt2_mini_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
 
 ker_doitgen_Opt2_small.xo: $(ker_doitgen_Opt2_SRC) $(ker_doitgen_Opt2_HEADER)
-	v++ --kernel $(ker_doitgen_Opt2_small_KERNEL) $(VPPFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_doitgen_Opt2_small_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
+	v++ --kernel $(ker_doitgen_Opt2_small_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) $(ker_doitgen_Opt2_small_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
 
 ker_doitgen_Opt2_medium.xo: $(ker_doitgen_Opt2_SRC) $(ker_doitgen_Opt2_HEADER)
-	v++ --kernel $(ker_doitgen_Opt2_medium_KERNEL) $(VPPFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_doitgen_Opt2_medium_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
+	v++ --kernel $(ker_doitgen_Opt2_medium_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) $(ker_doitgen_Opt2_medium_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
 
 ker_doitgen_Opt2_large.xo: $(ker_doitgen_Opt2_SRC) $(ker_doitgen_Opt2_HEADER)
-	v++ --kernel $(ker_doitgen_Opt2_large_KERNEL) $(VPPFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_doitgen_Opt2_large_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
+	v++ --kernel $(ker_doitgen_Opt2_large_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) $(ker_doitgen_Opt2_large_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
 
 ker_doitgen_Opt2_extralarge.xo: $(ker_doitgen_Opt2_SRC) $(ker_doitgen_Opt2_HEADER)
-	v++ --kernel $(ker_doitgen_Opt2_extralarge_KERNEL) $(VPPFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_doitgen_Opt2_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<
+	v++ --kernel $(ker_doitgen_Opt2_extralarge_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) $(ker_doitgen_Opt2_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_doitgen_Opt2_SRC) $<

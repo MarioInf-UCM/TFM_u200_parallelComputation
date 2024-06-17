@@ -6,8 +6,8 @@
 #include "../../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../../service/fileWriter_service/fileWriter_service.hpp"
 #include "../../utilities/helper/helper.hpp"
-#include "jacobi2dHost_Opt0_1/jacobi2dHost_Opt0_1.hpp"
-#include "jacobi2dHost_Opt2/jacobi2dHost_Opt2.hpp"
+#include "jacobi2dHost_Opt0/jacobi2dHost_Opt0.hpp"
+#include "jacobi2dHost_Opt1/jacobi2dHost_Opt1.hpp"
 #include "jacobi2dHost_Opt2/jacobi2dHost_Opt2.hpp"
 
 class Jacobi2dHost {

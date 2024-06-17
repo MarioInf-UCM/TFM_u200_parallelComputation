@@ -4,9 +4,9 @@ CMAKE_DIRECTORY=../../cmake
 SCRIPTS_ROUTE=cmake/scripts/
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
-JOBS = 6
+JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../config/configTest_jacobi2d_sw_emu.json
+CONFIGFILE_ROUTE=../../config/configDev.json
 
 
 #Kernel url specification - START

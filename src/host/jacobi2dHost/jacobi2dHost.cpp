@@ -16,9 +16,13 @@ bool Jacobi2dHost::exec(Execution exec, vector<double>& results, FileWriter_serv
         c = tolower(c);
     } 
 
-    if(hostName == Helper::getNameOfType(typeid(Jacobi2dHost_Opt0_1).name())){
-        fileWriter_logFile.writeln("KernelPackage selected matches with" + Helper::getNameOfType(typeid(Jacobi2dHost_Opt0_1).name()) + "host version");
-        result = Jacobi2dHost_Opt0_1::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+    if(hostName == Helper::getNameOfType(typeid(Jacobi2dHost_Opt0).name())){
+        fileWriter_logFile.writeln("KernelPackage selected matches with" + Helper::getNameOfType(typeid(Jacobi2dHost_Opt0).name()) + "host version");
+        result = Jacobi2dHost_Opt0::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+        
+    }else if(hostName == Helper::getNameOfType(typeid(Jacobi2dHost_Opt1).name())){
+        fileWriter_logFile.writeln("KernelPackage selected matches with" + Helper::getNameOfType(typeid(Jacobi2dHost_Opt1).name()) + "host version");
+        result = Jacobi2dHost_Opt1::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
         
     }else if(hostName == Helper::getNameOfType(typeid(Jacobi2dHost_Opt2).name())){
         fileWriter_logFile.writeln("KernelPackage selected matches with " + Helper::getNameOfType(typeid(Jacobi2dHost_Opt2).name()) + " host version");

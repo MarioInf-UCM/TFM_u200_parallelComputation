@@ -8,6 +8,7 @@ else ifeq ($(TARGET),hw_emu)
 else ifeq ($(TARGET),hw)
 	KERNEL_BUILD_SUBFOLDER := ker_cholesky_Opt1/hw/
 else
+    @echo "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|hw_emu|hw"
     $(error "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|hw_emu|hw")
 	exit -1
 endif
@@ -17,6 +18,7 @@ ifndef JOBS
 	JOBS := $(shell expr $(NCPUS) - 1)
 endif
 
+
 #*****************************
 #* CONFIG COMPULATION PARAMS *
 #*****************************
@@ -24,20 +26,29 @@ PLATFORM ?= xilinx_u200_gen3x16_xdma_2_202110_1
 PLATFORM_REPO_PATHS ?= /opt/xilinx/platforms
 PFM := $(PLATFORM_REPO_PATHS)/$(PLATFORM)/$(PLATFORM).xpfm
 IP_CACHE_DIR ?= ip_cache
+VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
+
 
 
 BUILD_DIR := ../../../../build/kernelBuild
+
 CONNECTIVITY_FOLDER := ../cholesky_connectivityConfig/
-CONNECTIVITY_NAME := cholesky_connec.ini
-CONNECTIVITY_URL := $(CONNECTIVITY_FOLDER)$(CONNECTIVITY_NAME)
+CONNECTIVITY_NAME_MINI := cholesky_Opt1_mini_connec.ini
+CONNECTIVITY_NAME_SMALL := cholesky_Opt1_small_connec.ini
+CONNECTIVITY_NAME_MEDIUM := cholesky_Opt1_medium_connec.ini
+CONNECTIVITY_NAME_LARGE := cholesky_Opt1_large_connec.ini
+CONNECTIVITY_NAME_EXTRALARGE := cholesky_Opt1_extralarge_connec.ini
 
 PROFILE_FOLDER := ../cholesky_connectivityConfig/
 PROFILE_NAME := profile.ini
-PROFILE_URL := $(CONNECTIVITY_FOLDER)$(PROFILE_NAME)
 
-VPPFLAGS := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
-VPPLFLAGS := --config $(CONNECTIVITY_NAME) --config $(CONNECTIVITY_NAME) 
-CUSTOMPARAMS_GENERAL :=
+
+
+VPPLFLAGS_SPECIFIC_MINI := --config $(CONNECTIVITY_NAME_MINI) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_SMALL := --config $(CONNECTIVITY_NAME_SMALL) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_MEDIUM := --config $(CONNECTIVITY_NAME_MEDIUM) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_LARGE := --config $(CONNECTIVITY_NAME_LARGE) --config $(PROFILE_NAME) 
+VPPLFLAGS_SPECIFIC_EXTRALARGE := --config $(CONNECTIVITY_NAME_EXTRALARGE) --config $(PROFILE_NAME) 
 
 
 
@@ -85,8 +96,12 @@ build: copy_files
 copy_files:
 	mkdir -p ${BUILD_DIR};
 	mkdir -p ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-	cp -r ${CONNECTIVITY_URL} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-	cp -r ${PROFILE_URL} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_MINI} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_SMALL} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_MEDIUM} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_LARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_EXTRALARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${PROFILE_FOLDER}${PROFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	cp -r ${ker_cholesky_Opt1_SRC} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	cp -r ${MAKEFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	$(foreach val,$(PackKerList), \
@@ -107,69 +122,69 @@ copy_files:
 
 
 
-kerPack_cholesky_Opt1_mini_sw_emu.xclbin: $(ker_cholesky_Opt1_mini_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_mini_sw_emu.xclbin: $(ker_cholesky_Opt1_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_cholesky_Opt1_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_small_sw_emu.xclbin: $(ker_cholesky_Opt1_small_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_small_sw_emu.xclbin: $(ker_cholesky_Opt1_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_cholesky_Opt1_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_medium_sw_emu.xclbin: $(ker_cholesky_Opt1_medium_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_medium_sw_emu.xclbin: $(ker_cholesky_Opt1_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_cholesky_Opt1_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_large_sw_emu.xclbin: $(ker_cholesky_Opt1_large_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_large_sw_emu.xclbin: $(ker_cholesky_Opt1_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_cholesky_Opt1_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_extralarge_sw_emu.xclbin: $(ker_cholesky_Opt1_extralarge_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-
-
-kerPack_cholesky_Opt1_mini_hw_emu.xclbin: $(ker_cholesky_Opt1_mini_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_cholesky_Opt1_small_hw_emu.xclbin: $(ker_cholesky_Opt1_small_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_cholesky_Opt1_medium_hw_emu.xclbin: $(ker_cholesky_Opt1_medium_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_cholesky_Opt1_large_hw_emu.xclbin: $(ker_cholesky_Opt1_large_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_cholesky_Opt1_extralarge_hw_emu.xclbin: $(ker_cholesky_Opt1_extralarge_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_extralarge_sw_emu.xclbin: $(ker_cholesky_Opt1_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_cholesky_Opt1_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
 
 
-kerPack_cholesky_Opt1_mini_hw.xclbin: $(ker_cholesky_Opt1_mini_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_mini_hw_emu.xclbin: $(ker_cholesky_Opt1_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_cholesky_Opt1_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_small_hw.xclbin: $(ker_cholesky_Opt1_small_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_small_hw_emu.xclbin: $(ker_cholesky_Opt1_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_cholesky_Opt1_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_medium_hw.xclbin: $(ker_cholesky_Opt1_medium_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_medium_hw_emu.xclbin: $(ker_cholesky_Opt1_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_cholesky_Opt1_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_large_hw.xclbin: $(ker_cholesky_Opt1_large_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_large_hw_emu.xclbin: $(ker_cholesky_Opt1_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_cholesky_Opt1_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_cholesky_Opt1_extralarge_hw.xclbin: $(ker_cholesky_Opt1_extralarge_XOS) $(CONNECTIVITY_NAME)
-	v++ -l $(VPPFLAGS) $(VPPLFLAGS) -o $@ $(ker_cholesky_Opt1_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_cholesky_Opt1_extralarge_hw_emu.xclbin: $(ker_cholesky_Opt1_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_cholesky_Opt1_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+
+
+kerPack_cholesky_Opt1_mini_hw.xclbin: $(ker_cholesky_Opt1_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_cholesky_Opt1_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_cholesky_Opt1_small_hw.xclbin: $(ker_cholesky_Opt1_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_cholesky_Opt1_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_cholesky_Opt1_medium_hw.xclbin: $(ker_cholesky_Opt1_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_cholesky_Opt1_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_cholesky_Opt1_large_hw.xclbin: $(ker_cholesky_Opt1_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_cholesky_Opt1_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_cholesky_Opt1_extralarge_hw.xclbin: $(ker_cholesky_Opt1_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_cholesky_Opt1_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
 
 
 
 ker_cholesky_Opt1_mini.xo: $(ker_cholesky_Opt1_SRC) $(ker_cholesky_Opt1_HEADER)
-	v++ --kernel $(ker_cholesky_Opt1_mini_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_cholesky_Opt1_mini_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
+	v++ --kernel $(ker_cholesky_Opt1_mini_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) $(ker_cholesky_Opt1_mini_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
 
 ker_cholesky_Opt1_small.xo: $(ker_cholesky_Opt1_SRC) $(ker_cholesky_Opt1_HEADER)
-	v++ --kernel $(ker_cholesky_Opt1_small_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_cholesky_Opt1_small_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
+	v++ --kernel $(ker_cholesky_Opt1_small_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) $(ker_cholesky_Opt1_small_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
 
 ker_cholesky_Opt1_medium.xo: $(ker_cholesky_Opt1_SRC) $(ker_cholesky_Opt1_HEADER)
-	v++ --kernel $(ker_cholesky_Opt1_medium_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_cholesky_Opt1_medium_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
+	v++ --kernel $(ker_cholesky_Opt1_medium_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) $(ker_cholesky_Opt1_medium_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
 
 ker_cholesky_Opt1_large.xo: $(ker_cholesky_Opt1_SRC) $(ker_cholesky_Opt1_HEADER)
-	v++ --kernel $(ker_cholesky_Opt1_large_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_cholesky_Opt1_large_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
+	v++ --kernel $(ker_cholesky_Opt1_large_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) $(ker_cholesky_Opt1_large_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
 
 ker_cholesky_Opt1_extralarge.xo: $(ker_cholesky_Opt1_SRC) $(ker_cholesky_Opt1_HEADER)
-	v++ --kernel $(ker_cholesky_Opt1_extralarge_KERNEL) $(VPPFLAGS) $(VPPLFLAGS) $(CUSTOMPARAMS_GENERAL) $(ker_cholesky_Opt1_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<
+	v++ --kernel $(ker_cholesky_Opt1_extralarge_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) $(ker_cholesky_Opt1_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_cholesky_Opt1_SRC) $<

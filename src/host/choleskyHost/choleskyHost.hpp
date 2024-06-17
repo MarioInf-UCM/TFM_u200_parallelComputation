@@ -6,7 +6,8 @@
 #include "../../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../../service/fileWriter_service/fileWriter_service.hpp"
 #include "../../utilities/helper/helper.hpp"
-#include "choleskyHost_Opt0_1/choleskyHost_Opt0_1.hpp"
+#include "choleskyHost_Opt0/choleskyHost_Opt0.hpp"
+#include "choleskyHost_Opt1/choleskyHost_Opt1.hpp"
 #include "choleskyHost_Opt2/choleskyHost_Opt2.hpp"
 
 class CholeskyHost {

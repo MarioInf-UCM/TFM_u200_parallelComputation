@@ -6,7 +6,8 @@
 #include "../../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../../service/fileWriter_service/fileWriter_service.hpp"
 #include "../../utilities/helper/helper.hpp"
-#include "gemmHost_Opt0_1/gemmHost_Opt0_1.hpp"
+#include "gemmHost_Opt0/gemmHost_Opt0.hpp"
+#include "gemmHost_Opt1/gemmHost_Opt1.hpp"
 #include "gemmHost_Opt2/gemmHost_Opt2.hpp"
 
 

@@ -4,8 +4,8 @@
 
 // TYPEDATA COMPILATOR VARIABLE
 //**********************************
-#define TYPEDATA_BITS_SIZE 32
-#define TYPEDATA_BITS_INT 17
+#define TYPEDATA_BITS_SIZE 16
+#define TYPEDATA_BITS_INT 7
 typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 
 
@@ -38,6 +38,12 @@ typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 #endif
 
 
+#define BUFFER_SIZE 64
+#define DATAWIDTH 512
+#define VECTOR_SIZE (DATAWIDTH / sizeof(typeData) )
+
+
+
 extern "C"{
 
     #ifdef MINI_DATASET
@@ -63,11 +69,36 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = outD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
+        typeData inD_A_local[SIZE_R*SIZE_Q*SIZE_P];
+        typeData inD_C4_local[SIZE_P*SIZE_P];
+        typeData outD_A_local[SIZE_R*SIZE_Q*SIZE_P];
         typeData sum[SIZE_P];
 
-
         #pragma HLS DATAFLOW
-        
+        //#pragma HLS stream variable = inD_A_local depth = 64
+        //#pragma HLS stream variable = outD_C4_local depth = 64
+        //#pragma HLS stream variable = outD_A_local depth = 64
+
+
+        readingInitDataA:
+        for (int i = 0; i < SIZE_R*SIZE_Q*SIZE_P ; i++) {
+            #pragma HLS LOOP_TRIPCOUNT min=SIZE_R*SIZE_Q*SIZE_P max=SIZE_R*SIZE_Q*SIZE_P
+            #pragma HLS UNROLL factor=8
+            #pragma HLS PIPELINE II=1
+            inD_A_local[i] = inD_A[i];
+            outD_A_local[i] = 0.0;
+        }
+
+        readingInitDataC4:
+        for (int i = 0; i < SIZE_P*SIZE_P ; i++) {
+            #pragma HLS LOOP_TRIPCOUNT min=SIZE_P*SIZE_P  max=SIZE_P*SIZE_P 
+            #pragma HLS UNROLL factor=8
+            #pragma HLS PIPELINE II=1
+            inD_C4_local[i] = inD_C4[i];
+        }
+
+
+        mainLoop:
         for (int r = 0; r < SIZE_R; r++){
             #pragma HLS LOOP_TRIPCOUNT min=SIZE_R max=SIZE_R
             #pragma HLS UNROLL factor=8
@@ -83,18 +114,28 @@ extern "C"{
                     for (int s = 0; s < SIZE_P; s++){
                         #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
                         #pragma HLS PIPELINE II=1
-                        sum[p] += inD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+s] * inD_C4[(s*SIZE_P)+p];
+                        sum[p] += inD_A_local[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+s] * inD_C4_local[(s*SIZE_P)+p];
                     }
                 }
 
                 for (int p = 0; p < SIZE_P; p++){
                     #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
                     #pragma HLS PIPELINE II=1
-                    outD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p] = sum[p];
+                    outD_A_local[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p] = sum[p];
                 }
             }
         }
-        
+
+
+
+        writingResults:
+        for (int i = 0; i < SIZE_R*SIZE_Q*SIZE_P ; i++) {
+            #pragma HLS LOOP_TRIPCOUNT min=SIZE_R*SIZE_Q*SIZE_P max=SIZE_R*SIZE_Q*SIZE_P
+            #pragma HLS UNROLL factor=8
+            #pragma HLS PIPELINE II=1
+            outD_A[i] = outD_A_local[i];
+        }
+
         return;
         
     }

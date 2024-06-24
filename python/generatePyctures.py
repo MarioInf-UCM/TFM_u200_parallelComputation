@@ -12,8 +12,7 @@ def generate_plot(csv_url, image_location):
         y1 = data['CPU time execution']
         y2 = data['CPU time execution optimizated']
         y3 = data['Device time execution']
-        y4 = data['Send buffers to device time']
-        y5 = data['Receive buffers from device time']
+        y4 = data['Transmision (S+R) time']
     except FileNotFoundError:
         print(f"File '{csv_url}' not found.")
         return
@@ -21,40 +20,34 @@ def generate_plot(csv_url, image_location):
         print(f"File '{csv_url}' does not contain necessary columns.")
         return
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(x, y1, marker='o', label='CPU time execution', color='red')
-    plt.plot(x, y2, marker='o', label='CPU time execution optimizated', color='darkred')
-    plt.plot(x, y3, marker='o', label='Device time execution', color='blue')
-    plt.plot(x, y4, marker='o', label='Send buffers to device time', color='skyblue')
-    plt.plot(x, y5, marker='o', label='Receive buffers from device time', color='aquamarine')
+    # Define the order of the categories
+    categories = ['mini', 'small', 'medium', 'large', 'extralarge']
 
-    plt.title(f'Execution Time Comparison - {os.path.basename(csv_url)}')
-    plt.xlabel('Data size')
-    plt.ylabel('Time (ms)')
+    plt.figure(figsize=(10, 6))
+    plt.plot(x, y1, marker='o', label='Ejecucion de la CPU', color='red')
+    plt.plot(x, y2, marker='o', label='Ejecución de la CPU paralelizada', color='darkred')
+    plt.plot(x, y3, marker='o', label='Ejecución del dispositivo', color='blue')
+    plt.plot(x, y4, marker='o', label='Transmisión y recepción de datos al dispositivo', color='aquamarine')
+
+    plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
+    plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
+    plt.ylabel('Tiempo (ms)')
     plt.legend()
-    plt.xscale('log')
+    plt.xticks(ticks=range(len(categories)), labels=categories)
     plt.yscale('log')
 
-    # Anotar los puntos con sus valores exactos
-    for i in range(len(x)):
-        plt.annotate(f'{y1[i]:.2f}', (x[i], y1[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='red', edgecolor='black', boxstyle='round,pad=0.2'))
-        plt.annotate(f'{y2[i]:.2f}', (x[i], y2[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='darkred', edgecolor='black', boxstyle='round,pad=0.2'))
-        plt.annotate(f'{y3[i]:.2f}', (x[i], y3[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='blue', edgecolor='black', boxstyle='round,pad=0.2'))
-        plt.annotate(f'{y4[i]:.2f}', (x[i], y4[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.2'))
-        plt.annotate(f'{y5[i]:.2f}', (x[i], y5[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='aquamarine', edgecolor='black', boxstyle='round,pad=0.2'))
+    #for i in range(len(x)):
+    #    plt.annotate(f'{y1[i]:.2f}', (x[i], y1[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='red', edgecolor='black', boxstyle='round,pad=0.2'))
+    #    plt.annotate(f'{y2[i]:.2f}', (x[i], y2[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='darkred', edgecolor='black', boxstyle='round,pad=0.2'))
+    #    plt.annotate(f'{y3[i]:.2f}', (x[i], y3[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='blue', edgecolor='black', boxstyle='round,pad=0.2'))
+    #    plt.annotate(f'{y4[i]:.2f}', (x[i], y4[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.2'))
 
     image_locationTemp = image_location +".log.jpg"
     plt.savefig(image_locationTemp, format='jpg', dpi=600)
-    image_locationTemp = image_location +".log.png"
-    plt.savefig(image_locationTemp, format='png', dpi=600)
     image_locationTemp = image_location +".log.eps"
     plt.savefig(image_locationTemp, format='eps', dpi=600)
 
-
     plt.close()
-
-    
-
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:

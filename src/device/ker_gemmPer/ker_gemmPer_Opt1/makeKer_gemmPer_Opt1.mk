@@ -60,8 +60,8 @@ MAKEFILE_NAME := makeKer_gemmPer_Opt1.mk
 PackKerList := kerPack_gemmPer_Opt1_mini
 PackKerList += kerPack_gemmPer_Opt1_small
 PackKerList += kerPack_gemmPer_Opt1_medium
-PackKerList += kerPack_gemmPer_Opt1_large
-PackKerList += kerPack_gemmPer_Opt1_extralarge
+#PackKerList += kerPack_gemmPer_Opt1_large
+#PackKerList += kerPack_gemmPer_Opt1_extralarge
 
 
 ker_gemmPer_Opt1_mini_XOS := ker_gemmPer_Opt1_mini.xo

@@ -181,12 +181,10 @@ bool GemmHost_Opt0::exec(Execution exec, vector<double>& results, FileWriter_ser
     fileWriter_logFile.writeln("--------------- Key execution times ---------------");
     fileWriter_logFile.write(event.getInfoEvents());
     fileWriter_logFile.writeln("---------------------------------------------------");
-    results.push_back(data.get_SIZE_I() * data.get_SIZE_J()); 
-    results.push_back(stod(event.getTimeEvents(1)));    //CPU execution time
-    results.push_back(stod(event.getTimeEvents(2)));    //CPU execution time optimizated
-    results.push_back(stod(event.getTimeEvents(5)));    //Device execution time 
-    results.push_back(stod(event.getTimeEvents(4)));    //Send data to device
-    results.push_back(stod(event.getTimeEvents(6)));    //Recieve data from device
+    results.push_back(stod(event.getTimeEvents(1)));                                  //CPU execution time
+    results.push_back(stod(event.getTimeEvents(2)));                                  //CPU execution time optimizated
+    results.push_back(stod(event.getTimeEvents(5)));                                  //Device execution time 
+    results.push_back(stod(event.getTimeEvents(4)) + stod(event.getTimeEvents(6)));   //Transmision (Send+Recv) time
 
   return result;
 }

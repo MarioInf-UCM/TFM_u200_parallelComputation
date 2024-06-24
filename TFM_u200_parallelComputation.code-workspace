@@ -68,7 +68,8 @@
         "thread": "cpp",
         "typeinfo": "cpp",
         "codecvt": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "cfenv": "cpp"
       }
     }
 }

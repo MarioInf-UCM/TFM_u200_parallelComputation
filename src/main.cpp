@@ -5,7 +5,7 @@
 #include "host/choleskyHost/choleskyHost.hpp"
 #include "host/doitgenHost/doitgenHost.hpp"
 #include "host/gemmHost/gemmHost.hpp"
-#include "host/jacobi_2dHost/jacobi_2dHost.hpp"
+#include "host/jacobi2dHost/jacobi2dHost.hpp"
 #include "utilities/dateAndTime/dateAndTime.hpp"
 #include "service/json_service/json_service.hpp"
 #include "service/json_service/jsonConfiguration/jsonConfiguration.hpp"
@@ -44,7 +44,7 @@ int main(int argc, char** argv){
 
     for(int i=0 ; i<jsonConfiguration.get_testList().size() ; i++){
         fileWriter_statsFile = FileWriter_service(jsonConfiguration.get_outDir() + outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile(), jsonConfiguration.get_verbose());
-        fileWriter_statsFile.writeln("x,CPU time execution,CPU time execution optimizated,Device time execution,Send buffers to device time,Receive buffers from device time", false);
+        fileWriter_statsFile.writeln("x,CPU time execution,CPU time execution optimizated,Device time execution,Transmision (S+R) time", false);
     
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
             testAverageResults.clear();
@@ -67,15 +67,18 @@ int main(int argc, char** argv){
                     if((execResult) >= testAverageResults.size()){
                         testAverageResults.push_back(executionResults[execResult]);
                     }else{
-                        testAverageResults[execResult] = ( (testAverageResults[execResult]+ executionResults[execResult]) / 2.0 );
+                        testAverageResults[execResult] = ( (testAverageResults[execResult]+ executionResults[execResult]) );
                     }
-                    fileWriter_logFile.write(to_string(testAverageResults[execResult]) + "  ");
                 }
-
                 fileWriter_logFile.writeln("\n*\n**\n*************\n", true);
             }
 
-            tempString_toWrite="";
+
+            for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
+                testAverageResults[execResult] = ( testAverageResults[execResult] / jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions() );
+            }
+            tempString_toWrite=jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()+",";
+            
             for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
                 if(execResult==executionResults.size()-1){
                     tempString_toWrite += to_string(testAverageResults[execResult]);
@@ -112,16 +115,16 @@ bool runExecution(Execution exec, vector<double>& results, FileWriter_service fi
 
     bool result = false;
     if(exec.get_host().find("doitgen") != string::npos){
-        result = DoitgenHost::doitgenHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+        result = DoitgenHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
 
     }else if(exec.get_host().find("cholesky") != string::npos){
-        result = CholeskyHost::choleskyHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        result = CholeskyHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
     
     }else if(exec.get_host().find("gemm") != string::npos){
-        result = GemmHost::gemmHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        result = GemmHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
     
-    }else if(exec.get_host().find("jacobi_2d") != string::npos){
-        result = Jacobi_2dHost::jacobi_2dHost_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+    }else if(exec.get_host().find("jacobi2d") != string::npos){
+        result = Jacobi2dHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
     
     }else{
         fileWriter_logFile.writeln("ERROR..: Host name unknow.");

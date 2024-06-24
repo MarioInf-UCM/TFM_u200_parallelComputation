@@ -1,0 +1,55 @@
+{
+    "verbose": true,
+    "outDir": "../../out",
+    "logFile": "logFile.txt",
+    "testList":[
+        {
+            "name":"test_gemm_Opt0_hw",
+            "statsFile":"test_gemm_Opt0_hw_results.csv",
+            "generatePictures": true,
+            "executionList":[
+                {
+                    "host": "gemmHost_Opt0",
+                    "kernelPackage": "kerPack_gemm_Opt0_mini_hw.xclbin",
+                    "kernel": "ker_gemm_Opt0_mini",
+                    "dataSize": "mini", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_Opt0",
+                    "kernelPackage": "kerPack_gemm_Opt0_small_hw.xclbin",
+                    "kernel": "ker_gemm_Opt0_small",
+                    "dataSize": "small", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_Opt0",
+                    "kernelPackage": "kerPack_gemm_Opt0_medium_hw.xclbin",
+                    "kernel": "ker_gemm_Opt0_medium",
+                    "dataSize": "medium", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_Opt0",
+                    "kernelPackage": "kerPack_gemm_Opt0_large_hw.xclbin",
+                    "kernel": "ker_gemm_Opt0_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "gemmHost_Opt0",
+                    "kernelPackage": "kerPack_gemm_Opt0_extralarge_hw.xclbin",
+                    "kernel": "ker_gemm_Opt0_extralarge",
+                    "dataSize": "extralarge", 
+                    "printResults": false,
+                    "numExecutions": 1
+                }
+            ]
+        }
+    ]
+ 
+}  

@@ -20,9 +20,9 @@ class Jacobi_2dKernel{
 
         vector< vector< typeData>> A;               //SIZE_N x SIZE_N
         vector< vector< typeData>> B;               //SIZE_N x SIZE_N
-        vector< vector< typeData>> resultCPU;       //SIZE_N x SIZE_N
-        vector< vector< typeData>> resultCPU_opt;   //SIZE_N x SIZE_N
-        vector< vector< typeData>> resultDevice;    //SIZE_N x SIZE_N
+        vector< vector< typeData>> resultCPU;       //SIZE_N x SIZE_N x 2
+        vector< vector< typeData>> resultCPU_opt;   //SIZE_N x SIZE_N x 2
+        vector< vector< typeData>> resultDevice;    //SIZE_N x SIZE_N x 2
 
 
 

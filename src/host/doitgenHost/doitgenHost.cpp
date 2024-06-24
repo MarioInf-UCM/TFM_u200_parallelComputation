@@ -7,23 +7,28 @@ DoitgenHost::~DoitgenHost(){};
 
 
 
-bool DoitgenHost::doitgenHost_exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
-    
+bool DoitgenHost::exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+
     bool result = false;
-    if(exec.get_host() == "doitgenHost_noOpt"){
-        fileWriter_logFile.writeln("KernelPackage selected matches with \"doitgenHost_noOpt\" host version");
-        result = DoitgenHost_noOpt::doitgenHost_noOpt_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+    string hostName = exec.get_host();
+    for (char& c : hostName) {
+        c = tolower(c);
+    } 
+
+    if(hostName == Helper::getNameOfType(typeid(DoitgenHost_Opt0).name())){
+        fileWriter_logFile.writeln("KernelPackage selected matches with" + Helper::getNameOfType(typeid(DoitgenHost_Opt0).name()) + "host version");
+        result = DoitgenHost_Opt0::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
         
-    }else if(exec.get_host() == "doitgenHost_mapOpt"){
-        fileWriter_logFile.writeln("KernelPackage selected matches with \"doitgenHost_mapOpt\" host version");
-        result = DoitgenHost_mapOpt ::doitgenHost_mapOpt_exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
-
-    }else if(exec.get_kernelPackage().find("") != string::npos){
-
-    }else if(exec.get_kernelPackage().find("") != string::npos){
+    }else if(hostName == Helper::getNameOfType(typeid(DoitgenHost_Opt1).name())){
+        fileWriter_logFile.writeln("KernelPackage selected matches with" + Helper::getNameOfType(typeid(DoitgenHost_Opt1).name()) + "host version");
+        result = DoitgenHost_Opt1::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+        
+    }else if(hostName == Helper::getNameOfType(typeid(DoitgenHost_Opt2).name())){
+        fileWriter_logFile.writeln("KernelPackage selected matches with " + Helper::getNameOfType(typeid(DoitgenHost_Opt2).name()) + " host version");
+        result = DoitgenHost_Opt2::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
 
     }else{
-        fileWriter_logFile.writeln("ERROR..: Host name unknow.");
+        fileWriter_logFile.writeln("ERROR..: Doitgen host name unknow (" + hostName + ").");
         return false;
     }
 

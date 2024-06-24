@@ -8,7 +8,7 @@ The format of this file ins based in [Keep a Changelog](https://keepachangelog.c
 
 ### Added
 
-- Merge branch [doitegen_benckmark]() - [@marioa25](https://github.com/marioa25)
+- Merge branch [doitegen_benckmark](https://github.com/MarioInf-UCM/TFM_u200_parallelComputation/pull/1/commits) - [@marioa25](https://github.com/marioa25)
     - Services `externProgramsConnection_service`, `fileWriter_service`, and `json_service` developed and added.
     - utilitie `dateAndTime` develoed and added.
     - utilities `evcen_timer`, `line_exception` and `xilinx_ocl_helper` added from [Get moving with Alveo](https://github.com/Xilinx/Get_Moving_With_Alveo).

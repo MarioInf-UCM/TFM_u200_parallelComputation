@@ -6,8 +6,8 @@
     //******************************
     namespace globalConfiguration_typeData{
         typedef float typeData;
-        #define TYPEDATA_BITS_SIZE 32
-        #define TYPEDATA_BITS_INT 8
+        #define TYPEDATA_BITS_SIZE 16
+        #define TYPEDATA_BITS_INT 7
         typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData_fixed;
     }
 
@@ -95,6 +95,19 @@
         #define JACOBI2D_TSTEPS_EXTRALARGE 1000
         #define JACOBI2D_N_EXTRALARGE 2800
     #endif
+
+
+    //DEFINE PARAMS FOR VECTORADD KERNEL
+    //**********************************
+    # if !defined(VECTORADD_SIZE)
+        #define VECTORADD_SIZE_MINI 10
+        #define VECTORADD_SIZE_SMALL 100
+        #define VECTORADD_SIZE_MEDIUM 2000
+        #define VECTORADD_SIZE_LARGE 50000
+        #define VECTORADD_SIZE_EXTRALARGE 800000
+    #endif
+        
+
 
 
 #endif

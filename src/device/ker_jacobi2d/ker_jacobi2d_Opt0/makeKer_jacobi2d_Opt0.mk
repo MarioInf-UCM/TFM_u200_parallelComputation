@@ -32,14 +32,14 @@ VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vi
 
 BUILD_DIR := ../../../../build/kernelBuild
 
-CONNECTIVITY_FOLDER := ../jacobi2d_connectivityConfig/
+CONNECTIVITY_FOLDER := connectivityConfig/
 CONNECTIVITY_NAME_MINI := jacobi2d_Opt0_mini_connec.ini
 CONNECTIVITY_NAME_SMALL := jacobi2d_Opt0_small_connec.ini
 CONNECTIVITY_NAME_MEDIUM := jacobi2d_Opt0_medium_connec.ini
 CONNECTIVITY_NAME_LARGE := jacobi2d_Opt0_large_connec.ini
 CONNECTIVITY_NAME_EXTRALARGE := jacobi2d_Opt0_extralarge_connec.ini
 
-PROFILE_FOLDER := ../jacobi2d_connectivityConfig/
+PROFILE_FOLDER := connectivityConfig/
 PROFILE_NAME := profile.ini
 
 
@@ -58,10 +58,10 @@ VPPLFLAGS_SPECIFIC_EXTRALARGE := --config $(CONNECTIVITY_NAME_EXTRALARGE) --conf
 MAKEFILE_NAME := makeKer_jacobi2d_Opt0.mk
 
 PackKerList := kerPack_jacobi2d_Opt0_mini
-PackKerList += kerPack_jacobi2d_Opt0_small
-PackKerList += kerPack_jacobi2d_Opt0_medium
-PackKerList += kerPack_jacobi2d_Opt0_large
-PackKerList += kerPack_jacobi2d_Opt0_extralarge
+#PackKerList += kerPack_jacobi2d_Opt0_small
+#PackKerList += kerPack_jacobi2d_Opt0_medium
+#PackKerList += kerPack_jacobi2d_Opt0_large
+#PackKerList += kerPack_jacobi2d_Opt0_extralarge
 
 
 ker_jacobi2d_Opt0_mini_XOS := ker_jacobi2d_Opt0_mini.xo

@@ -1,0 +1,23 @@
+{
+    "verbose": true,
+    "outDir": "../../../out",
+    "logFile": "logFile.txt",
+    "testList":[
+        {
+            "name":"test_jacobi2d_Opt0_hw_emu",
+            "statsFile":"test_jacobi2d_Opt0_hw_emu_results.csv",
+            "generatePictures": true,
+            "executionList":[
+                {
+                    "host": "jacobi2dHost_Opt0",
+                    "kernelPackage": "kerPack_jacobi2d_Opt0_mini_hw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt0_mini",
+                    "dataSize": "mini", 
+                    "printResults": false,
+                    "numExecutions": 1
+                }
+            ]
+        }
+    ]
+ 
+}  

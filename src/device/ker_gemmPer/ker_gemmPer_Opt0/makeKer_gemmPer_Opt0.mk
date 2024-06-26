@@ -26,7 +26,7 @@ PLATFORM ?= xilinx_u200_gen3x16_xdma_2_202110_1
 PLATFORM_REPO_PATHS ?= /opt/xilinx/platforms
 PFM := $(PLATFORM_REPO_PATHS)/$(PLATFORM)/$(PLATFORM).xpfm
 IP_CACHE_DIR ?= ip_cache
-VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS)
+VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vivado.synth.jobs $(JOBS) --vivado.impl.jobs $(JOBS) #-j 16
 
 
 

@@ -6,6 +6,7 @@
 #include "host/doitgenHost/doitgenHost.hpp"
 #include "host/gemmHost/gemmHost.hpp"
 #include "host/jacobi2dHost/jacobi2dHost.hpp"
+#include "host/vectorAddHost/vectorAddHost.hpp"
 #include "utilities/dateAndTime/dateAndTime.hpp"
 #include "service/json_service/json_service.hpp"
 #include "service/json_service/jsonConfiguration/jsonConfiguration.hpp"
@@ -110,7 +111,6 @@ int main(int argc, char** argv){
 //*************************************
 
 
-
 bool runExecution(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
 
     bool result = false;
@@ -125,6 +125,9 @@ bool runExecution(Execution exec, vector<double>& results, FileWriter_service fi
     
     }else if(exec.get_host().find("jacobi2d") != string::npos){
         result = Jacobi2dHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+    
+    }else if(exec.get_host().find("vectorAdd") != string::npos){
+        result = VectorAddHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
     
     }else{
         fileWriter_logFile.writeln("ERROR..: Host name unknow.");

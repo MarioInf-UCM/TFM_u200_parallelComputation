@@ -1,12 +1,14 @@
 CURRENT_DIR := $(shell pwd)
-BUILD_DIRECTORY=build/hostBuild
-CMAKE_DIRECTORY=../../cmake
+BUILD_DIRECTORY_SW_EMU=build/hostBuild/sw_emu
+BUILD_DIRECTORY_HW_EMU=build/hostBuild/hw_emu
+BUILD_DIRECTORY_HW=build/hostBuild/hw
+CMAKE_DIRECTORY=../../../cmake
 SCRIPTS_ROUTE=cmake/scripts/
 DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../config/configTest_doitgen_Opt1_hw.json
+CONFIGFILE_ROUTE=../../../config/configTest_vectorAdd/configTest_vectorAdd_Opt3_hw_emu.json
 
 
 #Kernel url specification - START
@@ -47,6 +49,17 @@ KERNEL_JACOBI2D_OPT1_SUBROUTE=ker_jacobi2d/ker_jacobi2d_Opt1
 KERNEL_JACOBI2D_OPT1_NAME=makeKer_jacobi2d_Opt1.mk
 KERNEL_JACOBI2D_OPT2_SUBROUTE=ker_jacobi2d/ker_jacobi2d_Opt2
 KERNEL_JACOBI2D_OPT2_NAME=makeKer_jacobi2d_Opt2.mk
+
+KERNEL_VECTORADD_OPT0_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt0
+KERNEL_VECTORADD_OPT0_NAME=makeKer_vectorAdd_Opt0.mk
+KERNEL_VECTORADD_OPT1_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt1
+KERNEL_VECTORADD_OPT1_NAME=makeKer_vectorAdd_Opt1.mk
+KERNEL_VECTORADD_OPT2_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt2
+KERNEL_VECTORADD_OPT2_NAME=makeKer_vectorAdd_Opt2.mk
+KERNEL_VECTORADD_OPT3_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt3
+KERNEL_VECTORADD_OPT3_NAME=makeKer_vectorAdd_Opt3.mk
+KERNEL_VECTORADD_OPT4_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt4
+KERNEL_VECTORADD_OPT4_NAME=makeKer_vectorAdd_Opt4.mk
 #***********************************
 #Kernel url specification - END
 
@@ -398,17 +411,112 @@ kerJacobi2d_All_build_hw: kerJacobi2d_Opt0_build_hw kerJacobi2d_Opt1_build_hw ke
 
 
 
+#***********************************************
+# COMMANDS FOR VECTORADD KERNELS COMPILE - START
+#***********************************************
+# KERNEL TARGET sw_emu
+#*********************************
+kerVectorAdd_Opt0_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT0_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT0_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerVectorAdd_Opt1_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT1_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT1_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt2_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT2_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT2_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt3_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT3_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt4_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT4_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_sw_emu: kerVectorAdd_Opt0_build_sw_emu kerVectorAdd_Opt1_build_sw_emu kerVectorAdd_Opt2_build_sw_emu kerVectorAdd_Opt3_build_sw_emu kerVectorAdd_Opt4_build_sw_emu
+
+
+# KERNEL TARGET hw_emu
+#*********************************
+kerVectorAdd_Opt0_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT0_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT0_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerVectorAdd_Opt1_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT1_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT1_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt2_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT2_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT2_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt3_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT3_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt4_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT4_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw_emu: kerVectorAdd_Opt0_build_hw_emu kerVectorAdd_Opt1_build_hw_emu kerVectorAdd_Opt2_build_hw_emu kerVectorAdd_Opt3_build_hw_emu kerVectorAdd_Opt4_build_hw_emu
+
+
+# KERNEL TARGET hw
+#*********************************
+kerVectorAdd_Opt0_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT0_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT0_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerVectorAdd_Opt1_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT1_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT1_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt2_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT2_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT2_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt3_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT3_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_Opt4_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_VECTORADD_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_VECTORADD_OPT4_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw: kerVectorAdd_Opt0_build_hw kerVectorAdd_Opt1_build_hw kerVectorAdd_Opt2_build_hw kerVectorAdd_Opt3_build_hw kerVectorAdd_Opt4_build_hw
+#***********************************************
+# COMMANDS FOR JACOBI_2D KERNELS COMPILE - START
+#***********************************************
+
+
+
 #**************************************
 # COMMANDS FOR ALL KERNELS COMPILE
 #**************************************
-kerAll_build_sw_emu: kerCholesky_Opt0_build_sw_emu kerDoitgen_Opt0_build_sw_emu kerGemm_Opt0_build_sw_emu kerGemmPer_Opt0_build_sw_emu kerJacobi2d_Opt0_build_sw_emu
+kerAll_build_sw_emu: kerCholesky_Opt0_build_sw_emu kerDoitgen_Opt0_build_sw_emu kerGemm_Opt0_build_sw_emu kerGemmPer_Opt0_build_sw_emu kerJacobi2d_Opt0_build_sw_emu kerVectorAdd_All_build_sw_emu
 	
-kerAll_build_hw_emu: kerCholesky_Opt0_build_hw_emu kerDoitgen_Opt0_build_hw_emu kerGemm_Opt0_build_hw_emu kerGemmPer_Opt0_build_hw_emu kerJacobi2d_Opt0_build_hw_emu
+kerAll_build_hw_emu: kerCholesky_Opt0_build_hw_emu kerDoitgen_Opt0_build_hw_emu kerGemm_Opt0_build_hw_emu kerGemmPer_Opt0_build_hw_emu kerJacobi2d_Opt0_build_hw_emu kerVectorAdd_All_build_hw_emu
 	
-kerAll_build_hw: kerCholesky_Opt0_build_hw kerDoitgen_Opt0_build_hw kerGemm_Opt0_build_hw kerGemmPer_Opt0_build_hw kerJacobi2d_Opt0_build_hw
+kerAll_build_hw: kerCholesky_Opt0_build_hw kerDoitgen_Opt0_build_hw kerGemm_Opt0_build_hw kerGemmPer_Opt0_build_hw kerJacobi2d_Opt0_build_hw kerVectorAdd_All_build_hw
 
-
-#kerAll_build_hw_custom: kerJacobi2d_build_hw kerGemmPer_build_hw 
 
 
 
@@ -416,25 +524,37 @@ kerAll_build_hw: kerCholesky_Opt0_build_hw kerDoitgen_Opt0_build_hw kerGemm_Opt0
 # COMMANDS FOR SOFTWARE COMPILE
 #**************************************
 hostBuild_sw_emu:
-	cd $(BUILD_DIRECTORY); \
+	mkdir -p ${BUILD_DIRECTORY_SW_EMU};
+	cd $(BUILD_DIRECTORY_SW_EMU); \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=sw_emu -DREPLACE_FILES=${REPLACE_FILES} $(CMAKE_DIRECTORY); \
 	make -j
 
 hostBuild_hw_emu:
-	@cd $(BUILD_DIRECTORY); \
+	mkdir -p ${BUILD_DIRECTORY_HW_EMU};
+	@cd $(BUILD_DIRECTORY_HW_EMU); \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=hw_emu -DREPLACE_FILES=${REPLACE_FILES} $(CMAKE_DIRECTORY); \
 	make -j
 
 hostBuild_hw:
-	cd $(BUILD_DIRECTORY); \
+	mkdir -p ${BUILD_DIRECTORY_HW};
+	cd $(BUILD_DIRECTORY_HW); \
 	emconfigutil --platform xilinx_u200_gen3x16_xdma_2_202110_1; \
 	cmake -DTARGET=hw -DREPLACE_FILES=${REPLACE_FILES} $(CMAKE_DIRECTORY); \
 	make -j
 
-run:
-	@cd $(BUILD_DIRECTORY); \
+
+run_sw_emu:
+	@cd $(BUILD_DIRECTORY_SW_EMU); \
+	./benchmarkExec $(CONFIGFILE_ROUTE); \
+
+run_hw_emu:
+	@cd $(BUILD_DIRECTORY_HW_EMU); \
+	./benchmarkExec $(CONFIGFILE_ROUTE); \
+
+run_hw:
+	@cd $(BUILD_DIRECTORY_HW); \
 	./benchmarkExec $(CONFIGFILE_ROUTE); \
 
 

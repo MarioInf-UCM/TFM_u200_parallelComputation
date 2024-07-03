@@ -65,8 +65,8 @@ extern "C"{
         int actualChunkSize=VECTOR_SIZE;
 
         #pragma HLS DATAFLOW
-        #pragma HLS stream variable = inD_vA_local depth = 64
-        #pragma HLS stream variable = inD_vB_local depth = 64
+        #pragma HLS stream variable = inD_vA_local depth = VECTOR_SIZE
+        #pragma HLS stream variable = inD_vB_local depth = VECTOR_SIZE
 
         for(int pos=0 ; pos<SIZE ; pos+=VECTOR_SIZE){
             

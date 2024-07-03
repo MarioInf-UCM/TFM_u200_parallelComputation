@@ -11,6 +11,7 @@
 #include "../../../kernel/vectorAddKernel/vectorAddKernel.hpp"
 
 using globalConfiguration_typeData::typeData;
+using globalConfiguration_typeData::typeData_fixed;
 
 class VectorAddHost_Opt4 {
 
@@ -34,9 +35,13 @@ class VectorAddHost_Opt4 {
 
     private:
         static bool initParameter(Execution exec, unsigned int &SIZE);
-        static void ensamble_dataToBuffers(VectorAddKernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice);
-        static void ensamble_buffersToData(VectorAddKernel& data, typeData *temp_resultDevice);
+
+        static float searchPropertyValue(const string& texto, const string& subcadena);
+        static void threadFunction_DeviceSampling();
+
+        static void ensamble_dataToBuffers(VectorAddKernel& data, typeData_fixed *temp_A, typeData_fixed *temp_B, typeData_fixed *temp_resultDevice);
+        static void ensamble_buffersToData(VectorAddKernel& data, typeData_fixed *temp_resultDevice);
         static bool compareResults(VectorAddKernel& data);
- 
+
 };
 #endif

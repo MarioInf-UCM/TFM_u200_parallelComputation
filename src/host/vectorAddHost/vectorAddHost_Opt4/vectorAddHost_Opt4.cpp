@@ -3,16 +3,28 @@
 #include <string.h>
 #include <sstream>
 #include <vector>
+#include <mutex>
 #include <omp.h>
+#include <thread>
+#include <chrono>
+#include <atomic>
+#include <xrt.h>
+#include <xrt/xrt_device.h>
 #include "vectorAddHost_Opt4.hpp"
 
 using namespace std;
 using globalConfiguration_typeData::typeData;
+using globalConfiguration_typeData::typeData_fixed;
 
 using cl::Event;
 using cl::CommandQueue;
 using cl::Kernel;
 using cl::Buffer;
+
+
+atomic<bool> stop_thread(false);
+mutex mtx;
+float sharedVariable = 0.0f;
 
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
@@ -35,6 +47,7 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
     VectorAddKernel data = VectorAddKernel(SIZE);
     EventTimer event;
     Event event_sp;
+    float resultMeasure_Device=0, resultMeasure_CPU=0;
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
@@ -93,19 +106,19 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
 
     Buffer sendBuff_vA(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
-                        data.get_SIZE() * sizeof(typeData),
+                        data.get_SIZE() * sizeof(typeData_fixed),
                         &bank_ext0,
                         NULL);
 
     Buffer sendBuff_vB(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
-                        data.get_SIZE() * sizeof(typeData),
+                        data.get_SIZE() * sizeof(typeData_fixed),
                         &bank_ext1,
                         NULL);
 
     Buffer recvBuff_resultDevice(xocl.get_context(),
                         static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_EXT_PTR_XILINX),
-                        data.get_SIZE() * sizeof(typeData),
+                        data.get_SIZE() * sizeof(typeData_fixed),
                         &bank_ext2,
                         NULL);
 
@@ -113,23 +126,23 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
     ker.setArg(1, sendBuff_vB);
     ker.setArg(2, recvBuff_resultDevice);
 
-    typeData *temp_vA = (typeData *)q.enqueueMapBuffer(sendBuff_vA,
+    typeData_fixed *temp_vA = (typeData_fixed *)q.enqueueMapBuffer(sendBuff_vA,
                                                         CL_TRUE,
                                                         CL_MAP_WRITE,
                                                         0,
-                                                        data.get_SIZE() * sizeof(typeData));
+                                                        data.get_SIZE() * sizeof(typeData_fixed));
 
-    typeData *temp_vB = (typeData *)q.enqueueMapBuffer(sendBuff_vB,
+    typeData_fixed *temp_vB = (typeData_fixed *)q.enqueueMapBuffer(sendBuff_vB,
                                                         CL_TRUE,
                                                         CL_MAP_WRITE,
                                                         0,
-                                                        data.get_SIZE() * sizeof(typeData));
+                                                        data.get_SIZE() * sizeof(typeData_fixed));
 
-    typeData *temp_resultDevice = (typeData *)q.enqueueMapBuffer(recvBuff_resultDevice,
+    typeData_fixed *temp_resultDevice = (typeData_fixed *)q.enqueueMapBuffer(recvBuff_resultDevice,
                                                         CL_TRUE,
                                                         CL_MAP_WRITE | CL_MAP_READ,
                                                         0,
-                                                        data.get_SIZE() * sizeof(typeData));
+                                                        data.get_SIZE() * sizeof(typeData_fixed));
 
     ensamble_dataToBuffers(data, temp_vA, temp_vB, temp_resultDevice);
 
@@ -141,7 +154,7 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
     //STEP 5 - START: Transmision data to device
     fileWriter_logFile.writeln("STEP 5 - START: Transmision data to device");
     event.add("Transmision data to device");
-
+    
     q.enqueueMigrateMemObjects({sendBuff_vA, sendBuff_vB}, 0, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
 
@@ -152,12 +165,24 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
 
     //STEP 6 - START: Device execution
     fileWriter_logFile.writeln("STEP 6 - START: Device execution");
+
+    stop_thread.store(false);
+
     event.add("Device execution");
-
     q.enqueueTask(ker, NULL, &event_sp);
-    clWaitForEvents(1, (const cl_event *)&event_sp);
 
+    thread thread_deviceMeasure(threadFunction_DeviceSampling);
+    
+    clWaitForEvents(1, (const cl_event *)&event_sp);
     event.finish();
+
+    stop_thread.store(true);
+    if (thread_deviceMeasure.joinable()) {
+        thread_deviceMeasure.join();
+    }
+    
+    resultMeasure_Device = sharedVariable;
+
     fileWriter_logFile.write("STEP 6 - END: Device execution (" + event.getInfoEvents(5));
     //STEP 6 - END: Device execution
 
@@ -200,9 +225,6 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
 //*************************************
 // MAIN FUNCTION - END
 //*************************************
-
-
-
 bool VectorAddHost_Opt4::initParameter(Execution exec, unsigned int &SIZE){
     if(exec.get_dataSize() == "mini"){
         SIZE=VECTORADD_SIZE_MINI;
@@ -224,23 +246,22 @@ bool VectorAddHost_Opt4::initParameter(Execution exec, unsigned int &SIZE){
 
 bool VectorAddHost_Opt4::compareResults(VectorAddKernel& data){
 
-    float tolerancia = 0.01;
-    float promedio = 0; 
-    float diferenciaRelativa = 0;
-    
+    typeData_fixed tolerance = 0.01;
+    typeData_fixed tempDataCPU, tempDataDevice;
+
     for (int i = 0; i < data.get_resultDevice().size() ; i++) {
-        promedio = (fabs(data.get_resultCPU()[i]) + fabs(data.get_resultDevice()[i])) / 2.0;
-        diferenciaRelativa = fabs( data.get_resultCPU()[i] - data.get_resultDevice()[i] ) / promedio;
-        if(!(diferenciaRelativa <= tolerancia)){
+        tempDataCPU = data.get_resultCPU()[i];
+        tempDataDevice = data.get_resultDevice()[i];
+        if( !((tempDataCPU > tempDataDevice ? tempDataCPU - tempDataDevice : tempDataDevice - tempDataCPU) < tolerance) ){
             return false;
-        }        
+        }
     }
     return true;
 }
 
 
 
-void VectorAddHost_Opt4::ensamble_dataToBuffers(VectorAddKernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice){
+void VectorAddHost_Opt4::ensamble_dataToBuffers(VectorAddKernel& data, typeData_fixed *temp_A, typeData_fixed *temp_B, typeData_fixed *temp_resultDevice){
 
     for (int i = 0; i < data.get_SIZE(); i++) {
         temp_A[i] = data.get_vA()[i];
@@ -253,11 +274,56 @@ void VectorAddHost_Opt4::ensamble_dataToBuffers(VectorAddKernel& data, typeData 
 
 
 
-
-void VectorAddHost_Opt4::ensamble_buffersToData(VectorAddKernel& data, typeData *temp_resultDevice){
+void VectorAddHost_Opt4::ensamble_buffersToData(VectorAddKernel& data, typeData_fixed *temp_resultDevice){
     
     for (int i = 0; i < data.get_SIZE() ; i++) {
         data.get_resultDevice()[i] = temp_resultDevice[i];
     }
     return;
 }
+
+
+
+
+float VectorAddHost_Opt4::searchPropertyValue(const string& texto, const string& subcadena) {
+    istringstream stream(texto);
+    string linea;
+    string resultado;
+
+    while (getline(stream, linea)) {
+        if (linea.find(subcadena) != string::npos) {
+            size_t start = linea.find(":") + 1;
+            size_t end = linea.find(",", start);
+            if (end == std::string::npos) {
+                end = linea.size();
+            }
+
+            resultado = linea.substr(start, end - start);
+            resultado.erase(remove(resultado.begin(), resultado.end(), '\"'), resultado.end());
+            resultado.erase(remove(resultado.begin(), resultado.end(), ' '), resultado.end());
+            return stof(resultado);
+        }
+    }
+    return 0.0f;
+}
+
+
+
+void VectorAddHost_Opt4::threadFunction_DeviceSampling() {
+
+    cout << "Measuring device consumption...";
+    unsigned int numIter=0;
+
+    sharedVariable=0;
+    do{
+        this_thread::sleep_for(chrono::milliseconds(1));
+        lock_guard<std::mutex> lock(mtx);
+        sharedVariable += searchPropertyValue( xrt::device(0).get_info<xrt::info::device::electrical>(), "power_consumption_watts");
+        numIter++;
+    }while (!stop_thread.load());
+
+    sharedVariable = sharedVariable/numIter;
+    cout << "...Finalizing Measure device consumption ("<< sharedVariable <<" Watts  |  " << numIter << " lectures )." << endl;
+    return;
+}
+

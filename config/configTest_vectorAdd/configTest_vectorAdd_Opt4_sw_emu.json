@@ -10,9 +10,41 @@
             "executionList":[
                 {
                     "host": "vectorAddHost_Opt4",
+                    "kernelPackage": "kerPack_vectorAdd_Opt4_mini_sw_emu.xclbin",
+                    "kernel": "ker_vectorAdd_Opt4_mini",
+                    "dataSize": "mini", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt4",
+                    "kernelPackage": "kerPack_vectorAdd_Opt4_small_sw_emu.xclbin",
+                    "kernel": "ker_vectorAdd_Opt4_small",
+                    "dataSize": "small", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt4",
                     "kernelPackage": "kerPack_vectorAdd_Opt4_medium_sw_emu.xclbin",
                     "kernel": "ker_vectorAdd_Opt4_medium",
                     "dataSize": "medium", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt4",
+                    "kernelPackage": "kerPack_vectorAdd_Opt4_large_sw_emu.xclbin",
+                    "kernel": "ker_vectorAdd_Opt4_large",
+                    "dataSize": "large", 
+                    "printResults": false,
+                    "numExecutions": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt4",
+                    "kernelPackage": "kerPack_vectorAdd_Opt4_extralarge_sw_emu.xclbin",
+                    "kernel": "ker_vectorAdd_Opt4_extralarge",
+                    "dataSize": "extralarge", 
                     "printResults": false,
                     "numExecutions": 1
                 }

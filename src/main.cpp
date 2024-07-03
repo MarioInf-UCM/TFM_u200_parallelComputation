@@ -63,7 +63,6 @@ int main(int argc, char** argv){
                     numFailures++;
                 }
                 
-                fileWriter_logFile.write("New execution average results: ");
                 for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
                     if((execResult) >= testAverageResults.size()){
                         testAverageResults.push_back(executionResults[execResult]);

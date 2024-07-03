@@ -91,8 +91,10 @@ public:
 
     void initialize(std::string xclbin_file_name);
 
-    cl::CommandQueue get_command_queue(bool in_order         = false,
-                                       bool enable_profiling = false);
+    std::vector<cl::Device> getDeviceList();
+
+
+    cl::CommandQueue get_command_queue(bool in_order = false, bool enable_profiling = false);
     cl::Kernel get_kernel(std::string kernel_name);
     cl::Buffer create_buffer(size_t size, cl_mem_flags flags);
     cl::Buffer create_buffer_in_bank(int bank, size_t size, cl_mem_flags flags);

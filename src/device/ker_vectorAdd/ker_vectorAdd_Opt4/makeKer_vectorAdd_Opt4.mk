@@ -57,11 +57,11 @@ VPPLFLAGS_SPECIFIC_EXTRALARGE := --config $(CONNECTIVITY_NAME_EXTRALARGE) --conf
 #********************************************
 MAKEFILE_NAME := makeKer_vectorAdd_Opt4.mk
 
-#PackKerList := kerPack_vectorAdd_Opt4_mini
-#PackKerList += kerPack_vectorAdd_Opt4_small
+PackKerList := kerPack_vectorAdd_Opt4_mini
+PackKerList += kerPack_vectorAdd_Opt4_small
 PackKerList += kerPack_vectorAdd_Opt4_medium
-#PackKerList += kerPack_vectorAdd_Opt4_large
-#PackKerList += kerPack_vectorAdd_Opt4_extralarge
+PackKerList += kerPack_vectorAdd_Opt4_large
+PackKerList += kerPack_vectorAdd_Opt4_extralarge
 
 
 ker_vectorAdd_Opt4_mini_XOS := ker_vectorAdd_Opt4_mini.xo

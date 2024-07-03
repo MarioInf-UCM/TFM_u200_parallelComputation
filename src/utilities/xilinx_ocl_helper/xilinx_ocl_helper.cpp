@@ -102,6 +102,11 @@ void XilinxOclHelper::initialize(std::string xclbin_file_name)
     }
 }
 
+std::vector<cl::Device> XilinxOclHelper::getDeviceList(){
+    return  find_xilinx_devices();
+}
+
+
 cl::Kernel XilinxOclHelper::get_kernel(std::string kernel_name)
 {
     if (!is_initialized) {

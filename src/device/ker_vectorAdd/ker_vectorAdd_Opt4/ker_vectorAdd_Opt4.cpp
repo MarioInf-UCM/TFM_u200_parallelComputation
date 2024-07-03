@@ -66,10 +66,12 @@ extern "C"{
         typeData inD_vA_local[VECTOR_SIZE];
         typeData inD_vB_local[VECTOR_SIZE];
         int actualChunkSize=VECTOR_SIZE;
+        typeData tempData1, tempData2;
+
 
         #pragma HLS DATAFLOW
-        #pragma HLS stream variable = inD_vA_local depth = 64
-        #pragma HLS stream variable = inD_vB_local depth = 64
+        #pragma HLS stream variable = inD_vA_local depth = VECTOR_SIZE
+        #pragma HLS stream variable = inD_vB_local depth = VECTOR_SIZE
 
         for(int pos=0 ; pos<SIZE ; pos+=VECTOR_SIZE){
             
@@ -88,6 +90,12 @@ extern "C"{
                 #pragma HLS LOOP_TRIPCOUNT min=1  max=VECTOR_SIZE 
                 #pragma HLS UNROLL factor=8
                 outD_result[pos+i] = inD_vA_local[i] + inD_vB_local[i];
+                
+                //tempData1 = inD_vA_local[i];
+                //tempData2 = inD_vB_local[i];
+                //outD_result[pos+i] = tempData1 + tempData2;
+            
+            
             }    
         }
 

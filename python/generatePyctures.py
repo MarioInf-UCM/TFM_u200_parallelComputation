@@ -46,6 +46,8 @@ def generate_plot(csv_url, image_location):
     plt.savefig(image_locationTemp, format='jpg', dpi=600)
     image_locationTemp = image_location +".log.eps"
     plt.savefig(image_locationTemp, format='eps', dpi=600)
+    image_locationTemp = image_location +".log.pdf"
+    plt.savefig(image_locationTemp, format='pdf', dpi=600)
 
     plt.close()
 

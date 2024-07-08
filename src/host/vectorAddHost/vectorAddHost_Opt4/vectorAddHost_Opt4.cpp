@@ -9,6 +9,7 @@
 #include <chrono>
 #include <atomic>
 #include <xrt.h>
+#include <papi.h>
 #include <xrt/xrt_device.h>
 #include "vectorAddHost_Opt4.hpp"
 
@@ -38,6 +39,10 @@ VectorAddHost_Opt4::~VectorAddHost_Opt4(){}
 bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"VectorAddHost::VectorAddHost_Opt4_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
+
+    //STEP 0 - START: Initializating parameters"
+    fileWriter_logFile.writeln("STEP 0 - START: Initializating parameters");
+    
     unsigned int SIZE=0;    
     bool result = initParameter(exec, SIZE);
     if(!result){
@@ -47,7 +52,29 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
     VectorAddKernel data = VectorAddKernel(SIZE);
     EventTimer event;
     Event event_sp;
-    float resultMeasure_Device=0, resultMeasure_CPU=0;
+    float resultMeasure_Device=0.0f, resultMeasure_CPU=0.0f, resultMeasure_CPUopt=0.0f;
+
+    bool PAPImeasureFlag=true;
+    int PAPIevent_PowerMeasure = PAPI_NULL;
+    long long CPU_powerMeasure;
+    if (PAPI_library_init(PAPI_VER_CURRENT) != PAPI_VER_CURRENT) {
+        PAPImeasureFlag=false;
+        cerr << "ERROR..: We couldn't initialize PAPI library." << endl;
+    }
+    if (PAPI_create_eventset(&PAPIevent_PowerMeasure) != PAPI_OK) {
+        PAPImeasureFlag=false;
+        cerr << "ERROR..: We couldn't create the serie of events." << endl;
+    }
+
+    if (PAPI_add_event(PAPIevent_PowerMeasure, PAPI_FP_OPS) != PAPI_OK) {
+        PAPImeasureFlag=false;
+        std::cerr << "ERROR..: We couldn't add energy measurent event to serie of events" << endl;
+    }
+
+
+    fileWriter_logFile.writeln("STEP 0 - END: Initializating parameters");
+    //STEP 0 - END: Initializating parameters"
+
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
@@ -67,7 +94,15 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
     fileWriter_logFile.writeln("STEP 2 - START: Running kernel in CPU");
     event.add("Running kernel in CPU");
 
-    data.kernel_vectorAdd_CPU();
+    if(PAPImeasureFlag){
+        stop_thread.store(false);
+        //thread thread_deviceMeasure(threadFunction_CPUPowerMeasure, resultMeasure_CPU);
+        data.kernel_vectorAdd_CPU();
+        stop_thread.store(true);
+
+    }else{
+        data.kernel_vectorAdd_CPU();
+    }
 
     event.finish();
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
@@ -165,23 +200,31 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
 
     //STEP 6 - START: Device execution
     fileWriter_logFile.writeln("STEP 6 - START: Device execution");
-
-    stop_thread.store(false);
-
-    event.add("Device execution");
-    q.enqueueTask(ker, NULL, &event_sp);
-
-    thread thread_deviceMeasure(threadFunction_DeviceSampling);
     
-    clWaitForEvents(1, (const cl_event *)&event_sp);
-    event.finish();
+    if(exec.get_kernelPackage().find("hw.xclbin") != string::npos){
+        
+        stop_thread.store(false);
+        q.enqueueTask(ker, NULL, &event_sp);
+        event.add("Device execution");
 
-    stop_thread.store(true);
-    if (thread_deviceMeasure.joinable()) {
-        thread_deviceMeasure.join();
+        thread thread_deviceMeasure(threadFunction_DevicePowerMeasure);
+        
+        clWaitForEvents(1, (const cl_event *)&event_sp);
+        event.finish();
+
+        stop_thread.store(true);
+        if (thread_deviceMeasure.joinable()) {
+            thread_deviceMeasure.join();
+        }
+        
+        resultMeasure_Device = sharedVariable;
+
+    }else{
+        q.enqueueTask(ker, NULL, &event_sp);
+        event.add("Device execution");
+        clWaitForEvents(1, (const cl_event *)&event_sp);  
+        event.finish();      
     }
-    
-    resultMeasure_Device = sharedVariable;
 
     fileWriter_logFile.write("STEP 6 - END: Device execution (" + event.getInfoEvents(5));
     //STEP 6 - END: Device execution
@@ -195,12 +238,12 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
     clWaitForEvents(1, (const cl_event *)&event_sp);
     q.finish();
 
-    ensamble_buffersToData(data, temp_resultDevice);
     event.finish();
     fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
     //STEP 7 - END: Transmision data from device 
     
     
+    ensamble_buffersToData(data, temp_resultDevice);
     if(exec.get_printResults()){
         fileWriter_logFile.write(data.printAll());
     }
@@ -219,6 +262,8 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& results, FileWrite
     results.push_back(stod(event.getTimeEvents(2)));                                  //CPU execution time optimizated
     results.push_back(stod(event.getTimeEvents(5)));                                  //Device execution time 
     results.push_back(stod(event.getTimeEvents(4)) + stod(event.getTimeEvents(6)));   //Transmision (Send+Recv) time
+    results.push_back(stod(event.getTimeEvents(4)));                                  //Send to device time
+    results.push_back(stod(event.getTimeEvents(6)));                                  //Recieve from device time
 
   return result;
 }
@@ -253,6 +298,7 @@ bool VectorAddHost_Opt4::compareResults(VectorAddKernel& data){
         tempDataCPU = data.get_resultCPU()[i];
         tempDataDevice = data.get_resultDevice()[i];
         if( !((tempDataCPU > tempDataDevice ? tempDataCPU - tempDataDevice : tempDataDevice - tempDataCPU) < tolerance) ){
+            //cout << i << "  " << data.get_resultCPU()[i] << "  " << data.get_resultDevice()[i] << endl;
             return false;
         }
     }
@@ -294,7 +340,7 @@ float VectorAddHost_Opt4::searchPropertyValue(const string& texto, const string&
         if (linea.find(subcadena) != string::npos) {
             size_t start = linea.find(":") + 1;
             size_t end = linea.find(",", start);
-            if (end == std::string::npos) {
+            if (end == string::npos) {
                 end = linea.size();
             }
 
@@ -309,21 +355,61 @@ float VectorAddHost_Opt4::searchPropertyValue(const string& texto, const string&
 
 
 
-void VectorAddHost_Opt4::threadFunction_DeviceSampling() {
+void VectorAddHost_Opt4::threadFunction_CPUPowerMeasure(int *PAPIevent_PowerMeasure, atomic<double> &CPU_powerMeasure) {
 
-    cout << "Measuring device consumption...";
+    cout << "Measuring CPU Power...";
     unsigned int numIter=0;
+    long long measure_picoJulios=0, measureTemp_picoJulios=0;
+    double measure_Julios=0;
+    CPU_powerMeasure=0;
+
+    if (PAPI_start(*PAPIevent_PowerMeasure) != PAPI_OK) {
+        cerr << "ERROR..: We couldn't init the serie of events" << endl;
+    }
+    auto start = chrono::high_resolution_clock::now();
+    
+    do{
+
+        if (PAPI_read(*PAPIevent_PowerMeasure, &measureTemp_picoJulios) != PAPI_OK) {
+            cerr << "ERROR..: We couldn't read the power measure event"<< endl;
+        }
+
+
+        measure_picoJulios += measure_picoJulios + measureTemp_picoJulios;
+        this_thread::sleep_for(chrono::milliseconds(1));
+    }while (!stop_thread.load());
+   
+    auto end = std::chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = end - start;
+    if (PAPI_stop(*PAPIevent_PowerMeasure, NULL) != PAPI_OK) {
+        cerr << "ERROR..: We couldn't stop the serie of events" << endl;
+    }
+
+    measure_picoJulios = measure_picoJulios/numIter;
+    measure_Julios = measure_picoJulios * 1e-12;
+    CPU_powerMeasure = measure_Julios / elapsed.count();
+
+    cout << "...Finalizing Measure CPU power ("<< CPU_powerMeasure <<" Watts  |  " << numIter << " lectures )." << endl;
+    return;
+}
+
+
+
+void VectorAddHost_Opt4::threadFunction_DevicePowerMeasure() {
+
+    cout << "Measuring device Power...";
+    unsigned int numIter=0; 
 
     sharedVariable=0;
     do{
-        this_thread::sleep_for(chrono::milliseconds(1));
-        lock_guard<std::mutex> lock(mtx);
+        //lock_guard<mutex> lock(mtx);
         sharedVariable += searchPropertyValue( xrt::device(0).get_info<xrt::info::device::electrical>(), "power_consumption_watts");
         numIter++;
+        this_thread::sleep_for(chrono::milliseconds(1));
     }while (!stop_thread.load());
 
     sharedVariable = sharedVariable/numIter;
-    cout << "...Finalizing Measure device consumption ("<< sharedVariable <<" Watts  |  " << numIter << " lectures )." << endl;
+    cout << "...Finalizing Measure device power ("<< sharedVariable <<" Watts  |  " << numIter << " lectures )." << endl;
     return;
 }
 

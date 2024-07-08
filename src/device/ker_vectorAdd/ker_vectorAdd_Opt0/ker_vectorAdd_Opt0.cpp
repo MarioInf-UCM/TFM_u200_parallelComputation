@@ -10,15 +10,15 @@ typedef float typeData;
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET
-    #define SIZE 10
+    #define SIZE (1024 * 1024 * 2)
 #elif defined(SMALL_DATASET)
-    #define SIZE 100
+    #define SIZE (1024 * 1024 * 4)
 #elif defined(MEDIUM_DATASET)
-    #define SIZE 2000
+    #define SIZE (1024 * 1024 * 8)
 #elif defined(LARGE_DATASET)
-    #define SIZE 50000
+    #define SIZE (1024 * 1024 * 16)
 #elif defined(EXTRALARGE_DATASET)
-    #define SIZE 800000
+    #define SIZE (1024 * 1024 * 32)
 #else
     #define SIZE 0
 #endif

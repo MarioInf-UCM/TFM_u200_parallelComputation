@@ -10,18 +10,19 @@ typedef float typeData;
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET
-    #define SIZE 10
+    #define SIZE (1024 * 1024 * 2)
 #elif defined(SMALL_DATASET)
-    #define SIZE 100
+    #define SIZE (1024 * 1024 * 4)
 #elif defined(MEDIUM_DATASET)
-    #define SIZE 2000
+    #define SIZE (1024 * 1024 * 8)
 #elif defined(LARGE_DATASET)
-    #define SIZE 50000
+    #define SIZE (1024 * 1024 * 16)
 #elif defined(EXTRALARGE_DATASET)
-    #define SIZE 800000
+    #define SIZE (1024 * 1024 * 32)
 #else
     #define SIZE 0
 #endif
+        
         
 
 // READING BY CHUNKS
@@ -29,6 +30,7 @@ typedef float typeData;
 #define WIDTH_OF_ACCESS 512
 #define SIZE_OF_TYPEDATA sizeof(typeData)
 #define VECTOR_SIZE (WIDTH_OF_ACCESS/SIZE_OF_TYPEDATA)
+#define STREAM_SIZE 1024
 
 
 
@@ -60,37 +62,39 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
-        typeData inD_vA_local[VECTOR_SIZE];
-        typeData inD_vB_local[VECTOR_SIZE];
-        int actualChunkSize=VECTOR_SIZE;
+        typeData inD_vA_local[STREAM_SIZE];
+        typeData inD_vB_local[STREAM_SIZE];
+        int actualChunkSize=0;
 
-        #pragma HLS DATAFLOW
-        #pragma HLS stream variable = inD_vA_local depth = VECTOR_SIZE
-        #pragma HLS stream variable = inD_vB_local depth = VECTOR_SIZE
 
-        for(int pos=0 ; pos<SIZE ; pos+=VECTOR_SIZE){
-            
+        for (int i = 0; i < SIZE; i += STREAM_SIZE) {
+            #pragma HLS DATAFLOW
+            #pragma HLS stream variable = inD_vA_local depth = STREAM_SIZE
+            #pragma HLS stream variable = inD_vB_local depth = STREAM_SIZE
+
+            actualChunkSize = STREAM_SIZE;
+            if ((i + STREAM_SIZE) > SIZE){
+                actualChunkSize = SIZE - i;
+            }
+
             block_initialRading:
-            for (int i = 0; ( i<VECTOR_SIZE && (pos+i)<SIZE) ; i++) {
-                #pragma HLS PIPELINE II=2
-                #pragma HLS LOOP_TRIPCOUNT min=1  max=VECTOR_SIZE 
+            for (int j = 0; j < actualChunkSize; j++) {
+                #pragma HLS PIPELINE II=1
+                #pragma HLS LOOP_TRIPCOUNT min=1  max=STREAM_SIZE 
                 #pragma HLS UNROLL factor=8
-                inD_vA_local[i] = inD_vA[pos+i];
-                inD_vB_local[i] = inD_vB[pos+i]; 
+                inD_vA_local[j] = inD_vA[i + j];
+                inD_vB_local[j] = inD_vB[i + j];
             }
 
             block_add:
-            for (int i = 0; ( i<VECTOR_SIZE && (pos+i)<SIZE) ; i++) {
+            for (int j = 0; j < actualChunkSize; j++) {
                 #pragma HLS PIPELINE II=1
-                #pragma HLS LOOP_TRIPCOUNT min=1  max=VECTOR_SIZE 
+                #pragma HLS LOOP_TRIPCOUNT min=1  max=STREAM_SIZE 
                 #pragma HLS UNROLL factor=8
-                outD_result[pos+i] = inD_vA_local[i] + inD_vB_local[i];
-            }    
+                outD_result[i + j] = inD_vA_local[j] + inD_vB_local[j];
+            }
         }
 
+        return;
     }
-    //*************************************
-    // MAIN KERNEL FUNCTION - END
-    //*************************************
-    
 }

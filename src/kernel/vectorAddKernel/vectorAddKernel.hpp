@@ -36,11 +36,11 @@ class VectorAddKernel{
         VectorAddKernel(unsigned int SIZE);
         ~VectorAddKernel();
 
-        void initData_vA(unsigned int SIZE);
-        void initData_vB(unsigned int SIZE);
-        void initData_resultCPU(unsigned int SIZE);
-        void initData_resultCPU_opt(unsigned int SIZE);
-        void initData_resultDevice(unsigned int SIZE);
+        void initData_vA();
+        void initData_vB();
+        void initData_resultCPU();
+        void initData_resultCPU_opt();
+        void initData_resultDevice();
         
         string printData_vA();
         string printData_vB();

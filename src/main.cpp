@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 
     for(int i=0 ; i<jsonConfiguration.get_testList().size() ; i++){
         fileWriter_statsFile = FileWriter_service(jsonConfiguration.get_outDir() + outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile(), jsonConfiguration.get_verbose());
-        fileWriter_statsFile.writeln("x,CPU time execution,CPU time execution optimizated,Device time execution,Transmision (S+R) time", false);
+        fileWriter_statsFile.writeln("x,CPU time execution,CPU time execution optimizated,Device time execution,Transmision (S+R) time,Send to device time, Recieve from device time", false);
     
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
             testAverageResults.clear();
@@ -85,13 +85,14 @@ int main(int argc, char** argv){
                 }else{
                     tempString_toWrite += to_string(testAverageResults[execResult]) + ",";
                 }
-            }            
+            }
+            fileWriter_logFile.writeln("Average results:\nX,CPU time execution,CPU time execution optimizated,Device time execution,Transmision (S+R) time,Send to device time, Recieve from device time", true);
+            fileWriter_logFile.writeln(tempString_toWrite, true);  
             fileWriter_statsFile.writeln(tempString_toWrite, false);
         }
 
         if(jsonConfiguration.get_testList()[i].get_generatePictures()){
             result = externProgramConnection.execute_generatePyctures(
-                jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile(), 
                 jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile());
             
             if(!result){

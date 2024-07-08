@@ -13,7 +13,7 @@ class ExternProgramsConnection_service {
         ExternProgramsConnection_service();
         ~ExternProgramsConnection_service();
     
-        bool execute_generatePyctures(string url, string outFile);
+        bool execute_generatePyctures(string url);
         bool execute_generatePyctures();
 
 

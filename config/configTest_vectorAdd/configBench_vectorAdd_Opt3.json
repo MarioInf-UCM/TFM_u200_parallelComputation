@@ -29,7 +29,7 @@
                     "kernel": "ker_vectorAdd_Opt3_mini",
                     "dataSize": "mini", 
                     "printResults": false,
-                    "numExecutions": 1
+                    "numExecutions": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -37,7 +37,7 @@
                     "kernel": "ker_vectorAdd_Opt3_small",
                     "dataSize": "small", 
                     "printResults": false,
-                    "numExecutions": 1
+                    "numExecutions": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -45,7 +45,7 @@
                     "kernel": "ker_vectorAdd_Opt3_medium",
                     "dataSize": "medium", 
                     "printResults": false,
-                    "numExecutions": 1
+                    "numExecutions": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -53,7 +53,7 @@
                     "kernel": "ker_vectorAdd_Opt3_large",
                     "dataSize": "large", 
                     "printResults": false,
-                    "numExecutions": 1
+                    "numExecutions": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -61,7 +61,7 @@
                     "kernel": "ker_vectorAdd_Opt3_extralarge",
                     "dataSize": "extralarge", 
                     "printResults": false,
-                    "numExecutions": 1
+                    "numExecutions": 5
                 }
             ]
         }

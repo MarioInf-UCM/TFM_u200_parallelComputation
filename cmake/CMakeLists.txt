@@ -8,6 +8,8 @@ find_package(OpenCL REQUIRED)
 find_package(XRT REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(jsoncpp REQUIRED)
+find_package(PAPI REQUIRED)
+
 
 if(NOT XRT_FOUND)
   message(FATAL_ERROR "XRT not found, please source XRT setup script before building")
@@ -144,6 +146,7 @@ add_library(example_utils STATIC
 target_include_directories(example_utils PUBLIC
   ${XRT_INCLUDE_DIRS}
   ${OpenCL_INCLUDE_DIRS}
+  ${PAPI_INCLUDE_DIRS}
 )
 
 add_executable(benchmarkExec
@@ -204,11 +207,13 @@ target_include_directories(benchmarkExec PRIVATE
 target_link_libraries(benchmarkExec PRIVATE
   ${XRT_LIBS}
   ${OpenCL_LIBRARIES}
+  ${CMAKE_DL_LIBS}
+  ${PAPI_LIBRARIES}
   jsoncpp_lib
   pthread
   uuid
-  ${CMAKE_DL_LIBS}
   example_utils
   OpenMP::OpenMP_CXX
+#  PAPI::PAPI
   )
 

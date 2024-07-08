@@ -2,6 +2,7 @@
 #define _VECTORADDHOST_OPT4_HPP_
 
 #include <iostream>
+#include <atomic>
 
 #include "../../../service/fileWriter_service/fileWriter_service.hpp"
 #include "../../../service/json_service/jsonConfiguration/execution/execution.hpp"
@@ -37,7 +38,8 @@ class VectorAddHost_Opt4 {
         static bool initParameter(Execution exec, unsigned int &SIZE);
 
         static float searchPropertyValue(const string& texto, const string& subcadena);
-        static void threadFunction_DeviceSampling();
+        static void threadFunction_CPUPowerMeasure(int *PAPIevent_PowerMeasure, atomic<double> &CPU_powerMeasure);
+        static void threadFunction_DevicePowerMeasure();
 
         static void ensamble_dataToBuffers(VectorAddKernel& data, typeData_fixed *temp_A, typeData_fixed *temp_B, typeData_fixed *temp_resultDevice);
         static void ensamble_buffersToData(VectorAddKernel& data, typeData_fixed *temp_resultDevice);

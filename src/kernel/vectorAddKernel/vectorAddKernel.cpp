@@ -18,11 +18,11 @@ VectorAddKernel::VectorAddKernel(unsigned int SIZE):
     resultCPU_opt(vector<typeData>()),
     resultDevice(vector<typeData>())
 {
-    initData_vA(SIZE);
-    initData_vB(SIZE);
-    initData_resultCPU(SIZE);
-    initData_resultCPU_opt(SIZE);
-    initData_resultDevice(SIZE);
+    initData_vA();
+    initData_vB();
+    initData_resultCPU();
+    initData_resultCPU_opt();
+    initData_resultDevice();
 }
 VectorAddKernel::~VectorAddKernel(){}
 
@@ -31,37 +31,43 @@ VectorAddKernel::~VectorAddKernel(){}
 //*********************
 //* GENERAL FUNCTIONS *
 //*********************
-void VectorAddKernel::initData_vA(unsigned int SIZE){
+void VectorAddKernel::initData_vA(){
+    typeData temp;
     for(int i=0 ; i<get_SIZE() ; i++){
-        get_vA().push_back( (typeData) generateRandomNumber());
+        temp=(i%10);
+        temp=temp + (temp/10);
+        get_vA().push_back(temp);
     }
     return;
 }
 
 
-void VectorAddKernel::initData_vB(unsigned int SIZE){
+void VectorAddKernel::initData_vB(){
+    typeData temp;
     for(int i=0 ; i<get_SIZE() ; i++){
-        get_vB().push_back( (typeData) generateRandomNumber());
+        temp=(i%10);
+        temp=temp + (temp/10);
+        get_vB().push_back( temp );
     }
     return;
 }
 
 
-void VectorAddKernel::initData_resultCPU(unsigned int SIZE){
+void VectorAddKernel::initData_resultCPU(){
     for(int i=0 ; i<get_SIZE() ; i++){
         get_resultCPU().push_back(0.0f);
     }
     return;
 }
 
-void VectorAddKernel::initData_resultCPU_opt(unsigned int SIZE){
+void VectorAddKernel::initData_resultCPU_opt(){
     for(int i=0 ; i<get_SIZE() ; i++){
         get_resultCPU_opt().push_back(0.0f);
     }
     return;
 }
 
-void VectorAddKernel::initData_resultDevice(unsigned int SIZE){
+void VectorAddKernel::initData_resultDevice(){
     for(int i=0 ; i<get_SIZE() ; i++){
         get_resultDevice().push_back(0.0f);
     }
@@ -160,17 +166,6 @@ void VectorAddKernel::kernel_vectorAdd_CPU_opt() {
     
     return;
 }
-
-
-double VectorAddKernel::generateRandomNumber(){
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_real_distribution<> dis(0.0, 9.99);
-    double numeroAleatorio = dis(gen);
-    numeroAleatorio = round(numeroAleatorio * 100.0) / 100.0;
-    return numeroAleatorio;
-}
-
 
 
 

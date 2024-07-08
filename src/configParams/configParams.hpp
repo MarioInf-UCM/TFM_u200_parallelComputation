@@ -100,11 +100,11 @@
     //DEFINE PARAMS FOR VECTORADD KERNEL
     //**********************************
     # if !defined(VECTORADD_SIZE)
-        #define VECTORADD_SIZE_MINI 10
-        #define VECTORADD_SIZE_SMALL 100
-        #define VECTORADD_SIZE_MEDIUM 2000
-        #define VECTORADD_SIZE_LARGE 50000
-        #define VECTORADD_SIZE_EXTRALARGE 800000
+        #define VECTORADD_SIZE_MINI (1024 * 1024 * 2)
+        #define VECTORADD_SIZE_SMALL (1024 * 1024 * 4)
+        #define VECTORADD_SIZE_MEDIUM (1024 * 1024 * 8)
+        #define VECTORADD_SIZE_LARGE (1024 * 1024 * 16)
+        #define VECTORADD_SIZE_EXTRALARGE (1024 * 1024 * 32)
     #endif
         
 

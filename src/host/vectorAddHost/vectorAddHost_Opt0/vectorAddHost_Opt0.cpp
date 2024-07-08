@@ -26,6 +26,9 @@ VectorAddHost_Opt0::~VectorAddHost_Opt0(){}
 bool VectorAddHost_Opt0::exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"VectorAddHost::VectorAddHost_Opt0_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
+    //STEP 1 - START: Initializating parameters"
+    fileWriter_logFile.writeln("STEP 0 - START: Initializating parameters");
+    
     unsigned int SIZE=0;    
     bool result = initParameter(exec, SIZE);
     if(!result){
@@ -35,6 +38,10 @@ bool VectorAddHost_Opt0::exec(Execution exec, vector<double>& results, FileWrite
     VectorAddKernel data = VectorAddKernel(SIZE);
     EventTimer event;
     Event event_sp;
+
+    fileWriter_logFile.writeln("STEP 0 - END: Initializating parameters");
+    //STEP 1 - END: Initializating parameters"
+
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
@@ -140,12 +147,12 @@ bool VectorAddHost_Opt0::exec(Execution exec, vector<double>& results, FileWrite
     clWaitForEvents(1, (const cl_event *)&event_sp);
     q.finish();
 
-    ensamble_buffersToData(data, temp_resultDevice);
     event.finish();
     fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
     //STEP 7 - END: Transmision data from device 
     
     
+    ensamble_buffersToData(data, temp_resultDevice);
     if(exec.get_printResults()){
         fileWriter_logFile.write(data.printAll());
     }
@@ -164,6 +171,8 @@ bool VectorAddHost_Opt0::exec(Execution exec, vector<double>& results, FileWrite
     results.push_back(stod(event.getTimeEvents(2)));                                  //CPU execution time optimizated
     results.push_back(stod(event.getTimeEvents(5)));                                  //Device execution time 
     results.push_back(stod(event.getTimeEvents(4)) + stod(event.getTimeEvents(6)));   //Transmision (Send+Recv) time
+    results.push_back(stod(event.getTimeEvents(4)));                                  //Send to device time
+    results.push_back(stod(event.getTimeEvents(6)));                                  //Recieve from device time
 
   return result;
 }

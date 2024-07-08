@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import sys
 import os
 
-def generate_plot(csv_url, image_location):
+def generate_plot(csv_url):
     try:
         data = pd.read_csv(csv_url)
         x = data['x']
@@ -42,25 +42,20 @@ def generate_plot(csv_url, image_location):
     #    plt.annotate(f'{y3[i]:.2f}', (x[i], y3[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='blue', edgecolor='black', boxstyle='round,pad=0.2'))
     #    plt.annotate(f'{y4[i]:.2f}', (x[i], y4[i]), textcoords="offset points", xytext=(0,10), ha='center', color='white', fontsize=8, bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.2'))
 
-    image_locationTemp = image_location +".log.jpg"
+    image_locationTemp = csv_url + ".jpg"
     plt.savefig(image_locationTemp, format='jpg', dpi=600)
-    image_locationTemp = image_location +".log.eps"
-    plt.savefig(image_locationTemp, format='eps', dpi=600)
-    image_locationTemp = image_location +".log.pdf"
+    image_locationTemp = csv_url + ".pdf"
     plt.savefig(image_locationTemp, format='pdf', dpi=600)
 
     plt.close()
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: ./generatePictures.py <csv_url> <image_location>")
+    if len(sys.argv) != 2:
+        print("ERROR: Entry params unexpected")
+        print("Usage: ./generatePictures.py <csv_url>")
         sys.exit(1)
 
     csv_url = sys.argv[1]
-    image_location = sys.argv[2]
 
-    if not os.path.exists(image_location):
-        os.makedirs(image_location)
-
-    generate_plot(csv_url, image_location)
+    generate_plot(csv_url)
     print("Plot generated and saved as a JPEG image.")

@@ -12,9 +12,9 @@ ExternProgramsConnection_service::~ExternProgramsConnection_service(){}
 
 
 
-bool ExternProgramsConnection_service::execute_generatePyctures(string entryParam, string outFile){
+bool ExternProgramsConnection_service::execute_generatePyctures(string entryParam){
 
-    string command = "python3 " + get_generatePyctures_URL() + " " + entryParam + " " + outFile;
+    string command = "python3 " + get_generatePyctures_URL() + " " + entryParam;
     int result = system(command.c_str());
     if (result == 0) {
         return true;

@@ -5,14 +5,19 @@
     "testList":[
         {
             "name":"initialTest",
-            "statsFile":"initialTest_vectorAdd_Opt0_hw_results.csv",
-            "generatePictures": true,
+            "performanceFile":"initialTest_performanceResults.csv",
+            "powerFile":"initialTest_powerResults.csv",
+            "generate_performanceGraphics": true,
+            "generate_powerGraphics": true,
             "executionList":[
                 {
                     "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_mini_hw.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_mini",
-                    "dataSize": "mini", 
+                    "dataSize": "mini",
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true, 
                     "printResults": false,
                     "numExecutions": 1
                 }
@@ -20,14 +25,19 @@
         },
         {
             "name":"test_vectorAdd_Opt0_hw",
-            "statsFile":"test_vectorAdd_Opt0_hw_results.csv",
-            "generatePictures": true,
+            "performanceFile":"test_vectorAdd_Opt0_hw_performanceResults.csv",
+            "powerFile":"test_vectorAdd_Opt0_hw_powerResults.csv",
+            "generate_powerGraphics": true,
+            "generate_performanceGraphics": true,
             "executionList":[
                 {
                     "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_mini_hw.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_mini",
-                    "dataSize": "mini", 
+                    "dataSize": "mini",
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,  
                     "printResults": false,
                     "numExecutions": 5
                 },
@@ -35,7 +45,10 @@
                     "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_small_hw.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_small",
-                    "dataSize": "small", 
+                    "dataSize": "small",
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,  
                     "printResults": false,
                     "numExecutions": 5
                 },
@@ -43,7 +56,10 @@
                     "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_medium_hw.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_medium",
-                    "dataSize": "medium", 
+                    "dataSize": "medium",
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,  
                     "printResults": false,
                     "numExecutions": 5
                 },
@@ -51,7 +67,10 @@
                     "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_large_hw.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_large",
-                    "dataSize": "large", 
+                    "dataSize": "large",
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,  
                     "printResults": false,
                     "numExecutions": 5
                 },
@@ -59,7 +78,10 @@
                     "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_extralarge_hw.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_extralarge",
-                    "dataSize": "extralarge", 
+                    "dataSize": "extralarge",
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,  
                     "printResults": false,
                     "numExecutions": 5
                 }

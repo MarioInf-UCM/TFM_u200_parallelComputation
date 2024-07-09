@@ -62,15 +62,20 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
     for (const auto &test : root["testList"]) {
         testTemp = Test();
         testTemp.set_name(test["name"].asString());
-        testTemp.set_generatePictures(test["generatePictures"].asBool());
-        testTemp.set_statsFile(test["statsFile"].asString());
-        
+        testTemp.set_performanceFile(test["performanceFile"].asString());
+        testTemp.set_powerFile(test["powerFile"].asString());
+        testTemp.set_generate_performanceGraphics(test["generate_performanceGraphics"].asBool());
+        testTemp.set_generate_powerGraphics(test["generate_powerGraphics"].asBool());
+
         for (const auto &execution : test["executionList"]) {
             executionTemp = Execution();
             executionTemp.set_host(execution["host"].asString());
             executionTemp.set_kernelPackage(execution["kernelPackage"].asString());
             executionTemp.set_kernel(execution["kernel"].asString());
             executionTemp.set_dataSize(execution["dataSize"].asString());
+            executionTemp.set_measurePower_CPU(execution["measurePower_CPU"].asBool());
+            executionTemp.set_measurePower_CPUopt(execution["measurePower_CPUopt"].asBool());
+            executionTemp.set_measurePower_device(execution["measurePower_device"].asBool());
             executionTemp.set_printResults(execution["printResults"].asBool());
             executionTemp.set_numExecutions(execution["numExecutions"].asInt());
             testTemp.get_executionList().push_back(executionTemp);

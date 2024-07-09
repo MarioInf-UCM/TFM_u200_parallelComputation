@@ -96,7 +96,7 @@ extern "C"{
                 #pragma HLS LOOP_TRIPCOUNT min=1  max=STREAM_SIZE 
                 #pragma HLS UNROLL factor=8
                 outD_result[i + j] = inD_vA_local[j] + inD_vB_local[j];
-            }
+            }   
         }
 
         return;

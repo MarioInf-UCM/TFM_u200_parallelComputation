@@ -5,14 +5,20 @@
     "testList":[
         {
             "name":"test_vectorAdd_Opt3_hw_emu",
-            "statsFile":"test_vectorAdd_Opt3_hw_emu_results.csv",
+            "performanceFile":"test_vectorAdd_Opt3_hw_emu_performanceResults.csv",
+            "powerFile":"test_vectorAdd_Opt3_hw_emu_powerResults.csv",
+            "generate_powerGraphics": true,
+            "generate_performanceGraphics": true,
             "generatePictures": true,
             "executionList":[
                 {
                     "host": "vectorAddHost_Opt3",
                     "kernelPackage": "kerPack_vectorAdd_Opt3_mini_hw_emu.xclbin",
                     "kernel": "ker_vectorAdd_Opt3_mini",
-                    "dataSize": "mini", 
+                    "dataSize": "mini",
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
                     "printResults": false,
                     "numExecutions": 1
                 }

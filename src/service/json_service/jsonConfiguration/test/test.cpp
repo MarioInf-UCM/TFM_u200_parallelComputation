@@ -5,11 +5,19 @@
 // CONSTRUCTORS DEFINITION ZONE *
 //*******************************
 Test::Test():
-    statsFile(""),
+    name(""),
+    performanceFile(""),
+    powerFile(""),
+    generate_performanceGraphics(false),
+    generate_powerGraphics(false),
     executionList(vector<Execution>()
 ){}
-Test::Test(string statsFile, vector<Execution> executionList):
-    statsFile(statsFile),
+Test::Test(string mame, string performanceFile, string powerFile, bool generate_performanceGraphics, bool generate_powerGraphics, vector<Execution> executionList):
+    name(name),
+    performanceFile(performanceFile),
+    powerFile(powerFile),
+    generate_performanceGraphics(generate_performanceGraphics),
+    generate_powerGraphics(generate_powerGraphics),
     executionList(vector<Execution>()
 ){
     set_executionList(executionList);
@@ -24,8 +32,10 @@ Test::~Test(){}
 string Test::displayInfo(string initLineString){
     string info = initLineString + "{\n";
     info += initLineString + "Name: " + get_name() + "\n";
-    info += initLineString + "Stats File: " + get_statsFile() + "\n";
-    info += initLineString + "Generate pictures?: " + (get_generatePictures()? "true" : "false") + "\n";
+    info += initLineString + "Performance File: " + get_performanceFile() + "\n";
+    info += initLineString + "Power File: " + get_powerFile() + "\n";
+    info += initLineString + "Generate performance graphics?: " + (get_generate_performanceGraphics()? "true" : "false") + "\n";
+    info += initLineString + "Generate power graphics?: " + (get_generate_powerGraphics()? "true" : "false") + "\n";
     info += initLineString + "Execution List:\n";
     for (size_t i = 0; i < get_executionList().size(); ++i) {
         info += get_executionList()[i].displayInfo(initLineString + "\t");
@@ -42,11 +52,17 @@ string Test::displayInfo(string initLineString){
 string Test::get_name() const{ return name; }
 void Test::set_name(string data){ name=data; }
 
-string Test::get_statsFile() const{ return statsFile; }
-void Test::set_statsFile(string data){ statsFile=data; }
+string Test::get_performanceFile() const{ return performanceFile; }
+void Test::set_performanceFile(string data){ performanceFile=data; }
 
-bool Test::get_generatePictures() const{ return generatePictures; }
-void Test::set_generatePictures(bool data){ generatePictures=data; }
+string Test::get_powerFile() const{ return powerFile; }
+void Test::set_powerFile(string data){ powerFile=data; }
+
+bool Test::get_generate_performanceGraphics() const{ return generate_performanceGraphics;}
+void Test::set_generate_performanceGraphics(bool data){ generate_performanceGraphics=data;}
+
+bool Test::get_generate_powerGraphics() const{ return generate_powerGraphics; }
+void Test::set_generate_powerGraphics(bool data){ generate_powerGraphics=data; }
 
 vector<Execution>& Test::get_executionList(){ return executionList; }
 Execution Test::getElement_executionList_byIndex(unsigned int index){

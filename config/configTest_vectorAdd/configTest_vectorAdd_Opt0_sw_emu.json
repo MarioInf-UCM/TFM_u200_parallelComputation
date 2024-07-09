@@ -5,14 +5,19 @@
     "testList":[
         {
             "name":"test_vectorAdd_Opt0_sw_emu",
-            "statsFile":"test_vectorAdd_Opt0_sw_emu_results.csv",
-            "generatePictures": true,
+            "performanceFile":"test_vectorAdd_Opt0_sw_emu_performanceResults.csv",
+            "powerFile":"test_vectorAdd_Opt0_sw_emu_powerResults.csv",
+            "generate_powerGraphics": true,
+            "generate_performanceGraphics": true,
             "executionList":[
                 {
                     "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_mini_sw_emu.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_mini",
                     "dataSize": "mini", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
                     "printResults": false,
                     "numExecutions": 1
                 },
@@ -21,6 +26,9 @@
                     "kernelPackage": "kerPack_vectorAdd_Opt0_small_sw_emu.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_small",
                     "dataSize": "small", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
                     "printResults": false,
                     "numExecutions": 1
                 },
@@ -29,6 +37,9 @@
                     "kernelPackage": "kerPack_vectorAdd_Opt0_medium_sw_emu.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_medium",
                     "dataSize": "medium", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
                     "printResults": false,
                     "numExecutions": 1
                 },
@@ -37,6 +48,9 @@
                     "kernelPackage": "kerPack_vectorAdd_Opt0_large_sw_emu.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_large",
                     "dataSize": "large", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
                     "printResults": false,
                     "numExecutions": 1
                 },
@@ -45,6 +59,9 @@
                     "kernelPackage": "kerPack_vectorAdd_Opt0_extralarge_sw_emu.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_extralarge",
                     "dataSize": "extralarge", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
                     "printResults": false,
                     "numExecutions": 1
                 }

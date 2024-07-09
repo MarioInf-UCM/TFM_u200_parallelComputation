@@ -44,7 +44,7 @@ int main(int argc, char** argv){
     fileWriter_logFile.writeln(jsonConfiguration.displayInfo("\t"));
 
     for(int i=0 ; i<jsonConfiguration.get_testList().size() ; i++){
-        fileWriter_statsFile = FileWriter_service(jsonConfiguration.get_outDir() + outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile(), jsonConfiguration.get_verbose());
+        fileWriter_statsFile = FileWriter_service(jsonConfiguration.get_outDir() + outForderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile(), jsonConfiguration.get_verbose());
         fileWriter_statsFile.writeln("x,CPU time execution,CPU time execution optimizated,Device time execution,Transmision (S+R) time,Send to device time, Recieve from device time", false);
     
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
@@ -91,12 +91,12 @@ int main(int argc, char** argv){
             fileWriter_statsFile.writeln(tempString_toWrite, false);
         }
 
-        if(jsonConfiguration.get_testList()[i].get_generatePictures()){
+        if(jsonConfiguration.get_testList()[i].get_generate_performanceGraphics()){
             result = externProgramConnection.execute_generatePyctures(
-                jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile());
+                jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile());
             
             if(!result){
-                fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_statsFile() );
+                fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile() );
             }
         }
 

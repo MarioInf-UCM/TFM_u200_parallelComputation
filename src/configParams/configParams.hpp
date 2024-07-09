@@ -2,7 +2,7 @@
 #define _CONFIGPARAMS_HPP_
 
 #include <ap_fixed.h>
-    //DEFINE TYPE OF DATA
+    //GENERAL
     //******************************
     namespace globalConfiguration_typeData{
         typedef float typeData;
@@ -10,6 +10,12 @@
         #define TYPEDATA_BITS_INT 7
         typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData_fixed;
     }
+
+    #define MSR_RAPL_POWER_UNIT 0x606
+    #define MSR_PKG_ENERGY_STATUS 0x611
+    #define MSR_PP0_ENERGY_STATUS 0x639
+    #define MSR_PP1_ENERGY_STATUS 0x641
+
 
 
 

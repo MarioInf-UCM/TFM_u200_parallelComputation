@@ -19,7 +19,8 @@ class Execution{
         bool measurePower_CPUopt;
         bool measurePower_device;
         bool printResults;
-        int numExecutions;
+        unsigned int numExecutions_cool;
+        unsigned int numExecutions_hot;
 
 
     //*****************************
@@ -32,7 +33,7 @@ class Execution{
         //* CONSTRUCTORS AND DESTRUCTORS *
         //********************************
         Execution();
-        Execution(string host, string kernelPackage, string kernel, bool measurePower_CPU, bool measurePower_CPUopt, bool measurePower_device, bool printResults, int numExecutions);
+        Execution(string host, string kernelPackage, string kernel, bool measurePower_CPU, bool measurePower_CPUopt, bool measurePower_device, bool printResults, unsigned int numExecutions_cool, unsigned int numExecutions_hot);
         ~Execution();
 
 
@@ -67,8 +68,11 @@ class Execution{
         bool get_printResults() const;
         void set_printResults(bool data);
         
-        int get_numExecutions() const;
-        void set_numExecutions(int data);
+        unsigned int get_numExecutions_cool() const;
+        void set_numExecutions_cool(unsigned int data);
+        
+        unsigned int get_numExecutions_hot() const;
+        void set_numExecutions_hot(unsigned int data);
 };
 
 #endif

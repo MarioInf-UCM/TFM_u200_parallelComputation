@@ -15,3 +15,9 @@
     pip3 install matplotlib
     pip install pandas
     ```
+
+## EJECUTAR CON PERMISOS DE SUDO
+```BASH
+    sudo -E PATH=$PATH make run_hw
+    sudo -E PATH=$PATH make clear_out
+```

@@ -78,12 +78,14 @@ extern "C"{
 
             block_initialRading:
             for (int j = 0; j < actualChunkSize; j++) {
+                #pragma HLS PIPELINE off
                 inD_vA_local[j] = inD_vA[i + j];
                 inD_vB_local[j] = inD_vB[i + j];
             }
 
             block_add:
             for (int j = 0; j < actualChunkSize; j++) {
+                #pragma HLS PIPELINE off
                 outD_result[i + j] = inD_vA_local[j] + inD_vB_local[j];
             }
         }

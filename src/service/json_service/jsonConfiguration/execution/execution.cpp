@@ -13,9 +13,10 @@ Execution::Execution():
     measurePower_CPUopt(false),
     measurePower_device(false),
     printResults(false),
-    numExecutions(0)
+    numExecutions_cool(0),
+    numExecutions_hot(0)
 {}
-Execution::Execution(string host, string kernelPackage, string kernel, bool measurePower_CPU, bool measurePower_CPUopt, bool measurePower_device, bool printResults, int numExecutions):
+Execution::Execution(string host, string kernelPackage, string kernel, bool measurePower_CPU, bool measurePower_CPUopt, bool measurePower_device, bool printResults, unsigned int numExecutions_cool, unsigned int numExecutions_hot):
     host(host),
     kernelPackage(kernelPackage),
     kernel(kernel),
@@ -23,7 +24,8 @@ Execution::Execution(string host, string kernelPackage, string kernel, bool meas
     measurePower_CPUopt(measurePower_CPUopt),
     measurePower_device(measurePower_device),
     printResults(printResults),
-    numExecutions(numExecutions)
+    numExecutions_cool(numExecutions_cool),
+    numExecutions_hot(numExecutions_hot)
 {}
 Execution::~Execution(){}
 
@@ -42,7 +44,8 @@ string Execution::displayInfo(string initLineString){
     info += initLineString + "Measure power CPU opt?: " + (get_measurePower_CPUopt()? "true":"false") + "\n";
     info += initLineString + "Measure power device?: " + (get_measurePower_device()? "true":"false") + "\n";
     info += initLineString + "Print Results?: " + (get_printResults()? "true":"false") + "\n";
-    info += initLineString + "Number of Executions: " + to_string(get_numExecutions()) + "\n";
+    info += initLineString + "Number of Cool Executions: " + to_string(get_numExecutions_cool()) + "\n";
+    info += initLineString + "Number of Hot Executions: " + to_string(get_numExecutions_hot()) + "\n";
     info += initLineString + "}\n";
     return info;
 }
@@ -76,5 +79,8 @@ void Execution::set_measurePower_device(bool data){ measurePower_device=data; }
 bool Execution::get_printResults() const{ return printResults; }
 void Execution::set_printResults(bool data){ printResults = data; }
 
-int Execution::get_numExecutions() const{ return numExecutions; }
-void Execution::set_numExecutions(int data){numExecutions=data; }
+unsigned int Execution::get_numExecutions_cool() const{ return numExecutions_cool; }
+void Execution::set_numExecutions_cool(unsigned int data){ numExecutions_cool=data; }
+        
+unsigned int Execution::get_numExecutions_hot() const{ return numExecutions_hot; }
+void Execution::set_numExecutions_hot(unsigned int data){ numExecutions_hot=data; }

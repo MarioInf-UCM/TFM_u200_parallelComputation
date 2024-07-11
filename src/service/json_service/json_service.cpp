@@ -77,7 +77,8 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
             executionTemp.set_measurePower_CPUopt(execution["measurePower_CPUopt"].asBool());
             executionTemp.set_measurePower_device(execution["measurePower_device"].asBool());
             executionTemp.set_printResults(execution["printResults"].asBool());
-            executionTemp.set_numExecutions(execution["numExecutions"].asInt());
+            executionTemp.set_numExecutions_cool(execution["numExecutions_cool"].asUInt());
+            executionTemp.set_numExecutions_hot(execution["numExecutions_hot"].asUInt());
             testTemp.get_executionList().push_back(executionTemp);
         }
         jsonConfiguration.get_testList().push_back(testTemp);        

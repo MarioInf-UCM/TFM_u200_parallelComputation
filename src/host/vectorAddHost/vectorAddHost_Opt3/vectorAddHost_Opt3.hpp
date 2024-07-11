@@ -19,7 +19,8 @@ class VectorAddHost_Opt3 {
     //* DEFINITION ZONE ATRIBUTES *
     //*****************************
     private:
-
+        static atomic<bool> stop_thread;
+        static double sharedVariable;
 
 
     //*****************************
@@ -34,6 +35,12 @@ class VectorAddHost_Opt3 {
 
     private:
         static bool initParameter(Execution exec, unsigned int &SIZE);
+
+        static float searchPropertyValue(const string& texto, const string& subcadena);
+        static void threadFunction_DevicePowerMeasure();
+        static double executeAndMeasure_CPU(VectorAddKernel& data, EventTimer &event);
+        static double executeAndMeasure_CPUopt(VectorAddKernel& data, vector<double> &measureByPack, EventTimer &event);
+
         static void ensamble_dataToBuffers(VectorAddKernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice);
         static void ensamble_buffersToData(VectorAddKernel& data, typeData *temp_resultDevice);
         static bool compareResults(VectorAddKernel& data);

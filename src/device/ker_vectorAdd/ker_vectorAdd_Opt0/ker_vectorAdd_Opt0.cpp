@@ -54,6 +54,7 @@ extern "C"{
 
 
         for (int i = 0; i < SIZE; i++) {
+        #pragma HLS PIPELINE off
             outD_result[i] = inD_vA[i] + inD_vB[i];
         }    
 

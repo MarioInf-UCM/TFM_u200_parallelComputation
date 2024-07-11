@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_vectorAdd/configBench_vectorAdd_Opt4.json
+CONFIGFILE_ROUTE=../../../config/configTest_vectorAdd/configTest_vectorAdd_Opt4_hw.json
 
 #Kernel url specification - START
 #***********************************

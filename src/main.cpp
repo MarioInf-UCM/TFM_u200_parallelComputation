@@ -49,13 +49,28 @@ int main(int argc, char** argv){
     
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
             testAverageResults.clear();
-            
-            for(int k=0 ; k<jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions() ; k++){
-                fileWriter_logFile.writeln("\n*************\n"
+
+
+            //Executing cool executions
+            for(int k=0 ; k<jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_cool() ; k++){
+                fileWriter_logFile.writeln("\033[1;34m\n*************\n"
                                             "** Running test " + to_string(i+1) + "/" + to_string(jsonConfiguration.get_testList().size()) +
                                             " with execution "+ to_string(j+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList().size()) +
-                                            " and repetition "+ to_string(k+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions()) + "\n" +
-                                            "*", true);
+                                            " and cool repetition "+ to_string(k+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_cool()) + "\n" +
+                                            "*\033[0m", true);
+                executionResults.clear();   
+                result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], executionResults, fileWriter_logFile, fileWriter_statsFile);
+                fileWriter_logFile.writeln("\033[1;34m\n*\n**\n*************\n\033[0m", true);
+            }
+
+
+            //Executing hot executions            
+            for(int k=0 ; k<jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_hot() ; k++){
+                fileWriter_logFile.writeln("\033[1;34m\n*************\n"
+                                            "** Running test " + to_string(i+1) + "/" + to_string(jsonConfiguration.get_testList().size()) +
+                                            " with execution "+ to_string(j+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList().size()) +
+                                            " and hot repetition "+ to_string(k+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_hot()) + "\n" +
+                                            "*\033[0m", true);
                 
                 executionResults.clear();
                 result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], executionResults, fileWriter_logFile, fileWriter_statsFile);
@@ -70,15 +85,18 @@ int main(int argc, char** argv){
                         testAverageResults[execResult] = ( (testAverageResults[execResult]+ executionResults[execResult]) );
                     }
                 }
-                fileWriter_logFile.writeln("\n*\n**\n*************\n", true);
+                fileWriter_logFile.writeln("\033[1;34m\n*\n**\n*************\n\033[0m", true);
             }
 
 
+            //Calculating average results 
             for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
-                testAverageResults[execResult] = ( testAverageResults[execResult] / jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions() );
+                testAverageResults[execResult] = ( testAverageResults[execResult] / jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_hot() );
             }
             tempString_toWrite=jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()+",";
-            
+
+
+            //Writing results into files 
             for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
                 if(execResult==executionResults.size()-1){
                     tempString_toWrite += to_string(testAverageResults[execResult]);

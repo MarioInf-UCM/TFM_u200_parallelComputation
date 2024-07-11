@@ -12,6 +12,54 @@
             "executionList":[
                 {
                     "host": "vectorAddHost_Opt0",
+                    "kernelPackage": "kerPack_vectorAdd_Opt0_mini_hw.xclbin",
+                    "kernel": "ker_vectorAdd_Opt0_mini",
+                    "dataSize": "mini", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,   
+                    "printResults": false,
+                    "numExecutions_cool": 0,
+                    "numExecutions_hot": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt0",
+                    "kernelPackage": "kerPack_vectorAdd_Opt0_small_hw.xclbin",
+                    "kernel": "ker_vectorAdd_Opt0_small",
+                    "dataSize": "small", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,   
+                    "printResults": false,
+                    "numExecutions_cool": 0,
+                    "numExecutions_hot": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt0",
+                    "kernelPackage": "kerPack_vectorAdd_Opt0_medium_hw.xclbin",
+                    "kernel": "ker_vectorAdd_Opt0_medium",
+                    "dataSize": "medium", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,   
+                    "printResults": false,
+                    "numExecutions_cool": 0,
+                    "numExecutions_hot": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt0",
+                    "kernelPackage": "kerPack_vectorAdd_Opt0_large_hw.xclbin",
+                    "kernel": "ker_vectorAdd_Opt0_large",
+                    "dataSize": "large", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": true,   
+                    "printResults": false,
+                    "numExecutions_cool": 0,
+                    "numExecutions_hot": 1
+                },
+                {
+                    "host": "vectorAddHost_Opt0",
                     "kernelPackage": "kerPack_vectorAdd_Opt0_extralarge_hw.xclbin",
                     "kernel": "ker_vectorAdd_Opt0_extralarge",
                     "dataSize": "extralarge", 
@@ -19,8 +67,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,  
                     "printResults": false,
-                    "numExecutions_cool": 3,
-                    "numExecutions_hot": 5
+                    "numExecutions_cool": 0,
+                    "numExecutions_hot": 1
                 }
             ]
         }

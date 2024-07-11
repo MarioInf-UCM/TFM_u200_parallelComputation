@@ -39,7 +39,7 @@ VectorAddHost_Opt2::~VectorAddHost_Opt2(){}
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-bool VectorAddHost_Opt2::exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+bool VectorAddHost_Opt2::exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
     fileWriter_logFile.writeln("Executing host function \"VectorAddHost::VectorAddHost_Opt2_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
 
@@ -254,12 +254,21 @@ bool VectorAddHost_Opt2::exec(Execution exec, vector<double>& results, FileWrite
     fileWriter_logFile.writeln("---------------------------------------------------");
 
 
-    results.push_back(stod(event.getTimeEvents(1)));                                  //CPU execution time
-    results.push_back(stod(event.getTimeEvents(2)));                                  //CPU execution time optimizated
-    results.push_back(stod(event.getTimeEvents(5)));                                  //Device execution time 
-    results.push_back(stod(event.getTimeEvents(4)) + stod(event.getTimeEvents(6)));   //Transmision (Send+Recv) time
-    results.push_back(stod(event.getTimeEvents(4)));                                  //Send to device time
-    results.push_back(stod(event.getTimeEvents(6)));                                  //Recieve from device time
+    resultsPerformance.push_back(stod(event.getTimeEvents(1)));                                  //CPU execution time
+    resultsPerformance.push_back(stod(event.getTimeEvents(2)));                                  //CPU execution time optimizated
+    resultsPerformance.push_back(stod(event.getTimeEvents(5)));                                  //Device execution time 
+    resultsPerformance.push_back(stod(event.getTimeEvents(4)) + stod(event.getTimeEvents(6)));   //Transmision (Send+Recv) time
+    resultsPerformance.push_back(stod(event.getTimeEvents(4)));                                  //Send to device time
+    resultsPerformance.push_back(stod(event.getTimeEvents(6)));                                  //Recieve from device time
+
+    resultsPower.clear();
+    resultsPower.push_back(resultMeasure_Device);
+    resultsPower.push_back(resultMeasure_CPU);
+    resultsPower.push_back(resultMeasure_CPUopt);
+    for(int i=0 ; i< resultMeasure_CPUopt_byPack.size() ; i++){
+        resultsPower.push_back(resultMeasure_CPUopt_byPack[i]);
+    }
+
 
   return result;
 }

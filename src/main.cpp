@@ -12,7 +12,7 @@
 #include "service/json_service/jsonConfiguration/jsonConfiguration.hpp"
 #include "service/externProgramsConnection_service/externProgramsConnection_service.hpp"
 
-bool runExecution(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_performanceFile);
 void printFinalMessage(unsigned int numFailures, FileWriter_service fileWriter_logFile);
 using namespace std;
 
@@ -31,24 +31,33 @@ int main(int argc, char** argv){
 
     unsigned int numFailures = 0;
     bool result = false;
-    string outForderID = "/exec_" +DateAndTime::getCurrentDateTime();
-    FileWriter_service fileWriter_statsFile;
+    string outFolderID = "/exec_" +DateAndTime::getCurrentDateTime();
+    FileWriter_service fileWriter_performanceFile;
+    FileWriter_service fileWriter_powerFile;
     FileWriter_service fileWriter_logFile;
-    ExternProgramsConnection_service externProgramConnection;
-    vector<double> testAverageResults = vector<double>();
-    vector<double> executionResults = vector<double>();
+    ExternProgramsConnection_service externConnec_performanceGraphics = ExternProgramsConnection_service("generateGaphics_performance.py");
+    ExternProgramsConnection_service externConnec_powerGraphics = ExternProgramsConnection_service("generateGaphics_power.py");
+    vector<double> resultsPerformance = vector<double>();
+    vector<double> resultsPower = vector<double>();
+    vector<double> resultsPerformance_average = vector<double>();
+    vector<double> resultsPower_average = vector<double>();
     string tempString_toWrite="";
 
-    fileWriter_logFile = FileWriter_service(jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_logFile(), jsonConfiguration.get_verbose());
+    fileWriter_logFile = FileWriter_service(jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_logFile(), jsonConfiguration.get_verbose());
     fileWriter_logFile.writeln("Contenido del fichero de configuración:");
     fileWriter_logFile.writeln(jsonConfiguration.displayInfo("\t"));
 
     for(int i=0 ; i<jsonConfiguration.get_testList().size() ; i++){
-        fileWriter_statsFile = FileWriter_service(jsonConfiguration.get_outDir() + outForderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile(), jsonConfiguration.get_verbose());
-        fileWriter_statsFile.writeln("x,CPU time execution,CPU time execution optimizated,Device time execution,Transmision (S+R) time,Send to device time, Recieve from device time", false);
+        fileWriter_performanceFile = FileWriter_service(jsonConfiguration.get_outDir() + outFolderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile(), jsonConfiguration.get_verbose());
+        fileWriter_performanceFile.writeln("X,CPU execution time,CPU optimized execution time,Device execution time,Transmision (S+R) time,Send to device time,Recieve from device time", true);
     
+        fileWriter_powerFile = FileWriter_service(jsonConfiguration.get_outDir() + outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile(), jsonConfiguration.get_verbose());
+        fileWriter_powerFile.writeln("X,Device energy consumption,CPU energy consumption,CPU optimized energy consumption,CPU-1,CPU-2", true);
+    
+
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
-            testAverageResults.clear();
+            resultsPerformance_average.clear();
+            resultsPower_average.clear();
 
 
             //Executing cool executions
@@ -58,8 +67,8 @@ int main(int argc, char** argv){
                                             " with execution "+ to_string(j+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList().size()) +
                                             " and cool repetition "+ to_string(k+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_cool()) + "\n" +
                                             "*\033[0m", true);
-                executionResults.clear();   
-                result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], executionResults, fileWriter_logFile, fileWriter_statsFile);
+                resultsPerformance.clear();   
+                result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);
                 fileWriter_logFile.writeln("\033[1;34m\n*\n**\n*************\n\033[0m", true);
             }
 
@@ -72,17 +81,26 @@ int main(int argc, char** argv){
                                             " and hot repetition "+ to_string(k+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_hot()) + "\n" +
                                             "*\033[0m", true);
                 
-                executionResults.clear();
-                result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], executionResults, fileWriter_logFile, fileWriter_statsFile);
+                resultsPerformance.clear();
+                resultsPower.clear();
+                result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);
                 if(!result){
                     numFailures++;
                 }
                 
-                for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
-                    if((execResult) >= testAverageResults.size()){
-                        testAverageResults.push_back(executionResults[execResult]);
+                for (int execResult=0 ; execResult<resultsPerformance.size() ; execResult++){
+                    if((execResult) >= resultsPerformance_average.size()){
+                        resultsPerformance_average.push_back(resultsPerformance[execResult]);
                     }else{
-                        testAverageResults[execResult] = ( (testAverageResults[execResult]+ executionResults[execResult]) );
+                        resultsPerformance_average[execResult] = ( (resultsPerformance_average[execResult]+ resultsPerformance[execResult]) );
+                    }
+                }
+
+                for (int execResult=0 ; execResult<resultsPower.size() ; execResult++){
+                    if((execResult) >= resultsPower_average.size()){
+                        resultsPower_average.push_back(resultsPower[execResult]);
+                    }else{
+                        resultsPower_average[execResult] = ( (resultsPower_average[execResult]+ resultsPower[execResult]) );
                     }
                 }
                 fileWriter_logFile.writeln("\033[1;34m\n*\n**\n*************\n\033[0m", true);
@@ -90,31 +108,52 @@ int main(int argc, char** argv){
 
 
             //Calculating average results 
-            for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
-                testAverageResults[execResult] = ( testAverageResults[execResult] / jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_hot() );
+            for (int execResult=0 ; execResult<resultsPerformance.size() ; execResult++){
+                resultsPerformance_average[execResult] = ( resultsPerformance_average[execResult] / jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_hot() );
             }
             tempString_toWrite=jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()+",";
-
-
-            //Writing results into files 
-            for (int execResult=0 ; execResult<executionResults.size() ; execResult++){
-                if(execResult==executionResults.size()-1){
-                    tempString_toWrite += to_string(testAverageResults[execResult]);
+            for (int execResult=0 ; execResult<resultsPerformance.size() ; execResult++){
+                if(execResult==resultsPerformance.size()-1){
+                    tempString_toWrite += to_string(resultsPerformance_average[execResult]);
                 }else{
-                    tempString_toWrite += to_string(testAverageResults[execResult]) + ",";
+                    tempString_toWrite += to_string(resultsPerformance_average[execResult]) + ",";
                 }
             }
-            fileWriter_logFile.writeln("Average results:\nX,CPU time execution,CPU time execution optimizated,Device time execution,Transmision (S+R) time,Send to device time, Recieve from device time", true);
+            fileWriter_logFile.writeln("\nAverage performance results:\nX,CPU execution time,CPU optimized execution time,Device execution time,Transmision (S+R) time,Send to device time, Recieve from device time", true);
             fileWriter_logFile.writeln(tempString_toWrite, true);  
-            fileWriter_statsFile.writeln(tempString_toWrite, false);
+            fileWriter_performanceFile.writeln(tempString_toWrite, false);
+
+
+            for (int execResult=0 ; execResult<resultsPower.size() ; execResult++){
+                resultsPower_average[execResult] = ( resultsPower_average[execResult] / jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_hot() );
+            }
+            tempString_toWrite=jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()+",";
+            for (int execResult=0 ; execResult<resultsPower.size() ; execResult++){
+                if(execResult==resultsPower.size()-1){
+                    tempString_toWrite += to_string(resultsPower_average[execResult]);
+                }else{
+                    tempString_toWrite += to_string(resultsPower_average[execResult]) + ",";
+                }
+            }
+            fileWriter_logFile.writeln("\nAverage energy consumption results:\nX,Device energy consumption,CPU energy consumption,CPU optimized energy consumption,CPU-1,CPU-2", true);
+            fileWriter_logFile.writeln(tempString_toWrite, true);  
+            fileWriter_powerFile.writeln(tempString_toWrite, false);            
         }
 
+        //Generating graphics
         if(jsonConfiguration.get_testList()[i].get_generate_performanceGraphics()){
-            result = externProgramConnection.execute_generatePyctures(
-                jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile());
-            
+            result = externConnec_performanceGraphics.execute_generatePyctures(
+                jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile());
             if(!result){
-                fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outForderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile() );
+                fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile() );
+            }
+        }
+    
+        if(jsonConfiguration.get_testList()[i].get_generate_powerGraphics()){
+            result = externConnec_powerGraphics.execute_generatePyctures(
+                jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile());
+            if(!result){
+                fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile() );
             }
         }
 
@@ -129,23 +168,23 @@ int main(int argc, char** argv){
 //*************************************
 
 
-bool runExecution(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_performanceFile){
 
     bool result = false;
     if(exec.get_host().find("doitgen") != string::npos){
-        result = DoitgenHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);
+        //result = DoitgenHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);
 
     }else if(exec.get_host().find("cholesky") != string::npos){
-        result = CholeskyHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        //result = CholeskyHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("gemm") != string::npos){
-        result = GemmHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        //result = GemmHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("jacobi2d") != string::npos){
-        result = Jacobi2dHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        //result = Jacobi2dHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("vectorAdd") != string::npos){
-        result = VectorAddHost::exec(exec, results, fileWriter_logFile, fileWriter_statsFile);   
+        result = VectorAddHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else{
         fileWriter_logFile.writeln("ERROR..: Host name unknow.");

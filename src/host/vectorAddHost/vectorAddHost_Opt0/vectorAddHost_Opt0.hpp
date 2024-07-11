@@ -29,7 +29,7 @@ class VectorAddHost_Opt0 {
         VectorAddHost_Opt0();
         ~VectorAddHost_Opt0();
 
-        static bool exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+        static bool exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:

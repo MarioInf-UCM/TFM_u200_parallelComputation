@@ -8,7 +8,6 @@ find_package(OpenCL REQUIRED)
 find_package(XRT REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(jsoncpp REQUIRED)
-find_package(PAPI REQUIRED)
 
 
 if(NOT XRT_FOUND)
@@ -121,10 +120,16 @@ endif()
 #********************************
 # COPIYING PYTHON FILES - START *
 #********************************
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../python/generatePyctures.py")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../python/generatePyctures.py ${CMAKE_CURRENT_BINARY_DIR}/generatePyctures.py COPYONLY)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../python/generateGaphics_performance.py")
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../python/generateGaphics_performance.py ${CMAKE_CURRENT_BINARY_DIR}/generateGaphics_performance.py COPYONLY)
 else()
-message(FATAL_ERROR "Python files haven't been founded")
+  message(FATAL_ERROR "Python generateGaphics_performance.py file haven't been founded")
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../python/generateGaphics_power.py")
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../python/generateGaphics_power.py ${CMAKE_CURRENT_BINARY_DIR}/generateGaphics_power.py COPYONLY)
+else()
+  message(FATAL_ERROR "Python generateGaphics_performance.py  files haven't been founded")
 endif()
 #********************************
 # COPIYING PYTHON FILES - END *
@@ -146,7 +151,6 @@ add_library(example_utils STATIC
 target_include_directories(example_utils PUBLIC
   ${XRT_INCLUDE_DIRS}
   ${OpenCL_INCLUDE_DIRS}
-  ${PAPI_INCLUDE_DIRS}
 )
 
 add_executable(benchmarkExec
@@ -208,12 +212,10 @@ target_link_libraries(benchmarkExec PRIVATE
   ${XRT_LIBS}
   ${OpenCL_LIBRARIES}
   ${CMAKE_DL_LIBS}
-  ${PAPI_LIBRARIES}
   jsoncpp_lib
   pthread
   uuid
   example_utils
   OpenMP::OpenMP_CXX
-#  PAPI::PAPI
   )
 

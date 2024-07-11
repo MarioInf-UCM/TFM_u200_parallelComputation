@@ -5,8 +5,8 @@
 
 using namespace std;
 
-ExternProgramsConnection_service::ExternProgramsConnection_service():
-    generatePyctures_URL("generatePyctures.py")
+ExternProgramsConnection_service::ExternProgramsConnection_service(string generatePicture_URL):
+    generatePyctures_URL(generatePicture_URL)
 {}
 ExternProgramsConnection_service::~ExternProgramsConnection_service(){}
 

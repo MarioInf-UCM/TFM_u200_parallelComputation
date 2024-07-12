@@ -37,6 +37,8 @@ int main(int argc, char** argv){
     FileWriter_service fileWriter_logFile;
     ExternProgramsConnection_service externConnec_performanceGraphics = ExternProgramsConnection_service("generateGaphics_performance.py");
     ExternProgramsConnection_service externConnec_powerGraphics = ExternProgramsConnection_service("generateGaphics_power.py");
+    ExternProgramsConnection_service externConnec_performanceTable = ExternProgramsConnection_service("generateTable_performance.py");
+    ExternProgramsConnection_service externConnec_powerTable = ExternProgramsConnection_service("generateTable_power.py");
     vector<double> resultsPerformance = vector<double>();
     vector<double> resultsPower = vector<double>();
     vector<double> resultsPerformance_average = vector<double>();
@@ -52,7 +54,7 @@ int main(int argc, char** argv){
         fileWriter_performanceFile.writeln("X,CPU execution time,CPU optimized execution time,Device execution time,Transmision (S+R) time,Send to device time,Recieve from device time", true);
     
         fileWriter_powerFile = FileWriter_service(jsonConfiguration.get_outDir() + outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile(), jsonConfiguration.get_verbose());
-        fileWriter_powerFile.writeln("X,Device energy consumption,CPU energy consumption,CPU optimized energy consumption,CPU-1,CPU-2", true);
+        fileWriter_powerFile.writeln("X,Device energy consumption,Device execution time,CPU energy consumption,CPU execution time,CPU optimized energy consumption,CPU optimized execution time,CPU-1,CPU-2", true);
     
 
         for(int j=0 ; j<jsonConfiguration.get_testList()[i].get_executionList().size() ; j++){
@@ -135,26 +137,36 @@ int main(int argc, char** argv){
                     tempString_toWrite += to_string(resultsPower_average[execResult]) + ",";
                 }
             }
-            fileWriter_logFile.writeln("\nAverage energy consumption results:\nX,Device energy consumption,CPU energy consumption,CPU optimized energy consumption,CPU-1,CPU-2", true);
+            fileWriter_logFile.writeln("\nAverage energy consumption results:\nX,Device energy consumption,Device execution time,CPU energy consumption,CPU execution time,CPU optimized energy consumption,CPU optimized execution time,CPU-1,CPU-2", true);
             fileWriter_logFile.writeln(tempString_toWrite, true);  
             fileWriter_powerFile.writeln(tempString_toWrite, false);            
         }
 
-        //Generating graphics
+        //Generating graphics and tables
         if(jsonConfiguration.get_testList()[i].get_generate_performanceGraphics()){
-            result = externConnec_performanceGraphics.execute_generatePyctures(
+            result = externConnec_performanceGraphics.executeCommand(
                 jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile());
             if(!result){
                 fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile() );
             }
+            result = externConnec_performanceTable.executeCommand(
+                jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile());
+            if(!result){
+                fileWriter_logFile.writeln("ERROR..: Couldn't generate the table of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_performanceFile() );
+            }
         }
     
         if(jsonConfiguration.get_testList()[i].get_generate_powerGraphics()){
-            result = externConnec_powerGraphics.execute_generatePyctures(
+            result = externConnec_powerGraphics.executeCommand(
                 jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile());
             if(!result){
                 fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile() );
             }
+            result = externConnec_powerTable.executeCommand(
+                jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile());
+            if(!result){
+                fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_testList()[i].get_powerFile() );
+            }           
         }
 
     }

@@ -233,8 +233,11 @@ bool VectorAddHost_Opt1::exec(Execution exec, vector<double>& resultsPerformance
 
     resultsPower.clear();
     resultsPower.push_back(resultMeasure_Device);
+    resultsPower.push_back(stod(event.getTimeEvents(5)));
     resultsPower.push_back(resultMeasure_CPU);
+    resultsPower.push_back(stod(event.getTimeEvents(1)));
     resultsPower.push_back(resultMeasure_CPUopt);
+    resultsPower.push_back(stod(event.getTimeEvents(2)));
     for(int i=0 ; i< resultMeasure_CPUopt_byPack.size() ; i++){
         resultsPower.push_back(resultMeasure_CPUopt_byPack[i]);
     }

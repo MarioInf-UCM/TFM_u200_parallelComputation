@@ -7,23 +7,11 @@ import sys
 translation_dict = {
     "CPU execution time": "CPU",
     "CPU optimized execution time": "CPU opt",
-    "Device execution time": "Dispositivo (Eje)",
+    "Device execution time": "Dispositivo (Ejec)",
     "Transmision (S+R) time": "Trasmisión (Env+Rec)",
     "Send to device time": "Envío",
     "Recieve from device time": "Recepción"
 }
-
-
-def Speed_CPU_device(row):
-    try:
-        valor_b = float(row.iloc[1])
-        valor_d = float(row.iloc[3])
-        
-        resultado = ((valor_b - valor_d) / valor_b) * 100
-        return resultado
-    except (ValueError, ZeroDivisionError):
-        return np.nan
-
 
 def csv_to_latex(csv_file):
     # Leer el archivo CSV
@@ -39,16 +27,16 @@ def csv_to_latex(csv_file):
 
     #Agregamos fila: Tiempo total del dispositivo
     newRow_name = "Dispositivo (Ejec+Tras)"
-    newRow = df.iloc[3] - df.iloc[4]
+    newRow = df.iloc[3] + df.iloc[4]
     df = pd.concat([df.iloc[:4], pd.DataFrame([newRow], index=[newRow_name]), df.iloc[4:]])
 
     #Agregamos fila: Aceleracion CPU -> Dispositivo (Ejec.)
-    newRow = ((df.iloc[1] - df.iloc[3]) / df.iloc[1])*100;
+    newRow = ((df.iloc[1] - df.iloc[3]) / df.iloc[3])*100;
     newRow.name = "CPU -> Device (ejec)"
     df = df._append(newRow)
 
     #Agregamos fila: Aceleracion CPU -> Dispositivo (Ejec.+Tras.)
-    newRow = ((df.iloc[1] - df.iloc[4]) / df.iloc[1])*100;
+    newRow = ((df.iloc[1] - df.iloc[4]) / df.iloc[4])*100;
     newRow.name = "CPU -> Device (ejec+Tras)"
     df = df._append(newRow)
 
@@ -76,25 +64,32 @@ def csv_to_latex(csv_file):
             latex_table += f"    \\rowcolor[HTML]{{DAE8FC}} \\ & "
             latex_table += " & ".join(" \\textbf{"+row+"}") + " \\\\\n"
         elif numRow%2 != 0:
-            if {idx} == "CPU -> Device (ejec)":
+            if idx == "CPU -> Device (ejec)" or idx == "CPU -> Device (ejec+Tras)":
                 latex_table += f"    \\cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
-                latex_table += " & ".join(row) + "\% \\\\\n"            
+                latex_table += " & ".join(row+"\%") + " \\\\\n"            
             else:
                 latex_table += f"    \\cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
-                latex_table += " & ".join(row) + " \\\\\n"
+                latex_table += " & ".join(row+"ms") + " \\\\\n"
         else:
-            latex_table += f"    \\rowcolor[HTML]{{EFEFEF}} \cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
-            latex_table += " & ".join(row) + " \\\\\n"
+            if idx == "CPU -> Device (ejec)" or idx == "CPU -> Device (ejec+Tras)":
+                latex_table += f"    \\rowcolor[HTML]{{EFEFEF}} \cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
+                latex_table += " & ".join(row+"\%") + " \\\\\n"
+            else:
+                latex_table += f"    \\rowcolor[HTML]{{EFEFEF}} \cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
+                latex_table += " & ".join(row+"ms") + " \\\\\n"            
         numRow+=1
     
+    nameFile = ultimo_elemento = csv_file.split("/")[-1]
+    nameFile_parts=nameFile.split("_")
+
+
     latex_table += "    \\end{tabular}\n"
-    latex_table += f"    \\caption[Datos obtenidos de los diferentes tamaños]{{Datos obtenidos de los diferentes tamaños}}\n"
+    latex_table += f"    \\caption[Resultados de rendimiento "+nameFile_parts[1]+" "+nameFile_parts[2]+"]{{Resultados de rendimiento "+nameFile_parts[1]+" "+nameFile_parts[2]+"}}\n"
     latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
     latex_table += "\\end{table}"
 
     # Crear el nombre del archivo de salida .tex
-    base_name = os.path.splitext(os.path.basename(csv_file))[0]
-    output_tex_file = f"{base_name}.tex"
+    output_tex_file = f"{csv_file}.tex"
 
     # Escribir el contenido LaTeX en un archivo
     with open(output_tex_file, 'w') as f:

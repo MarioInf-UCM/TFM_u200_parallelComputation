@@ -129,7 +129,19 @@ endif()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../python/generateGaphics_power.py")
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../python/generateGaphics_power.py ${CMAKE_CURRENT_BINARY_DIR}/generateGaphics_power.py COPYONLY)
 else()
-  message(FATAL_ERROR "Python generateGaphics_performance.py  files haven't been founded")
+  message(FATAL_ERROR "Python generateGaphics_performance.py file haven't been founded")
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../python/generateTable_performance.py")
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../python/generateTable_performance.py ${CMAKE_CURRENT_BINARY_DIR}/generateTable_performance.py COPYONLY)
+else()
+  message(FATAL_ERROR "Python generateTable_performance.py file haven't been founded")
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../python/generateTable_power.py")
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../python/generateTable_power.py ${CMAKE_CURRENT_BINARY_DIR}/generateTable_power.py COPYONLY)
+else()
+  message(FATAL_ERROR "Python generateTable_power.py file haven't been founded")
 endif()
 #********************************
 # COPIYING PYTHON FILES - END *

@@ -12,7 +12,7 @@ ExternProgramsConnection_service::~ExternProgramsConnection_service(){}
 
 
 
-bool ExternProgramsConnection_service::execute_generatePyctures(string entryParam){
+bool ExternProgramsConnection_service::executeCommand(string entryParam){
 
     string command = "python3 " + get_generatePyctures_URL() + " " + entryParam;
     int result = system(command.c_str());
@@ -24,7 +24,7 @@ bool ExternProgramsConnection_service::execute_generatePyctures(string entryPara
 }
 
 
-bool ExternProgramsConnection_service::execute_generatePyctures(){
+bool ExternProgramsConnection_service::executeCommand(){
     
     string command = "python3 " + get_generatePyctures_URL();
     for (const auto& filePath : get_generatePyctures_entryParams()) {

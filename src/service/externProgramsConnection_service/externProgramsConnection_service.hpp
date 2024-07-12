@@ -13,8 +13,8 @@ class ExternProgramsConnection_service {
         ExternProgramsConnection_service(string generatePicture_URL);
         ~ExternProgramsConnection_service();
     
-        bool execute_generatePyctures(string url);
-        bool execute_generatePyctures();
+        bool executeCommand(string url);
+        bool executeCommand();
 
 
 

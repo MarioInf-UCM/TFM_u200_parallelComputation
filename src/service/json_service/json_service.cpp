@@ -55,6 +55,10 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
     jsonConfiguration.set_verbose(root["verbose"].asBool());
     jsonConfiguration.set_logFile(root["logFile"].asString());
     jsonConfiguration.set_outDir(root["outDir"].asString());
+    jsonConfiguration.set_global_performanceFile(root["global_performanceFile"].asString());
+    jsonConfiguration.set_global_powerFile(root["global_powerFile"].asString());
+    jsonConfiguration.set_generate_global_PerformanceGraphics(root["generate_global_PerformanceGraphics"].asBool());
+    jsonConfiguration.set_generate_global_PowerGraphics(root["generate_global_PowerGraphics"].asBool());
 
     Test testTemp;
     Execution executionTemp;

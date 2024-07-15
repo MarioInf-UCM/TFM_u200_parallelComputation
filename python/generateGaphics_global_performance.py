@@ -10,11 +10,11 @@ def generate_plot(csv_url):
         data = pd.read_csv(csv_url)
         x = data['X']
         y1 = data['CPU execution time']
-        y2 = data['CPU optimized execution time']
-        y3 = data['Device execution time']
-        y4 = data['Transmision (S+R) time']
-        y5 = data['Send to device time']
-        y6 = data['Recieve from device time']
+        y2 = data['Opt0 execution time']
+        y3 = data['Opt1 execution time']
+        y4 = data['Opt2 execution time']
+        y5 = data['Opt3 execution time']
+        y6 = data['Opt4 execution time']
     except FileNotFoundError:
         print(f"GenarateGraphics_performance.py - ERROR..: File '{csv_url}' not found.")
         return
@@ -27,14 +27,16 @@ def generate_plot(csv_url):
     categories = ['2Gb', '4Gb', '8Gb', '16Gb', '32Gb']                  #Categorias exclusivas del kernel VectorAdd
 
     plt.figure(figsize=(10, 6))
-    plt.plot(x, y1, marker='o', label='Ejecucion de la CPU', color='red')
-    plt.plot(x, y2, marker='^', label='Ejecución de la CPU optimizada', color='darkred')
-    plt.plot(x, y3, marker='s', label='Ejecución del dispositivo', color='blue')
-    plt.plot(x, y4, marker='p', label='Transmisión y recepción de datos al dispositivo', color='aquamarine')
+    plt.plot(x, y1, marker='o', label='CPU', color='red')
+    plt.plot(x, y2, marker='^', label='Dispositivo Opt0 (ejec+Tras)', color='green')
+    plt.plot(x, y3, marker='s', label='Dispositivo Opt1 (ejec+Tras)', color='lime')
+    plt.plot(x, y4, marker='p', label='Dispositivo Opt2 (ejec+Tras)', color='mediumaquamarine')
+    plt.plot(x, y5, marker='P', label='Dispositivo Opt3 (ejec+Tras)', color='cyan')
+    plt.plot(x, y6, marker='*', label='Dispositivo Opt4 (ejec+Tras)', color='blue')
 
     plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
     #plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
-    plt.xlabel('Tamaño de datos de entrada')                            #Etiqueta exclusivas del kernel VectorAdd
+    plt.xlabel('Tamaño de datos de entrada')                  #Etiqueta exclusivas del kernel VectorAdd
 
     plt.ylabel('Tiempo (ms)')
     plt.legend()
@@ -43,8 +45,8 @@ def generate_plot(csv_url):
 
     image_locationTemp = csv_url + ".jpg"
     plt.savefig(image_locationTemp, format='jpg', dpi=600)
-    image_locationTemp = csv_url + ".pdf"
-    plt.savefig(image_locationTemp, format='pdf', dpi=600)
+    #image_locationTemp = csv_url + ".pdf"
+    #plt.savefig(image_locationTemp, format='pdf', dpi=600)
 
     plt.close()
 

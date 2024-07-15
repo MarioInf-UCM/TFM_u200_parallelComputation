@@ -14,13 +14,9 @@ translation_dict = {
 }
 
 def csv_to_latex(csv_file):
-    # Leer el archivo CSV
+    
     df = pd.read_csv(csv_file)
-    
-    # Transponer el DataFrame
-    df = df.transpose()
-    
-    # Ajustar los nombres de las columnas para que se muestren como el índice después de transponer
+    df = df.transpose()    
     df.columns = df.iloc[0]
     df.index = df.index.map(lambda x: translation_dict.get(x, x))       # Traducir los índices (valores de la primera columna
 

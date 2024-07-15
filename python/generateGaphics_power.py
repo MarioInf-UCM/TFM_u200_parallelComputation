@@ -26,17 +26,18 @@ def generate_plot(csv_url):
 
     # Define the order of the categories
     #categories = ['mini', 'small', 'medium', 'large', 'extralarge']
-    categories = ['2Gb', '4Gb', '8Gb', '16Gb', '32Gb']
+    categories = ['2Gb', '4Gb', '8Gb', '16Gb', '32Gb']                  #Categorias exclusivas del kernel VectorAdd
 
     plt.figure(figsize=(10, 6))
     plt.plot(x, y1, marker='o', label='Consumo del dispositivo', color='green')
-    plt.plot(x, y3, marker='o', label='Consumo de la CPU', color='orange')
-    plt.plot(x, y5, marker='o', label='Consumo de la CPU optimizada', color='orangered')
+    plt.plot(x, y3, marker='^', label='Consumo de la CPU', color='orange')
+    plt.plot(x, y5, marker='s', label='Consumo de la CPU optimizada', color='orangered')
 
 
     plt.title(f'Comparación de energía consumida - {os.path.basename(csv_url)}')
     #plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
-    plt.xlabel('Tamaño de datos de entrada')
+    plt.xlabel('Tamaño de datos de entrada')                          #Etiqueta exclusivas del kernel VectorAdd
+
     plt.ylabel('Consumo (Vatios)')
     plt.legend()
     plt.xticks(ticks=range(len(categories)), labels=categories)

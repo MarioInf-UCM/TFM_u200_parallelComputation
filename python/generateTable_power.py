@@ -9,7 +9,6 @@ def csv_to_latex(csv_file):
     df_ini = pd.read_csv(csv_file)
     df_ini = df_ini.transpose()
     df_ini.columns = df_ini.iloc[0]                                         # Ajustar los nombres de las columnas para que se muestren como el índice después de transponer
-    #f_ini.index = df_ini.index.map(lambda x: translation_dict.get(x, x))   # Traducir los índices (valores de la primera columna
 
 
     df=df_ini[:1]
@@ -45,7 +44,7 @@ def csv_to_latex(csv_file):
 
     #Agregamos consumos en KiloVátios/Hora
     ######################################
-    newRow_name = "\\textbf{{\\emph{{\\underline{{Consumo (kWh)}}}}}}"
+    newRow_name = "\\textbf{{\\emph{{\\underline{{Energía (kWh)}}}}}}"
     newRow = df_ini.iloc[0].copy()
     newRow.loc[:]=""
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
@@ -65,10 +64,6 @@ def csv_to_latex(csv_file):
     newRow = (df_ini.iloc[1]/1000)*((df_ini.iloc[2]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-
-
-
-    
 
     # Redondear los valores numéricos a dos decimales y agregar tabulador a las dos últimas columnas
     def format_value(x, col):

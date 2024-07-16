@@ -18,9 +18,6 @@ def generate_plot(csv_url):
     except FileNotFoundError:
         print(f"GenarateGraphics_performance.py - ERROR..: File '{csv_url}' not found.")
         return
-    except KeyError:
-        print(f"GenarateGraphics_performance.py - ERROR..: File '{csv_url}' does not contain necessary columns.")
-        return
 
     # Define the order of the categories
     #categories = ['mini', 'small', 'medium', 'large', 'extralarge']

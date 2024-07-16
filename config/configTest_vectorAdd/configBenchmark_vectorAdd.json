@@ -3,7 +3,7 @@
     "outDir": "../../../out",
     "logFile": "logFile.txt",
     "global_performanceFile":"global_vectorAdd_PerformanceResults.csv",
-    "global_powerFile":"global_vectorAdd_PerformanceResults.csv",
+    "global_powerFile":"global_vectorAdd_PowerResults.csv",
     "generate_global_PerformanceGraphics": true,
     "generate_global_PowerGraphics": true,
     "testList":[
@@ -23,8 +23,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt0",
@@ -35,8 +35,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt0",
@@ -47,8 +47,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt0",
@@ -59,8 +59,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt0",
@@ -71,8 +71,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,  
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 }
             ]
         },
@@ -92,8 +92,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt1",
@@ -104,8 +104,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt1",
@@ -116,8 +116,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt1",
@@ -128,8 +128,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt1",
@@ -140,8 +140,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,  
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 }
             ]
         },
@@ -161,8 +161,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt2",
@@ -173,8 +173,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt2",
@@ -185,8 +185,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt2",
@@ -197,8 +197,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt2",
@@ -209,8 +209,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,  
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 }
             ]
         },
@@ -230,8 +230,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -242,8 +242,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -254,8 +254,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -266,8 +266,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt3",
@@ -278,8 +278,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,  
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 }
             ]
         },
@@ -299,8 +299,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt4",
@@ -311,8 +311,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt4",
@@ -323,8 +323,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt4",
@@ -335,8 +335,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,   
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 },
                 {
                     "host": "vectorAddHost_Opt4",
@@ -347,8 +347,8 @@
                     "measurePower_CPUopt": true, 
                     "measurePower_device": true,  
                     "printResults": false,
-                    "numExecutions_cool": 0,
-                    "numExecutions_hot": 1
+                    "numExecutions_cool": 3,
+                    "numExecutions_hot": 5
                 }
             ]
         }

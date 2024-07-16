@@ -3,7 +3,7 @@
     "outDir": "../../../out",
     "logFile": "logFile.txt",
     "global_performanceFile":"global_vectorAdd_PerformanceResults.csv",
-    "global_powerFile":"global_vectorAdd_PerformanceResults.csv",
+    "global_powerFile":"global_vectorAdd_PowerResults.csv",
     "generate_global_PerformanceGraphics": true,
     "generate_global_PowerGraphics": true,
     "testList":[

@@ -20,18 +20,15 @@ def generate_plot(csv_url):
     except FileNotFoundError:
         print(f"GenarateGraphics_power.py - ERROR..: File '{csv_url}' not found.")
         return
-    except KeyError:
-        print(f"GenarateGraphics_power.py - ERROR..: File '{csv_url}' does not contain necessary columns.")
-        return
 
     # Define the order of the categories
     #categories = ['mini', 'small', 'medium', 'large', 'extralarge']
     categories = ['2Gb', '4Gb', '8Gb', '16Gb', '32Gb']                  #Categorias exclusivas del kernel VectorAdd
 
     plt.figure(figsize=(10, 6))
-    plt.plot(x, y1, marker='o', label='Consumo del dispositivo', color='green')
-    plt.plot(x, y3, marker='^', label='Consumo de la CPU', color='orange')
-    plt.plot(x, y5, marker='s', label='Consumo de la CPU optimizada', color='orangered')
+    plt.plot(x, y1, marker='o', label='Consumo energético del dispositivo', color='green')
+    plt.plot(x, y3, marker='^', label='Consumo energético de la CPU', color='orange')
+    plt.plot(x, y5, marker='s', label='Consumo energético de la CPU optimizada', color='orangered')
 
 
     plt.title(f'Comparación de energía consumida - {os.path.basename(csv_url)}')

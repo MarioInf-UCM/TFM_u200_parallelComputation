@@ -19,8 +19,7 @@ def calculate_differences(row, elementIdx):
     return ((row - element)/element)*100
 
 
-
-def format_value(x, col, df):
+def format_value_percent(x, col, df):
     if isinstance(x, (int, float)):
         x = f"{x:.2f}\%"
     if col in df.columns[-2:]:  # Las dos últimas columnas
@@ -28,18 +27,31 @@ def format_value(x, col, df):
     return x
 
 
+def format_dataframe_percent(df):
+    return df.apply(lambda col: col.apply(format_value_percent, args=(col.name, df)))
+
+
+def format_value(x, col, df):
+    if isinstance(x, (int, float)):
+        x = f"{x:.2f}"
+    if col in df.columns[-2:]:  # Las dos últimas columnas
+        x = f"\t{x}"
+    return x
+
 
 def format_dataframe(df):
     return df.apply(lambda col: col.apply(format_value, args=(col.name, df)))
 
 
 
-def csv_to_latex(csv_file):
+
+
+def generateSpeedupTable(csv_file):
 
     df_ini = pd.read_csv(csv_file)
     #df_ini.index = df_ini.index.map(lambda x: translation_dict.get(x, x))   # Traducir los índices (valores de la primera columna
-    print("DataFrame original:")
-    print(df_ini)
+    #print("DataFrame original:")
+    #print(df_ini)
 
     df=pd.DataFrame()
     dfTemp=pd.DataFrame()
@@ -85,7 +97,7 @@ def csv_to_latex(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
-    dfTemp = format_dataframe(dfTemp)
+    dfTemp = format_dataframe_percent(dfTemp)
     dfTemp = dfTemp.astype(object)
     for i in range(len(dfTemp)):
         for j in range(i+1, len(dfTemp)):
@@ -139,7 +151,7 @@ def csv_to_latex(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
-    dfTemp = format_dataframe(dfTemp)
+    dfTemp = format_dataframe_percent(dfTemp)
     dfTemp = dfTemp.astype(object)
     for i in range(len(dfTemp)):
         for j in range(i+1, len(dfTemp)):
@@ -193,7 +205,7 @@ def csv_to_latex(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
-    dfTemp = format_dataframe(dfTemp)
+    dfTemp = format_dataframe_percent(dfTemp)
     dfTemp = dfTemp.astype(object)
     for i in range(len(dfTemp)):
         for j in range(i+1, len(dfTemp)):
@@ -247,7 +259,7 @@ def csv_to_latex(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
-    dfTemp = format_dataframe(dfTemp)
+    dfTemp = format_dataframe_percent(dfTemp)
     dfTemp = dfTemp.astype(object)
     for i in range(len(dfTemp)):
         for j in range(i+1, len(dfTemp)):
@@ -302,7 +314,7 @@ def csv_to_latex(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
-    dfTemp = format_dataframe(dfTemp)
+    dfTemp = format_dataframe_percent(dfTemp)
     dfTemp = dfTemp.astype(object)
     for i in range(len(dfTemp)):
         for j in range(i+1, len(dfTemp)):
@@ -323,12 +335,6 @@ def csv_to_latex(csv_file):
     HeaderRow.iloc[4]="Opt3"
     HeaderRow.iloc[5]="Opt4"
     df = pd.concat([pd.DataFrame([HeaderRow], index=[""]), df])
-
-    print("\nDataFrame salida:")
-    print(df)   
-
-
-
 
 
     # Crear el contenido LaTeX para la tabla con colores
@@ -356,12 +362,67 @@ def csv_to_latex(csv_file):
 
 
     latex_table += "    \\end{tabular}\n"
-    latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[2]+"]{{Resultados generales de rendimiento "+nameFile_parts[2]+"}}\n"
+    latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+"}}\n"
     latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
     latex_table += "\\end{table}"
 
     # Crear el nombre del archivo de salida .tex
-    output_tex_file = f"{csv_file}.tex"
+    output_tex_file = f"{csv_file}_speedup.tex"
+
+    # Escribir el contenido LaTeX en un archivo
+    with open(output_tex_file, 'w') as f:
+        f.write(latex_table)
+
+
+
+
+
+def generateDataTable(csv_file):
+    df = pd.read_csv(csv_file)
+    df = df.transpose()    
+    df.columns = df.iloc[0]
+    df.index = df.index.map(lambda x: translation_dict.get(x, x))       # Traducir los índices (valores de la primera columna
+
+
+    df = format_dataframe(df)
+
+    # Crear el contenido LaTeX para la tabla con colores
+    latex_table = "\\begin{table}[H]\n"
+    latex_table += "    \\centering\n"
+    latex_table += "    \\begin{tabular}{lllllll}\n"
+    
+    numRow=0
+    for idx, row in df.iterrows():
+        if numRow == 0:
+            latex_table += f"    \\rowcolor[HTML]{{DAE8FC}} \\ & "
+            latex_table += " & ".join(" \\textbf{"+row+"}") + " \\\\\n"
+        elif numRow%2 != 0:
+            if idx == "CPU -> Device (ejec)" or idx == "CPU -> Device (ejec+Tras)":
+                latex_table += f"    \\cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
+                latex_table += " & ".join(row+"\%") + " \\\\\n"            
+            else:
+                latex_table += f"    \\cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
+                latex_table += " & ".join(row+"ms") + " \\\\\n"
+        else:
+            if idx == "CPU -> Device (ejec)" or idx == "CPU -> Device (ejec+Tras)":
+                latex_table += f"    \\rowcolor[HTML]{{EFEFEF}} \cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
+                latex_table += " & ".join(row+"\%") + " \\\\\n"
+            else:
+                latex_table += f"    \\rowcolor[HTML]{{EFEFEF}} \cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
+                latex_table += " & ".join(row+"ms") + " \\\\\n"            
+        numRow+=1
+    
+    nameFile = ultimo_elemento = csv_file.split("/")[-1]
+    nameFile_parts=nameFile.split("_")
+
+
+    latex_table += "    \\end{tabular}\n"
+    latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+"}}\n"
+    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
+    latex_table += "\\end{table}"
+
+    # Crear el nombre del archivo de salida .tex
+    output_tex_file = f"{csv_file}_data.tex"
 
     # Escribir el contenido LaTeX en un archivo
     with open(output_tex_file, 'w') as f:
@@ -378,4 +439,5 @@ if __name__ == "__main__":
 
     # Obtener la ruta del archivo CSV desde los argumentos de línea de comandos
     csv_file = sys.argv[1]
-    csv_to_latex(csv_file)
+    generateSpeedupTable(csv_file)
+    generateDataTable(csv_file)

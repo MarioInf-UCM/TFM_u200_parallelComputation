@@ -14,6 +14,7 @@
 
 bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_performanceFile);
 void printFinalMessage(unsigned int numFailures, FileWriter_service fileWriter_logFile);
+void printResults(FileWriter_service &fileLog, FileWriter_service &fileStats, vector<double> &resultList, string size);
 using namespace std;
 
 
@@ -55,11 +56,11 @@ int main(int argc, char** argv){
     vector<double> resultsGlobal_performance_medium = vector<double>(1, 0.0f);
     vector<double> resultsGlobal_performance_large = vector<double>(1, 0.0f);
     vector<double> resultsGlobal_performance_extralarge = vector<double>(1, 0.0f);
-    vector<double> resultsGlobal_power_mini = vector<double>(1, 0.0f);
-    vector<double> resultsGlobal_power_small = vector<double>(1, 0.0f);
-    vector<double> resultsGlobal_power_medium = vector<double>(1, 0.0f);
-    vector<double> resultsGlobal_power_large = vector<double>(1, 0.0f);
-    vector<double> resultsGlobal_power_extralarge = vector<double>(1, 0.0f);
+    vector<double> resultsGlobal_power_mini = vector<double>(2, 0.0f);
+    vector<double> resultsGlobal_power_small = vector<double>(2, 0.0f);
+    vector<double> resultsGlobal_power_medium = vector<double>(2, 0.0f);
+    vector<double> resultsGlobal_power_large = vector<double>(2, 0.0f);
+    vector<double> resultsGlobal_power_extralarge = vector<double>(2, 0.0f);
     string tempString_toWrite="";
 
     fileWriter_logFile = FileWriter_service(jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_logFile(), jsonConfiguration.get_verbose());
@@ -69,8 +70,8 @@ int main(int argc, char** argv){
     fileWriter_global_performanceFile = FileWriter_service(jsonConfiguration.get_outDir() + outFolderID + "/" + jsonConfiguration.get_global_performanceFile(), jsonConfiguration.get_verbose());
     fileWriter_global_performanceFile.writeln("X,CPU execution time,Opt0 execution time,Opt1 execution time,Opt2 execution time,Opt3 execution time,Opt4 execution time", true);
 
-    //fileWriter_global_powerFile = FileWriter_service(jsonConfiguration.get_outDir() + outFolderID + "/" + jsonConfiguration.get_global_powerFile(), jsonConfiguration.get_verbose());
-    //fileWriter_global_powerFile.writeln("X,CPU execution time,CPU optimized execution time,Device execution time,Transmision (S+R) time,Send to device time,Recieve from device time", true);
+    fileWriter_global_powerFile = FileWriter_service(jsonConfiguration.get_outDir() + outFolderID + "/" + jsonConfiguration.get_global_powerFile(), jsonConfiguration.get_verbose());
+    fileWriter_global_powerFile.writeln("X,CPU energy consumption,CPU execution time,Opt0 energy consumption,Opt0 execution time,Opt1 energy consumption,Opt1 execution time,Opt2 energy consumption,Opt2 execution time,Opt3 energy consumption,Opt3 execution time,Opt4 energy consumption,Opt4 execution time", true);
 
 
     for(int i=0 ; i<jsonConfiguration.get_testList().size() ; i++){
@@ -85,7 +86,6 @@ int main(int argc, char** argv){
             resultsPerformance_average.clear();
             resultsPower_average.clear();
 
-
             //Executing cool executions
             for(int k=0 ; k<jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_cool() ; k++){
                 fileWriter_logFile.writeln("\033[1;34m\n*************\n"
@@ -94,6 +94,7 @@ int main(int argc, char** argv){
                                             " and cool repetition "+ to_string(k+1) + "/" + to_string(jsonConfiguration.get_testList()[i].get_executionList()[j].get_numExecutions_cool()) + "\n" +
                                             "*\033[0m", true);
                 resultsPerformance.clear();   
+                resultsPower.clear();   
                 result = runExecution(jsonConfiguration.get_testList()[i].get_executionList()[j], resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);
                 fileWriter_logFile.writeln("\033[1;34m\n*\n**\n*************\n\033[0m", true);
             }
@@ -188,22 +189,32 @@ int main(int argc, char** argv){
 
 
             //Calculating general Performance average results 
-/*             if(jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()=="mini"){
-                resultsGlobal_performance_mini.push_back(resultsGlobal_performance_mini[0] + resultsPerformance_average[0]);
-                resultsGlobal_performance_mini.push_back(resultsPerformance_average[2]);
+            if(jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()=="mini"){
+                resultsGlobal_power_mini[0] = resultsGlobal_power_mini[0] + resultsPower_average[2];
+                resultsGlobal_power_mini[1] = resultsGlobal_power_mini[1] + resultsPower_average[3];
+                resultsGlobal_power_mini.push_back(resultsPower_average[0]);
+                resultsGlobal_power_mini.push_back(resultsPower_average[1]);
             }else if(jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()=="small"){
-                resultsGlobal_performance_small.push_back(resultsGlobal_performance_mini[0] + resultsPerformance_average[0]);
-                resultsGlobal_performance_small.push_back(resultsPerformance_average[2]);                
+                resultsGlobal_power_small[0] = resultsGlobal_power_small[0] + resultsPower_average[2];
+                resultsGlobal_power_small[1] = resultsGlobal_power_small[1] + resultsPower_average[3];
+                resultsGlobal_power_small.push_back(resultsPower_average[0]);
+                resultsGlobal_power_small.push_back(resultsPower_average[1]);               
             }else if(jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()=="medium"){
-                resultsGlobal_performance_medium.push_back(resultsGlobal_performance_mini[0] + resultsPerformance_average[0]);
-                resultsGlobal_performance_medium.push_back(resultsPerformance_average[2]);
+                resultsGlobal_power_medium[0] = resultsGlobal_power_medium[0] + resultsPower_average[2];
+                resultsGlobal_power_medium[1] = resultsGlobal_power_medium[1] + resultsPower_average[3];
+                resultsGlobal_power_medium.push_back(resultsPower_average[0]);
+                resultsGlobal_power_medium.push_back(resultsPower_average[1]);
             }else if(jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()=="large"){
-                resultsGlobal_performance_large.push_back(resultsGlobal_performance_mini[0] + resultsPerformance_average[0]);
-                resultsGlobal_performance_large.push_back(resultsPerformance_average[2]);
+                resultsGlobal_power_large[0] = resultsGlobal_power_large[0] + resultsPower_average[2];
+                resultsGlobal_power_large[1] = resultsGlobal_power_large[1] + resultsPower_average[3];
+                resultsGlobal_power_large.push_back(resultsPower_average[0]);
+                resultsGlobal_power_large.push_back(resultsPower_average[1]);
             }else if(jsonConfiguration.get_testList()[i].get_executionList()[j].get_dataSize()=="extralarge"){
-                resultsGlobal_performance_extralarge.push_back(resultsGlobal_performance_mini[0] + resultsPerformance_average[0]);
-                resultsGlobal_performance_extralarge.push_back(resultsPerformance_average[2]);
-            } */
+                resultsGlobal_power_extralarge[0] = resultsGlobal_power_extralarge[0] + resultsPower_average[2];
+                resultsGlobal_power_extralarge[1] = resultsGlobal_power_extralarge[1] + resultsPower_average[3];
+                resultsGlobal_power_extralarge.push_back(resultsPower_average[0]);
+                resultsGlobal_power_extralarge.push_back(resultsPower_average[1]);
+            }
 
         }
 
@@ -237,82 +248,61 @@ int main(int argc, char** argv){
     }
 
 
-    //Calculating and print general Performance average results 
+    //Calculating, printing and generating tables of general performance results 
     resultsGlobal_performance_mini[0]=resultsGlobal_performance_mini[0]/(resultsGlobal_performance_mini.size()-1);
     resultsGlobal_performance_small[0]=resultsGlobal_performance_small[0]/(resultsGlobal_performance_small.size()-1);
     resultsGlobal_performance_medium[0]=resultsGlobal_performance_medium[0]/(resultsGlobal_performance_medium.size()-1);
     resultsGlobal_performance_large[0]=resultsGlobal_performance_large[0]/(resultsGlobal_performance_large.size()-1);
     resultsGlobal_performance_extralarge[0]=resultsGlobal_performance_extralarge[0]/(resultsGlobal_performance_extralarge.size()-1);
 
-    fileWriter_logFile.writeln("\nGlobal performance results:\nX,CPU execution time,Opt0 execution time,Opt1 execution time,Opt2 execution time,Opt3 execution time,Opt4 execution time", true);
-    tempString_toWrite="mini,";
-    for (int i=0 ; i<resultsGlobal_performance_mini.size() ; i++){
-        if(i==resultsGlobal_performance_mini.size()-1){
-            tempString_toWrite += to_string(resultsGlobal_performance_mini[i]);
-        }else{
-            tempString_toWrite += to_string(resultsGlobal_performance_mini[i]) + ",";
-        }
-    }
-    fileWriter_logFile.writeln(tempString_toWrite, true);  
-    fileWriter_global_performanceFile.writeln(tempString_toWrite, false);
+    printResults(fileWriter_logFile, fileWriter_global_performanceFile, resultsGlobal_performance_mini, "mini");
+    printResults(fileWriter_logFile, fileWriter_global_performanceFile, resultsGlobal_performance_small, "small");
+    printResults(fileWriter_logFile, fileWriter_global_performanceFile, resultsGlobal_performance_medium, "medium");
+    printResults(fileWriter_logFile, fileWriter_global_performanceFile, resultsGlobal_performance_large, "large");
+    printResults(fileWriter_logFile, fileWriter_global_performanceFile, resultsGlobal_performance_extralarge, "extralarge");
 
-    tempString_toWrite="small,";
-    for (int i=0 ; i<resultsGlobal_performance_small.size() ; i++){
-        if(i==resultsGlobal_performance_small.size()-1){
-            tempString_toWrite += to_string(resultsGlobal_performance_small[i]);
-        }else{
-            tempString_toWrite += to_string(resultsGlobal_performance_small[i]) + ",";
-        }
-    }
-    fileWriter_logFile.writeln(tempString_toWrite, true);  
-    fileWriter_global_performanceFile.writeln(tempString_toWrite, false);
-
-    tempString_toWrite="medium,";
-    for (int i=0 ; i<resultsGlobal_performance_medium.size() ; i++){
-        if(i==resultsGlobal_performance_medium.size()-1){
-            tempString_toWrite += to_string(resultsGlobal_performance_medium[i]);
-        }else{
-            tempString_toWrite += to_string(resultsGlobal_performance_medium[i]) + ",";
-        }
-    }
-    fileWriter_logFile.writeln(tempString_toWrite, true);  
-    fileWriter_global_performanceFile.writeln(tempString_toWrite, false);
-
-    tempString_toWrite="large,";
-    for (int i=0 ; i<resultsGlobal_performance_large.size() ; i++){
-        if(i==resultsGlobal_performance_large.size()-1){
-            tempString_toWrite += to_string(resultsGlobal_performance_large[i]);
-        }else{
-            tempString_toWrite += to_string(resultsGlobal_performance_large[i]) + ",";
-        }
-    }
-    fileWriter_logFile.writeln(tempString_toWrite, true);  
-    fileWriter_global_performanceFile.writeln(tempString_toWrite, false);
-
-    tempString_toWrite="extralarge,";
-    for (int i=0 ; i<resultsGlobal_performance_extralarge.size() ; i++){
-        if(i==resultsGlobal_performance_extralarge.size()-1){
-            tempString_toWrite += to_string(resultsGlobal_performance_extralarge[i]);
-        }else{
-            tempString_toWrite += to_string(resultsGlobal_performance_extralarge[i]) + ",";
-        }
-    }
-    fileWriter_logFile.writeln(tempString_toWrite, true);  
-    fileWriter_global_performanceFile.writeln(tempString_toWrite, false);
-
-
-    //Generating global performance graphics and tables
     if(jsonConfiguration.get_generate_global_PerformanceGraphics()){
         result = externConnec_global_performanceGraphics.executeCommand(
             jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_performanceFile());
         if(!result){
             fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_performanceFile());
         }
-        //result = externConnec_performanceTable.executeCommand(
-        //    jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_powerFile());
-        //if(!result){
-        //    fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_powerFile());
-        //}
+        result = externConnec_global_performanceTable.executeCommand(
+            jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_performanceFile());
+        if(!result){
+            fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_performanceFile());
+        }
+    }
+
+    //Calculating, printing and generating tables of general performance results 
+    resultsGlobal_power_mini[0]=resultsGlobal_power_mini[0]/((resultsGlobal_power_mini.size()-2)/2);
+    resultsGlobal_power_mini[1]=resultsGlobal_power_mini[1]/((resultsGlobal_power_mini.size()-2)/2);
+    resultsGlobal_power_small[0]=resultsGlobal_power_small[0]/((resultsGlobal_power_small.size()-2)/2);
+    resultsGlobal_power_small[1]=resultsGlobal_power_small[1]/((resultsGlobal_power_small.size()-2)/2);
+    resultsGlobal_power_medium[0]=resultsGlobal_power_medium[0]/((resultsGlobal_power_medium.size()-2)/2);
+    resultsGlobal_power_medium[1]=resultsGlobal_power_medium[1]/((resultsGlobal_power_medium.size()-2)/2);
+    resultsGlobal_power_large[0]=resultsGlobal_power_large[0]/((resultsGlobal_power_large.size()-2)/2);
+    resultsGlobal_power_large[1]=resultsGlobal_power_large[1]/((resultsGlobal_power_large.size()-2)/2);
+    resultsGlobal_power_extralarge[0]=resultsGlobal_power_extralarge[0]/((resultsGlobal_power_extralarge.size()-2)/2);
+    resultsGlobal_power_extralarge[1]=resultsGlobal_power_extralarge[1]/((resultsGlobal_power_extralarge.size()-2)/2);
+
+    printResults(fileWriter_logFile, fileWriter_global_powerFile, resultsGlobal_power_mini, "mini");
+    printResults(fileWriter_logFile, fileWriter_global_powerFile, resultsGlobal_power_small, "small");
+    printResults(fileWriter_logFile, fileWriter_global_powerFile, resultsGlobal_power_medium, "medium");
+    printResults(fileWriter_logFile, fileWriter_global_powerFile, resultsGlobal_power_large, "large");
+    printResults(fileWriter_logFile, fileWriter_global_powerFile, resultsGlobal_power_extralarge, "extralarge");
+
+    if(jsonConfiguration.get_generate_global_PowerGraphics()){
+        result = externConnec_global_powerGraphics.executeCommand(
+            jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_powerFile());
+        if(!result){
+            fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_powerFile());
+        }
+        result = externConnec_global_powerTable.executeCommand(
+            jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_powerFile());
+        if(!result){
+            fileWriter_logFile.writeln("ERROR..: Couldn't generate the image of " + jsonConfiguration.get_outDir()+ outFolderID + "/" + jsonConfiguration.get_global_powerFile());
+        }
     }
 
 
@@ -367,4 +357,20 @@ void printFinalMessage(unsigned int numFailures, FileWriter_service fileWriter_l
         fileWriter_logFile.writeln("\033[1;31m**********************************************\033[0m\n", true);
     }
 
+}
+
+
+
+void printResults(FileWriter_service &fileLog, FileWriter_service &fileStats, vector<double> &resultList, string size){
+    string tempString_toWrite=size+",";
+    for (int i=0 ; i<resultList.size() ; i++){
+        if(i==resultList.size()-1){
+            tempString_toWrite += to_string(resultList[i]);
+        }else{
+            tempString_toWrite += to_string(resultList[i]) + ",";
+        }
+    }
+    fileLog.writeln(tempString_toWrite, true);  
+    fileStats.writeln(tempString_toWrite, false);
+    return;
 }

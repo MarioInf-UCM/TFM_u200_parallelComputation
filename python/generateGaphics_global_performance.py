@@ -16,10 +16,7 @@ def generate_plot(csv_url):
         y5 = data['Opt3 execution time']
         y6 = data['Opt4 execution time']
     except FileNotFoundError:
-        print(f"GenarateGraphics_performance.py - ERROR..: File '{csv_url}' not found.")
-        return
-    except KeyError:
-        print(f"GenarateGraphics_performance.py - ERROR..: File '{csv_url}' does not contain necessary columns.")
+        print(f"GenarateGraphics_global_performance.py - ERROR..: File '{csv_url}' not found.")
         return
 
     # Define the order of the categories
@@ -45,8 +42,8 @@ def generate_plot(csv_url):
 
     image_locationTemp = csv_url + ".jpg"
     plt.savefig(image_locationTemp, format='jpg', dpi=600)
-    #image_locationTemp = csv_url + ".pdf"
-    #plt.savefig(image_locationTemp, format='pdf', dpi=600)
+    image_locationTemp = csv_url + ".pdf"
+    plt.savefig(image_locationTemp, format='pdf', dpi=600)
 
     plt.close()
 

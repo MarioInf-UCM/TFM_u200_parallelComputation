@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <ap_fixed.h>
 
-// TYPEDATA COMPILATOR VARIABLE
+// TYPEDATA COMPILER VARIABLE
 //**********************************
 #define TYPEDATA_BITS_SIZE 16
 #define TYPEDATA_BITS_INT 7
@@ -11,7 +11,7 @@ typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 #define INCREMENT_FACTOR_STREAM (sizeof(float)/sizeof(typeData))
 
 
-// DATASIZE COMPILATOR VARIABLE
+// DATASIZE COMPILER VARIABLE
 //**********************************
 #ifdef MINI_DATASET
     #define SIZE (1024 * 1024 * 2)

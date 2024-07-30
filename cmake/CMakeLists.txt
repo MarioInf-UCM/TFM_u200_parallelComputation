@@ -51,6 +51,17 @@ endmacro()
 # COPIYING KERNEL FILES - START *
 #********************************
 set(kerPackList)
+list(APPEND kerPackList "kerPack_vectorAdd_Opt0_mini" "kerPack_vectorAdd_Opt0_small" "kerPack_vectorAdd_Opt0_medium" "kerPack_vectorAdd_Opt0_large" "kerPack_vectorAdd_Opt0_extralarge" )
+list(APPEND kerPackList "kerPack_vectorAdd_Opt1_mini" "kerPack_vectorAdd_Opt1_small" "kerPack_vectorAdd_Opt1_medium" "kerPack_vectorAdd_Opt1_large" "kerPack_vectorAdd_Opt1_extralarge" )
+list(APPEND kerPackList "kerPack_vectorAdd_Opt2_mini" "kerPack_vectorAdd_Opt2_small" "kerPack_vectorAdd_Opt2_medium" "kerPack_vectorAdd_Opt2_large" "kerPack_vectorAdd_Opt2_extralarge" )
+list(APPEND kerPackList "kerPack_vectorAdd_Opt3_mini" "kerPack_vectorAdd_Opt3_small" "kerPack_vectorAdd_Opt3_medium" "kerPack_vectorAdd_Opt3_large" "kerPack_vectorAdd_Opt3_extralarge" )
+list(APPEND kerPackList "kerPack_vectorAdd_Opt4_mini" "kerPack_vectorAdd_Opt4_small" "kerPack_vectorAdd_Opt4_medium" "kerPack_vectorAdd_Opt4_large" "kerPack_vectorAdd_Opt4_extralarge" )
+
+list(APPEND kerPackList "kerPack_studyCase1_a_mini" "kerPack_studyCase1_a_small" "kerPack_studyCase1_a_medium" "kerPack_studyCase1_a_large" "kerPack_studyCase1_a_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase1_b_mini" "kerPack_studyCase1_b_small" "kerPack_studyCase1_b_medium" "kerPack_studyCase1_b_large" "kerPack_studyCase1_b_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase1_c_mini" "kerPack_studyCase1_c_small" "kerPack_studyCase1_c_medium" "kerPack_studyCase1_c_large" "kerPack_studyCase1_c_extralarge" )
+
+
 list(APPEND kerPackList "kerPack_cholesky_Opt0_mini" "kerPack_cholesky_Opt0_small" "kerPack_cholesky_Opt0_medium" "kerPack_cholesky_Opt0_large" "kerPack_cholesky_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_cholesky_Opt1_mini" "kerPack_cholesky_Opt1_small" "kerPack_cholesky_Opt1_medium" "kerPack_cholesky_Opt1_large" "kerPack_cholesky_Opt1_extralarge" )
 
@@ -66,11 +77,6 @@ list(APPEND kerPackList "kerPack_gemmPer_Opt1_mini" "kerPack_gemmPer_Opt1_small"
 list(APPEND kerPackList "kerPack_jacobi2d_Opt0_mini" "kerPack_jacobi2d_Opt0_small" "kerPack_jacobi2d_Opt0_medium" "kerPack_jacobi2d_Opt0_large" "kerPack_jacobi2d_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_jacobi2d_Opt1_mini" "kerPack_jacobi2d_Opt1_small" "kerPack_jacobi2d_Opt1_medium" "kerPack_jacobi2d_Opt1_large" "kerPack_jacobi2d_Opt1_extralarge" )
 
-list(APPEND kerPackList "kerPack_vectorAdd_Opt0_mini" "kerPack_vectorAdd_Opt0_small" "kerPack_vectorAdd_Opt0_medium" "kerPack_vectorAdd_Opt0_large" "kerPack_vectorAdd_Opt0_extralarge" )
-list(APPEND kerPackList "kerPack_vectorAdd_Opt1_mini" "kerPack_vectorAdd_Opt1_small" "kerPack_vectorAdd_Opt1_medium" "kerPack_vectorAdd_Opt1_large" "kerPack_vectorAdd_Opt1_extralarge" )
-list(APPEND kerPackList "kerPack_vectorAdd_Opt2_mini" "kerPack_vectorAdd_Opt2_small" "kerPack_vectorAdd_Opt2_medium" "kerPack_vectorAdd_Opt2_large" "kerPack_vectorAdd_Opt2_extralarge" )
-list(APPEND kerPackList "kerPack_vectorAdd_Opt3_mini" "kerPack_vectorAdd_Opt3_small" "kerPack_vectorAdd_Opt3_medium" "kerPack_vectorAdd_Opt3_large" "kerPack_vectorAdd_Opt3_extralarge" )
-list(APPEND kerPackList "kerPack_vectorAdd_Opt4_mini" "kerPack_vectorAdd_Opt4_small" "kerPack_vectorAdd_Opt4_medium" "kerPack_vectorAdd_Opt4_large" "kerPack_vectorAdd_Opt4_extralarge" )
 
 
 
@@ -193,32 +199,30 @@ target_include_directories(example_utils PUBLIC
 
 add_executable(benchmarkExec
   ../src/main.cpp
-
-  ../src/kernel/doitgenKernel/doitgenKernel.cpp
-  ../src/kernel/choleskyKernel/choleskyKernel.cpp
-  ../src/kernel/gemmKernel/gemmKernel.cpp
-  ../src/kernel/jacobi_2dKernel/jacobi_2dKernel.cpp
-  ../src/kernel/vectorAddKernel/vectorAddKernel.cpp
-
+  
   ../src/host/doitgenHost/doitgenHost.cpp
   ../src/host/doitgenHost/doitgenHost_Opt0/doitgenHost_Opt0.cpp
   ../src/host/doitgenHost/doitgenHost_Opt1/doitgenHost_Opt1.cpp
   ../src/host/doitgenHost/doitgenHost_Opt2/doitgenHost_Opt2.cpp
-
+  ../src/kernel/doitgenKernel/doitgenKernel.cpp
+  
   ../src/host/choleskyHost/choleskyHost.cpp
   ../src/host/choleskyHost/choleskyHost_Opt0/choleskyHost_Opt0.cpp
   ../src/host/choleskyHost/choleskyHost_Opt1/choleskyHost_Opt1.cpp
   ../src/host/choleskyHost/choleskyHost_Opt2/choleskyHost_Opt2.cpp
-
+  ../src/kernel/choleskyKernel/choleskyKernel.cpp
+  
   ../src/host/jacobi2dHost/jacobi2dHost.cpp
   ../src/host/jacobi2dHost/jacobi2dHost_Opt0/jacobi2dHost_Opt0.cpp
   ../src/host/jacobi2dHost/jacobi2dHost_Opt1/jacobi2dHost_Opt1.cpp
   ../src/host/jacobi2dHost/jacobi2dHost_Opt2/jacobi2dHost_Opt2.cpp
-
+  ../src/kernel/jacobi_2dKernel/jacobi_2dKernel.cpp
+  
   ../src/host/gemmHost/gemmHost.cpp
   ../src/host/gemmHost/gemmHost_Opt0/gemmHost_Opt0.cpp
   ../src/host/gemmHost/gemmHost_Opt1/gemmHost_Opt1.cpp
   ../src/host/gemmHost/gemmHost_Opt2/gemmHost_Opt2.cpp
+  ../src/kernel/gemmKernel/gemmKernel.cpp
   
   ../src/host/vectorAddHost/vectorAddHost.cpp
   ../src/host/vectorAddHost/vectorAddHost_Opt0/vectorAddHost_Opt0.cpp
@@ -226,6 +230,13 @@ add_executable(benchmarkExec
   ../src/host/vectorAddHost/vectorAddHost_Opt2/vectorAddHost_Opt2.cpp
   ../src/host/vectorAddHost/vectorAddHost_Opt3/vectorAddHost_Opt3.cpp
   ../src/host/vectorAddHost/vectorAddHost_Opt4/vectorAddHost_Opt4.cpp
+  ../src/kernel/vectorAddKernel/vectorAddKernel.cpp
+  
+  ../src/host/studyCase1Host/studyCase1Host.cpp
+  ../src/host/studyCase1Host/studyCase1Host_a/studyCase1Host_a.cpp
+  ../src/host/studyCase1Host/studyCase1Host_b/studyCase1Host_b.cpp
+  ../src/host/studyCase1Host/studyCase1Host_c/studyCase1Host_c.cpp
+  ../src/kernel/studyCase1Kernel/studyCase1Kernel.cpp
 
   ../src/service/fileWriter_service/fileWriter_service.cpp
   ../src/service/json_service/json_service.cpp

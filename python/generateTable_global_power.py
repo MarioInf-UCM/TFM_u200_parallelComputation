@@ -5,12 +5,13 @@ import sys
 
 # Diccionario para traducir los valores de la primera columna
 translation_dict = {
-    "CPU execution time"  : "CPU->",
-    "Opt0 execution time" : "Opt0->",
-    "Opt1 execution time" : "Opt1->",
-    "Opt2 execution time" : "Opt2->",
-    "Opt3 execution time" : "Opt3->",
-    "Opt4 execution time" : "Opt4->"
+    "CPU execution time"  : "CPU",
+    "CPU optimized execution time"  : "CPU Opt",
+    "Opt0 execution time" : "Opt0",
+    "Opt1 execution time" : "Opt1",
+    "Opt2 execution time" : "Opt2",
+    "Opt3 execution time" : "Opt3",
+    "Opt4 execution time" : "Opt4"
 }
 
 
@@ -51,147 +52,196 @@ def format_dataframe(df):
 def generateSpeedupTable(csv_file):
 
     df_ini = pd.read_csv(csv_file)
-    #df_ini.index = df_ini.index.map(lambda x: translation_dict.get(x, x))   # Traducir los índices (valores de la primera columna
-    #print("DataFrame original:")
-    #print(df_ini)
-
-    df=pd.DataFrame(columns=['', 'Aceleración', 'Energía', 'Aceleración/Energía'])
-    df.loc[df.shape[0]]=['', 'Aceleración', 'Energía', 'Aceleración/Energía']
+    df=pd.DataFrame(columns=['', 'Aceleración (CPU->X)', 'Energía', 'Aceleración/Energía'])
+    df.loc[df.shape[0]]=['', 'Aceleración (CPU->X)', 'Energía', 'Aceleración/Energía']
 
 
     #################################
     # Tratamiento de datos Mini
     #################################
     dataRow = df_ini.iloc[0, 1:]
-
     CPU_energy = dataRow.iloc[0]
     CPU_time = dataRow.iloc[1]
-    Opt0_energy = dataRow.iloc[2]
-    Opt0_time = dataRow.iloc[3]
-    Opt1_energy = dataRow.iloc[4]
-    Opt1_time = dataRow.iloc[5]
-    Opt2_energy = dataRow.iloc[6]
-    Opt2_time = dataRow.iloc[7]
-    Opt3_energy = dataRow.iloc[8]
-    Opt3_time = dataRow.iloc[9]
-    Opt4_energy = dataRow.iloc[10]
-    Opt4_time = dataRow.iloc[11]
+
+    CPUOpt_energy = dataRow.iloc[2]
+    CPUOpt_time = dataRow.iloc[3]
+    CPUOpt_accel = ((CPU_time-CPUOpt_time)/CPUOpt_time)*100
+    Opt0_energy = dataRow.iloc[4]
+    Opt0_time = dataRow.iloc[5]
+    Opt0_accel = ((CPU_time-Opt0_time)/Opt0_time)*100
+    Opt1_energy = dataRow.iloc[6]
+    Opt1_time = dataRow.iloc[7]
+    Opt1_accel = ((CPU_time-Opt1_time)/Opt1_time)*100
+    Opt2_energy = dataRow.iloc[8]
+    Opt2_time = dataRow.iloc[9]
+    Opt2_accel = ((CPU_time-Opt2_time)/Opt2_time)*100
+    Opt3_energy = dataRow.iloc[10]
+    Opt3_time = dataRow.iloc[11]
+    Opt3_accel = ((CPU_time-Opt3_time)/Opt3_time)*100
+    Opt4_energy = dataRow.iloc[12]
+    Opt4_time = dataRow.iloc[13]
+    Opt4_accel = ((CPU_time-Opt4_time)/Opt4_time)*100
 
 
     df.loc[df.shape[0]]=['\\textbf{{\\emph{{\\underline{{Mini}}}}}}', '', '', '']
-    df.loc[df.shape[0]]=['OPT0', ((CPU_time-Opt0_time)/Opt0_time)*100, Opt0_energy, (((CPU_time-Opt0_time)/Opt0_time)*100)/Opt0_energy]
-    df.loc[df.shape[0]]=['OPT1', ((CPU_time-Opt1_time)/Opt1_time)*100, Opt1_energy, (((CPU_time-Opt1_time)/Opt1_time)*100)/Opt1_energy]
-    df.loc[df.shape[0]]=['OPT2', ((CPU_time-Opt2_time)/Opt2_time)*100, Opt2_energy, (((CPU_time-Opt2_time)/Opt2_time)*100)/Opt2_energy]
-    df.loc[df.shape[0]]=['OPT3', ((CPU_time-Opt3_time)/Opt3_time)*100, Opt3_energy, (((CPU_time-Opt3_time)/Opt3_time)*100)/Opt3_energy]
-    df.loc[df.shape[0]]=['OPT4', ((CPU_time-Opt4_time)/Opt4_time)*100, Opt4_energy, (((CPU_time-Opt4_time)/Opt4_time)*100)/Opt4_energy]
+    df.loc[df.shape[0]]=['CPU Opt', CPUOpt_accel, CPUOpt_energy, CPUOpt_accel/CPUOpt_energy]
+    df.loc[df.shape[0]]=['OPT0', Opt0_accel, Opt0_energy, Opt0_accel/Opt0_energy]
+    df.loc[df.shape[0]]=['OPT1', Opt1_accel, Opt1_energy, Opt1_accel/Opt1_energy]
+    df.loc[df.shape[0]]=['OPT2', Opt2_accel, Opt2_energy, Opt2_accel/Opt2_energy]
+    df.loc[df.shape[0]]=['OPT3', Opt3_accel, Opt3_energy, Opt3_accel/Opt3_energy]
+    df.loc[df.shape[0]]=['OPT4', Opt4_accel, Opt4_energy, Opt4_accel/Opt4_energy]
 
 
     #################################
     # Tratamiento de datos Small
     #################################
     dataRow = df_ini.iloc[1, 1:]
-
     CPU_energy = dataRow.iloc[0]
     CPU_time = dataRow.iloc[1]
-    Opt0_energy = dataRow.iloc[2]
-    Opt0_time = dataRow.iloc[3]
-    Opt1_energy = dataRow.iloc[4]
-    Opt1_time = dataRow.iloc[5]
-    Opt2_energy = dataRow.iloc[6]
-    Opt2_time = dataRow.iloc[7]
-    Opt3_energy = dataRow.iloc[8]
-    Opt3_time = dataRow.iloc[9]
-    Opt4_energy = dataRow.iloc[10]
-    Opt4_time = dataRow.iloc[11]
+
+    CPUOpt_energy = dataRow.iloc[2]
+    CPUOpt_time = dataRow.iloc[3]
+    CPUOpt_accel = ((CPU_time-CPUOpt_time)/CPUOpt_time)*100
+    Opt0_energy = dataRow.iloc[4]
+    Opt0_time = dataRow.iloc[5]
+    Opt0_accel = ((CPU_time-Opt0_time)/Opt0_time)*100
+    Opt1_energy = dataRow.iloc[6]
+    Opt1_time = dataRow.iloc[7]
+    Opt1_accel = ((CPU_time-Opt1_time)/Opt1_time)*100
+    Opt2_energy = dataRow.iloc[8]
+    Opt2_time = dataRow.iloc[9]
+    Opt2_accel = ((CPU_time-Opt2_time)/Opt2_time)*100
+    Opt3_energy = dataRow.iloc[10]
+    Opt3_time = dataRow.iloc[11]
+    Opt3_accel = ((CPU_time-Opt3_time)/Opt3_time)*100
+    Opt4_energy = dataRow.iloc[12]
+    Opt4_time = dataRow.iloc[13]
+    Opt4_accel = ((CPU_time-Opt4_time)/Opt4_time)*100
 
 
     df.loc[df.shape[0]]=['\\textbf{{\\emph{{\\underline{{Small}}}}}}', '', '', '']
-    df.loc[df.shape[0]]=['OPT0', ((CPU_time-Opt0_time)/Opt0_time)*100, Opt0_energy, (((CPU_time-Opt0_time)/Opt0_time)*100)/Opt0_energy]
-    df.loc[df.shape[0]]=['OPT1', ((CPU_time-Opt1_time)/Opt1_time)*100, Opt1_energy, (((CPU_time-Opt1_time)/Opt1_time)*100)/Opt1_energy]
-    df.loc[df.shape[0]]=['OPT2', ((CPU_time-Opt2_time)/Opt2_time)*100, Opt2_energy, (((CPU_time-Opt2_time)/Opt2_time)*100)/Opt2_energy]
-    df.loc[df.shape[0]]=['OPT3', ((CPU_time-Opt3_time)/Opt3_time)*100, Opt3_energy, (((CPU_time-Opt3_time)/Opt3_time)*100)/Opt3_energy]
-    df.loc[df.shape[0]]=['OPT4', ((CPU_time-Opt4_time)/Opt4_time)*100, Opt4_energy, (((CPU_time-Opt4_time)/Opt4_time)*100)/Opt4_energy]
+    df.loc[df.shape[0]]=['CPU Opt', CPUOpt_accel, CPUOpt_energy, CPUOpt_accel/CPUOpt_energy]
+    df.loc[df.shape[0]]=['OPT0', Opt0_accel, Opt0_energy, Opt0_accel/Opt0_energy]
+    df.loc[df.shape[0]]=['OPT1', Opt1_accel, Opt1_energy, Opt1_accel/Opt1_energy]
+    df.loc[df.shape[0]]=['OPT2', Opt2_accel, Opt2_energy, Opt2_accel/Opt2_energy]
+    df.loc[df.shape[0]]=['OPT3', Opt3_accel, Opt3_energy, Opt3_accel/Opt3_energy]
+    df.loc[df.shape[0]]=['OPT4', Opt4_accel, Opt4_energy, Opt4_accel/Opt4_energy]
+
+
 
 
     #################################
     # Tratamiento de datos Medium
     #################################
     dataRow = df_ini.iloc[2, 1:]
-
     CPU_energy = dataRow.iloc[0]
     CPU_time = dataRow.iloc[1]
-    Opt0_energy = dataRow.iloc[2]
-    Opt0_time = dataRow.iloc[3]
-    Opt1_energy = dataRow.iloc[4]
-    Opt1_time = dataRow.iloc[5]
-    Opt2_energy = dataRow.iloc[6]
-    Opt2_time = dataRow.iloc[7]
-    Opt3_energy = dataRow.iloc[8]
-    Opt3_time = dataRow.iloc[9]
-    Opt4_energy = dataRow.iloc[10]
-    Opt4_time = dataRow.iloc[11]
+
+    CPUOpt_energy = dataRow.iloc[2]
+    CPUOpt_time = dataRow.iloc[3]
+    CPUOpt_accel = ((CPU_time-CPUOpt_time)/CPUOpt_time)*100
+    Opt0_energy = dataRow.iloc[4]
+    Opt0_time = dataRow.iloc[5]
+    Opt0_accel = ((CPU_time-Opt0_time)/Opt0_time)*100
+    Opt1_energy = dataRow.iloc[6]
+    Opt1_time = dataRow.iloc[7]
+    Opt1_accel = ((CPU_time-Opt1_time)/Opt1_time)*100
+    Opt2_energy = dataRow.iloc[8]
+    Opt2_time = dataRow.iloc[9]
+    Opt2_accel = ((CPU_time-Opt2_time)/Opt2_time)*100
+    Opt3_energy = dataRow.iloc[10]
+    Opt3_time = dataRow.iloc[11]
+    Opt3_accel = ((CPU_time-Opt3_time)/Opt3_time)*100
+    Opt4_energy = dataRow.iloc[12]
+    Opt4_time = dataRow.iloc[13]
+    Opt4_accel = ((CPU_time-Opt4_time)/Opt4_time)*100
 
 
     df.loc[df.shape[0]]=['\\textbf{{\\emph{{\\underline{{Medium}}}}}}', '', '', '']
-    df.loc[df.shape[0]]=['OPT0', ((CPU_time-Opt0_time)/Opt0_time)*100, Opt0_energy, (((CPU_time-Opt0_time)/Opt0_time)*100)/Opt0_energy]
-    df.loc[df.shape[0]]=['OPT1', ((CPU_time-Opt1_time)/Opt1_time)*100, Opt1_energy, (((CPU_time-Opt1_time)/Opt1_time)*100)/Opt1_energy]
-    df.loc[df.shape[0]]=['OPT2', ((CPU_time-Opt2_time)/Opt2_time)*100, Opt2_energy, (((CPU_time-Opt2_time)/Opt2_time)*100)/Opt2_energy]
-    df.loc[df.shape[0]]=['OPT3', ((CPU_time-Opt3_time)/Opt3_time)*100, Opt3_energy, (((CPU_time-Opt3_time)/Opt3_time)*100)/Opt3_energy]
-    df.loc[df.shape[0]]=['OPT4', ((CPU_time-Opt4_time)/Opt4_time)*100, Opt4_energy, (((CPU_time-Opt4_time)/Opt4_time)*100)/Opt4_energy]
+    df.loc[df.shape[0]]=['CPU Opt', CPUOpt_accel, CPUOpt_energy, CPUOpt_accel/CPUOpt_energy]
+    df.loc[df.shape[0]]=['OPT0', Opt0_accel, Opt0_energy, Opt0_accel/Opt0_energy]
+    df.loc[df.shape[0]]=['OPT1', Opt1_accel, Opt1_energy, Opt1_accel/Opt1_energy]
+    df.loc[df.shape[0]]=['OPT2', Opt2_accel, Opt2_energy, Opt2_accel/Opt2_energy]
+    df.loc[df.shape[0]]=['OPT3', Opt3_accel, Opt3_energy, Opt3_accel/Opt3_energy]
+    df.loc[df.shape[0]]=['OPT4', Opt4_accel, Opt4_energy, Opt4_accel/Opt4_energy]
+
+
 
 
     #################################
     # Tratamiento de datos Large
     #################################
     dataRow = df_ini.iloc[3, 1:]
-
     CPU_energy = dataRow.iloc[0]
     CPU_time = dataRow.iloc[1]
-    Opt0_energy = dataRow.iloc[2]
-    Opt0_time = dataRow.iloc[3]
-    Opt1_energy = dataRow.iloc[4]
-    Opt1_time = dataRow.iloc[5]
-    Opt2_energy = dataRow.iloc[6]
-    Opt2_time = dataRow.iloc[7]
-    Opt3_energy = dataRow.iloc[8]
-    Opt3_time = dataRow.iloc[9]
-    Opt4_energy = dataRow.iloc[10]
-    Opt4_time = dataRow.iloc[11]
+
+    CPUOpt_energy = dataRow.iloc[2]
+    CPUOpt_time = dataRow.iloc[3]
+    CPUOpt_accel = ((CPU_time-CPUOpt_time)/CPUOpt_time)*100
+    Opt0_energy = dataRow.iloc[4]
+    Opt0_time = dataRow.iloc[5]
+    Opt0_accel = ((CPU_time-Opt0_time)/Opt0_time)*100
+    Opt1_energy = dataRow.iloc[6]
+    Opt1_time = dataRow.iloc[7]
+    Opt1_accel = ((CPU_time-Opt1_time)/Opt1_time)*100
+    Opt2_energy = dataRow.iloc[8]
+    Opt2_time = dataRow.iloc[9]
+    Opt2_accel = ((CPU_time-Opt2_time)/Opt2_time)*100
+    Opt3_energy = dataRow.iloc[10]
+    Opt3_time = dataRow.iloc[11]
+    Opt3_accel = ((CPU_time-Opt3_time)/Opt3_time)*100
+    Opt4_energy = dataRow.iloc[12]
+    Opt4_time = dataRow.iloc[13]
+    Opt4_accel = ((CPU_time-Opt4_time)/Opt4_time)*100
 
 
     df.loc[df.shape[0]]=['\\textbf{{\\emph{{\\underline{{Large}}}}}}', '', '', '']
-    df.loc[df.shape[0]]=['OPT0', ((CPU_time-Opt0_time)/Opt0_time)*100, Opt0_energy, (((CPU_time-Opt0_time)/Opt0_time)*100)/Opt0_energy]
-    df.loc[df.shape[0]]=['OPT1', ((CPU_time-Opt1_time)/Opt1_time)*100, Opt1_energy, (((CPU_time-Opt1_time)/Opt1_time)*100)/Opt1_energy]
-    df.loc[df.shape[0]]=['OPT2', ((CPU_time-Opt2_time)/Opt2_time)*100, Opt2_energy, (((CPU_time-Opt2_time)/Opt2_time)*100)/Opt2_energy]
-    df.loc[df.shape[0]]=['OPT3', ((CPU_time-Opt3_time)/Opt3_time)*100, Opt3_energy, (((CPU_time-Opt3_time)/Opt3_time)*100)/Opt3_energy]
-    df.loc[df.shape[0]]=['OPT4', ((CPU_time-Opt4_time)/Opt4_time)*100, Opt4_energy, (((CPU_time-Opt4_time)/Opt4_time)*100)/Opt4_energy]
+    df.loc[df.shape[0]]=['CPU Opt', CPUOpt_accel, CPUOpt_energy, CPUOpt_accel/CPUOpt_energy]
+    df.loc[df.shape[0]]=['OPT0', Opt0_accel, Opt0_energy, Opt0_accel/Opt0_energy]
+    df.loc[df.shape[0]]=['OPT1', Opt1_accel, Opt1_energy, Opt1_accel/Opt1_energy]
+    df.loc[df.shape[0]]=['OPT2', Opt2_accel, Opt2_energy, Opt2_accel/Opt2_energy]
+    df.loc[df.shape[0]]=['OPT3', Opt3_accel, Opt3_energy, Opt3_accel/Opt3_energy]
+    df.loc[df.shape[0]]=['OPT4', Opt4_accel, Opt4_energy, Opt4_accel/Opt4_energy]
+
+
 
 
     #################################
     # Tratamiento de datos Extralarge
     #################################
     dataRow = df_ini.iloc[4, 1:]
-
     CPU_energy = dataRow.iloc[0]
     CPU_time = dataRow.iloc[1]
-    Opt0_energy = dataRow.iloc[2]
-    Opt0_time = dataRow.iloc[3]
-    Opt1_energy = dataRow.iloc[4]
-    Opt1_time = dataRow.iloc[5]
-    Opt2_energy = dataRow.iloc[6]
-    Opt2_time = dataRow.iloc[7]
-    Opt3_energy = dataRow.iloc[8]
-    Opt3_time = dataRow.iloc[9]
-    Opt4_energy = dataRow.iloc[10]
-    Opt4_time = dataRow.iloc[11]
+
+    CPUOpt_energy = dataRow.iloc[2]
+    CPUOpt_time = dataRow.iloc[3]
+    CPUOpt_accel = ((CPU_time-CPUOpt_time)/CPUOpt_time)*100
+    Opt0_energy = dataRow.iloc[4]
+    Opt0_time = dataRow.iloc[5]
+    Opt0_accel = ((CPU_time-Opt0_time)/Opt0_time)*100
+    Opt1_energy = dataRow.iloc[6]
+    Opt1_time = dataRow.iloc[7]
+    Opt1_accel = ((CPU_time-Opt1_time)/Opt1_time)*100
+    Opt2_energy = dataRow.iloc[8]
+    Opt2_time = dataRow.iloc[9]
+    Opt2_accel = ((CPU_time-Opt2_time)/Opt2_time)*100
+    Opt3_energy = dataRow.iloc[10]
+    Opt3_time = dataRow.iloc[11]
+    Opt3_accel = ((CPU_time-Opt3_time)/Opt3_time)*100
+    Opt4_energy = dataRow.iloc[12]
+    Opt4_time = dataRow.iloc[13]
+    Opt4_accel = ((CPU_time-Opt4_time)/Opt4_time)*100
 
 
-    df.loc[df.shape[0]]=['\\textbf{{\\emph{{\\underline{{Extralarge}}}}}}', '', '', '']
-    df.loc[df.shape[0]]=['OPT0', ((CPU_time-Opt0_time)/Opt0_time)*100, Opt0_energy, (((CPU_time-Opt0_time)/Opt0_time)*100)/Opt0_energy]
-    df.loc[df.shape[0]]=['OPT1', ((CPU_time-Opt1_time)/Opt1_time)*100, Opt1_energy, (((CPU_time-Opt1_time)/Opt1_time)*100)/Opt1_energy]
-    df.loc[df.shape[0]]=['OPT2', ((CPU_time-Opt2_time)/Opt2_time)*100, Opt2_energy, (((CPU_time-Opt2_time)/Opt2_time)*100)/Opt2_energy]
-    df.loc[df.shape[0]]=['OPT3', ((CPU_time-Opt3_time)/Opt3_time)*100, Opt3_energy, (((CPU_time-Opt3_time)/Opt3_time)*100)/Opt3_energy]
-    df.loc[df.shape[0]]=['OPT4', ((CPU_time-Opt4_time)/Opt4_time)*100, Opt4_energy, (((CPU_time-Opt4_time)/Opt4_time)*100)/Opt4_energy]
+    df.loc[df.shape[0]]=['\\textbf{{\\emph{{\\underline{{Exralarge}}}}}}', '', '', '']
+    df.loc[df.shape[0]]=['CPU Opt', CPUOpt_accel, CPUOpt_energy, CPUOpt_accel/CPUOpt_energy]
+    df.loc[df.shape[0]]=['OPT0', Opt0_accel, Opt0_energy, Opt0_accel/Opt0_energy]
+    df.loc[df.shape[0]]=['OPT1', Opt1_accel, Opt1_energy, Opt1_accel/Opt1_energy]
+    df.loc[df.shape[0]]=['OPT2', Opt2_accel, Opt2_energy, Opt2_accel/Opt2_energy]
+    df.loc[df.shape[0]]=['OPT3', Opt3_accel, Opt3_energy, Opt3_accel/Opt3_energy]
+    df.loc[df.shape[0]]=['OPT4', Opt4_accel, Opt4_energy, Opt4_accel/Opt4_energy]
+
+
 
     df=format_dataframe(df)
     df = df.reset_index(drop=True)
@@ -222,24 +272,9 @@ def generateSpeedupTable(csv_file):
             
             rowTemp=row.iloc[1:]
             if rowTemp.iloc[0] != "" and rowTemp.iloc[0]!="\t":
-                latex_table += rowTemp.iloc[0]+"\%  &" + rowTemp.iloc[1] + " kWh  &"+ rowTemp.iloc[2]+" \\\\\n"
+                latex_table += rowTemp.iloc[0]+"\%  &" + rowTemp.iloc[1] + " kWh  &"+ rowTemp.iloc[2]+" s/j \\\\\n"
             else:
                 latex_table += rowTemp.iloc[0]+"&" + rowTemp.iloc[1] + "&"+ rowTemp.iloc[2]+" \\\\\n"
-
-
-
-            #for i, cell in enumerate(rowTemp):
-            #    if i == 0:
-            #        latex_table += str(cell)+"\%"
-            #    elif i==1:
-            #        latex_table += str(cell)+"ms"
-            #    else:
-            #        latex_table += str(cell)
-            #
-            #    if i < len(rowTemp) - 1:
-            #        latex_table += " & "
-            #latex_table += " \\\\\n"
-
         numRow+=1
     
     nameFile = ultimo_elemento = csv_file.split("/")[-1]
@@ -248,7 +283,7 @@ def generateSpeedupTable(csv_file):
 
     latex_table += "    \\end{tabular}\n"
     latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+"}}\n"
-    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
+    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}_speedup-energy}}\n"
     latex_table += "\\end{table}"
 
     # Crear el nombre del archivo de salida .tex
@@ -282,24 +317,28 @@ def generateDataTable(csv_file):
     newRow = df_ini.iloc[1].copy()
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt0"
+    newRow_name = "CPU Opt"
     newRow = df_ini.iloc[3].copy()
+    df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name = "Opt0"
+    newRow = df_ini.iloc[5].copy()
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
     
     newRow_name = "Opt1"
-    newRow = df_ini.iloc[5].copy()
-    df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
-
-    newRow_name = "Opt2"
     newRow = df_ini.iloc[7].copy()
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt3"
+    newRow_name = "Opt2"
     newRow = df_ini.iloc[9].copy()
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt4"
+    newRow_name = "Opt3"
     newRow = df_ini.iloc[11].copy()
+    df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name = "Opt4"
+    newRow = df_ini.iloc[13].copy()
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
 
@@ -316,29 +355,34 @@ def generateDataTable(csv_file):
     newRow = (df_ini.iloc[1]/1000)*((df_ini.iloc[2]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt0"
+    newRow_name = "CPU Opt"
     newRow = df_ini.iloc[3].copy()
     newRow = (df_ini.iloc[3]/1000)*((df_ini.iloc[4]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt1"
+    newRow_name = "Opt0"
     newRow = df_ini.iloc[5].copy()
     newRow = (df_ini.iloc[5]/1000)*((df_ini.iloc[6]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt2"
+    newRow_name = "Opt1"
     newRow = df_ini.iloc[7].copy()
     newRow = (df_ini.iloc[7]/1000)*((df_ini.iloc[8]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt3"
+    newRow_name = "Opt2"
     newRow = df_ini.iloc[9].copy()
     newRow = (df_ini.iloc[9]/1000)*((df_ini.iloc[10]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "Opt4"
+    newRow_name = "Opt3"
     newRow = df_ini.iloc[11].copy()
     newRow = (df_ini.iloc[11]/1000)*((df_ini.iloc[12]/3600000))
+    df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name = "Opt4"
+    newRow = df_ini.iloc[13].copy()
+    newRow = (df_ini.iloc[13]/1000)*((df_ini.iloc[14]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
     df = format_dataframe(df)
@@ -367,7 +411,7 @@ def generateDataTable(csv_file):
 
     latex_table += "    \\end{tabular}\n"
     latex_table += f"    \\caption[Resultados de consumo "+nameFile_parts[1]+" "+nameFile_parts[2]+"]{{Resultados de consumo "+nameFile_parts[1]+" "+nameFile_parts[2]+"}}\n"
-    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
+    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}_data}}\n"
     latex_table += "\\end{table}"
 
     # Crear el nombre del archivo de salida .tex

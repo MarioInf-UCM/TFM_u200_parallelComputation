@@ -61,7 +61,7 @@ PackKerList := kerPack_vectorAdd_Opt2_mini
 PackKerList += kerPack_vectorAdd_Opt2_small
 PackKerList += kerPack_vectorAdd_Opt2_medium
 PackKerList += kerPack_vectorAdd_Opt2_large
-#PackKerList += kerPack_vectorAdd_Opt2_extralarge
+PackKerList += kerPack_vectorAdd_Opt2_extralarge
 
 
 ker_vectorAdd_Opt2_mini_XOS := ker_vectorAdd_Opt2_mini.xo

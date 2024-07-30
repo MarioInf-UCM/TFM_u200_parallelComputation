@@ -5,12 +5,13 @@ import sys
 
 # Diccionario para traducir los valores de la primera columna
 translation_dict = {
-    "CPU execution time"  : "CPU->",
-    "Opt0 execution time" : "Opt0->",
-    "Opt1 execution time" : "Opt1->",
-    "Opt2 execution time" : "Opt2->",
-    "Opt3 execution time" : "Opt3->",
-    "Opt4 execution time" : "Opt4->"
+    "CPU execution time"  : "CPU",
+    "CPU optimized execution time"  : "CPU Opt",
+    "Opt0 execution time" : "Opt0",
+    "Opt1 execution time" : "Opt1",
+    "Opt2 execution time" : "Opt2",
+    "Opt3 execution time" : "Opt3",
+    "Opt4 execution time" : "Opt4"
 }
 
 
@@ -49,10 +50,6 @@ def format_dataframe(df):
 def generateSpeedupTable(csv_file):
 
     df_ini = pd.read_csv(csv_file)
-    #df_ini.index = df_ini.index.map(lambda x: translation_dict.get(x, x))   # Traducir los índices (valores de la primera columna
-    #print("DataFrame original:")
-    #print(df_ini)
-
     df=pd.DataFrame()
     dfTemp=pd.DataFrame()
 
@@ -67,33 +64,39 @@ def generateSpeedupTable(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt0"
+    newRow_name="->CPU Opt"
     newRow = df_ini.iloc[0, 1:]
     accelerator = df_ini.iloc[0, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt1"
+    newRow_name="->Opt0"
     newRow = df_ini.iloc[0, 1:]
     accelerator = df_ini.iloc[0, 3]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt2"
+    newRow_name="->Opt1"
     newRow = df_ini.iloc[0, 1:]
     accelerator = df_ini.iloc[0, 4]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt3"
+    newRow_name="->Opt2"
     newRow = df_ini.iloc[0, 1:]
     accelerator = df_ini.iloc[0, 5]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt4"
+    newRow_name="->Opt3"
     newRow = df_ini.iloc[0, 1:]
     accelerator = df_ini.iloc[0, 6]
+    newRow = ((newRow-accelerator)/accelerator)*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="->Opt4"
+    newRow = df_ini.iloc[0, 1:]
+    accelerator = df_ini.iloc[0, 7]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
@@ -121,33 +124,39 @@ def generateSpeedupTable(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt0"
-    newRow = df_ini.iloc[1, 1:]
-    accelerator = df_ini.iloc[1, 2]
+    newRow_name="->CPU Opt"
+    newRow = df_ini.iloc[0, 1:]
+    accelerator = df_ini.iloc[0, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt1"
+    newRow_name="->Opt0"
     newRow = df_ini.iloc[1, 1:]
     accelerator = df_ini.iloc[1, 3]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt2"
+    newRow_name="->Opt1"
     newRow = df_ini.iloc[1, 1:]
     accelerator = df_ini.iloc[1, 4]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt3"
+    newRow_name="->Opt2"
     newRow = df_ini.iloc[1, 1:]
     accelerator = df_ini.iloc[1, 5]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt4"
+    newRow_name="->Opt3"
     newRow = df_ini.iloc[1, 1:]
     accelerator = df_ini.iloc[1, 6]
+    newRow = ((newRow-accelerator)/accelerator)*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="->Opt4"
+    newRow = df_ini.iloc[1, 1:]
+    accelerator = df_ini.iloc[1, 7]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
@@ -175,33 +184,39 @@ def generateSpeedupTable(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt0"
-    newRow = df_ini.iloc[2, 1:]
-    accelerator = df_ini.iloc[2, 2]
+    newRow_name="->CPU Opt"
+    newRow = df_ini.iloc[0, 1:]
+    accelerator = df_ini.iloc[0, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt1"
+    newRow_name="->Opt0"
     newRow = df_ini.iloc[2, 1:]
     accelerator = df_ini.iloc[2, 3]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt2"
+    newRow_name="->Opt1"
     newRow = df_ini.iloc[2, 1:]
     accelerator = df_ini.iloc[2, 4]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt3"
+    newRow_name="->Opt2"
     newRow = df_ini.iloc[2, 1:]
     accelerator = df_ini.iloc[2, 5]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt4"
+    newRow_name="->Opt3"
     newRow = df_ini.iloc[2, 1:]
     accelerator = df_ini.iloc[2, 6]
+    newRow = ((newRow-accelerator)/accelerator)*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="->Opt4"
+    newRow = df_ini.iloc[2, 1:]
+    accelerator = df_ini.iloc[2, 7]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
@@ -235,27 +250,33 @@ def generateSpeedupTable(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt1"
-    newRow = df_ini.iloc[3, 1:]
-    accelerator = df_ini.iloc[3, 3]
+    newRow_name="->CPU Opt"
+    newRow = df_ini.iloc[0, 1:]
+    accelerator = df_ini.iloc[0, 3]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt2"
+    newRow_name="->Opt1"
     newRow = df_ini.iloc[3, 1:]
     accelerator = df_ini.iloc[3, 4]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt3"
+    newRow_name="->Opt2"
     newRow = df_ini.iloc[3, 1:]
     accelerator = df_ini.iloc[3, 5]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt4"
+    newRow_name="->Opt3"
     newRow = df_ini.iloc[3, 1:]
     accelerator = df_ini.iloc[3, 6]
+    newRow = ((newRow-accelerator)/accelerator)*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="->Opt4"
+    newRow = df_ini.iloc[3, 1:]
+    accelerator = df_ini.iloc[3, 7]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
@@ -273,7 +294,6 @@ def generateSpeedupTable(csv_file):
 
 
 
-
     #################################
     # Tratamiento de datos Extralarge
     #################################
@@ -284,33 +304,39 @@ def generateSpeedupTable(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt0"
-    newRow = df_ini.iloc[4, 1:]
-    accelerator = df_ini.iloc[4, 2]
+    newRow_name="->CPU Opt"
+    newRow = df_ini.iloc[0, 1:]
+    accelerator = df_ini.iloc[0, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt1"
+    newRow_name="->Opt0"
     newRow = df_ini.iloc[4, 1:]
     accelerator = df_ini.iloc[4, 3]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt2"
+    newRow_name="->Opt1"
     newRow = df_ini.iloc[4, 1:]
     accelerator = df_ini.iloc[4, 4]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt3"
+    newRow_name="->Opt2"
     newRow = df_ini.iloc[4, 1:]
     accelerator = df_ini.iloc[4, 5]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt4"
+    newRow_name="->Opt3"
     newRow = df_ini.iloc[4, 1:]
     accelerator = df_ini.iloc[4, 6]
+    newRow = ((newRow-accelerator)/accelerator)*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="->Opt4"
+    newRow = df_ini.iloc[4, 1:]
+    accelerator = df_ini.iloc[4, 7]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
     
@@ -327,20 +353,25 @@ def generateSpeedupTable(csv_file):
     df = pd.concat([df, dfTemp])
 
 
+
+    #################################
+    # Creando tabla en LaTex
+    #################################
     HeaderRow = df_ini.iloc[0, 1:].copy()
     HeaderRow.iloc[0]="CPU"
-    HeaderRow.iloc[1]="Opt0"
-    HeaderRow.iloc[2]="Opt1"
-    HeaderRow.iloc[3]="Opt2"
-    HeaderRow.iloc[4]="Opt3"
-    HeaderRow.iloc[5]="Opt4"
+    HeaderRow.iloc[1]="CPU Opt"
+    HeaderRow.iloc[2]="Opt0"
+    HeaderRow.iloc[3]="Opt1"
+    HeaderRow.iloc[4]="Opt2"
+    HeaderRow.iloc[5]="Opt3"
+    HeaderRow.iloc[6]="Opt4"
     df = pd.concat([pd.DataFrame([HeaderRow], index=[""]), df])
 
 
     # Crear el contenido LaTeX para la tabla con colores
     latex_table = "\\begin{table}[H]\n"
     latex_table += "    \\centering\n"
-    latex_table += "    \\begin{tabular}{lllllll}\n"
+    latex_table += "    \\begin{tabular}{llllllll}\n"
     
     numRow=0
     for idx, row in df.iterrows():
@@ -363,7 +394,7 @@ def generateSpeedupTable(csv_file):
 
     latex_table += "    \\end{tabular}\n"
     latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+"}}\n"
-    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
+    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}_speedup}}\n"
     latex_table += "\\end{table}"
 
     # Crear el nombre del archivo de salida .tex
@@ -418,7 +449,7 @@ def generateDataTable(csv_file):
 
     latex_table += "    \\end{tabular}\n"
     latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+"}}\n"
-    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
+    latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}_data}}\n"
     latex_table += "\\end{table}"
 
     # Crear el nombre del archivo de salida .tex

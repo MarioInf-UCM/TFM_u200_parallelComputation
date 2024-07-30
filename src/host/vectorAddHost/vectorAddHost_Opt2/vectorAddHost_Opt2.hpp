@@ -2,6 +2,7 @@
 #define _VECTORADDHOST_OPT2_HPP_
 
 #include <iostream>
+#include <atomic>
 
 #include "../../../service/fileWriter_service/fileWriter_service.hpp"
 #include "../../../service/json_service/jsonConfiguration/execution/execution.hpp"

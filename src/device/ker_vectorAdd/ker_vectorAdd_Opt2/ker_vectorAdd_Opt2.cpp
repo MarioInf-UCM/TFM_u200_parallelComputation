@@ -2,12 +2,12 @@
 #include <cmath>
 #include <stdlib.h>
 
-// TYPEDATA COMPILATOR VARIABLE
+// TYPEDATA COMPILER VARIABLE
 //**********************************
 typedef float typeData;
 
 
-// DATASIZE COMPILATOR VARIABLE
+// DATASIZE COMPILER VARIABLE
 //**********************************
 #ifdef MINI_DATASET
     #define SIZE (1024 * 1024 * 2)
@@ -92,5 +92,4 @@ extern "C"{
 
         return;
     }
-    
 }

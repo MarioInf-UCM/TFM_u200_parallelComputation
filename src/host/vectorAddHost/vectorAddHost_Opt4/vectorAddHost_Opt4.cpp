@@ -262,11 +262,11 @@ bool VectorAddHost_Opt4::exec(Execution exec, vector<double>& resultsPerformance
 
     resultsPower.clear();
     resultsPower.push_back(resultMeasure_Device);
-    resultsPower.push_back(stod(event.getTimeEvents(5)));
+    resultsPower.push_back(stod(event.getTimeEvents(5)));       //Device execution time
     resultsPower.push_back(resultMeasure_CPU);
-    resultsPower.push_back(stod(event.getTimeEvents(1)));
+    resultsPower.push_back(stod(event.getTimeEvents(1)));       //CPU execution time
     resultsPower.push_back(resultMeasure_CPUopt);
-    resultsPower.push_back(stod(event.getTimeEvents(2)));
+    resultsPower.push_back(stod(event.getTimeEvents(2)));       //CPU execution time optimizated
     for(int i=0 ; i< resultMeasure_CPUopt_byPack.size() ; i++){
         resultsPower.push_back(resultMeasure_CPUopt_byPack[i]);
     }
@@ -332,30 +332,6 @@ void VectorAddHost_Opt4::ensamble_buffersToData(VectorAddKernel& data, typeData_
         data.get_resultDevice()[i] = temp_resultDevice[i];
     }
     return;
-}
-
-
-
-float VectorAddHost_Opt4::searchPropertyValue(const string& texto, const string& subcadena) {
-    istringstream stream(texto);
-    string linea;
-    string resultado;
-
-    while (getline(stream, linea)) {
-        if (linea.find(subcadena) != string::npos) {
-            size_t start = linea.find(":") + 1;
-            size_t end = linea.find(",", start);
-            if (end == string::npos) {
-                end = linea.size();
-            }
-
-            resultado = linea.substr(start, end - start);
-            resultado.erase(remove(resultado.begin(), resultado.end(), '\"'), resultado.end());
-            resultado.erase(remove(resultado.begin(), resultado.end(), ' '), resultado.end());
-            return stof(resultado);
-        }
-    }
-    return 0.0f;
 }
 
 
@@ -514,4 +490,28 @@ void VectorAddHost_Opt4::threadFunction_DevicePowerMeasure() {
     sharedVariable = sharedVariable/numIter;
     cout << "...Finalizing Measure device power ("<< sharedVariable <<" Watts  |  " << numIter << " lectures )." << endl;
     return;
+}
+
+
+
+float VectorAddHost_Opt4::searchPropertyValue(const string& texto, const string& subcadena) {
+    istringstream stream(texto);
+    string linea;
+    string resultado;
+
+    while (getline(stream, linea)) {
+        if (linea.find(subcadena) != string::npos) {
+            size_t start = linea.find(":") + 1;
+            size_t end = linea.find(",", start);
+            if (end == string::npos) {
+                end = linea.size();
+            }
+
+            resultado = linea.substr(start, end - start);
+            resultado.erase(remove(resultado.begin(), resultado.end(), '\"'), resultado.end());
+            resultado.erase(remove(resultado.begin(), resultado.end(), ' '), resultado.end());
+            return stof(resultado);
+        }
+    }
+    return 0.0f;
 }

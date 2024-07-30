@@ -2,12 +2,12 @@
 #include <cmath>
 #include <stdlib.h>
 
-// TYPEDATA COMPILATOR VARIABLE
+// TYPEDATA COMPILER VARIABLE
 //**********************************
 typedef float typeData;
 
 
-// DATASIZE COMPILATOR VARIABLE
+// DATASIZE COMPILER VARIABLE
 //**********************************
 #ifdef MINI_DATASET
     #define SIZE (1024 * 1024 * 2)
@@ -26,9 +26,6 @@ typedef float typeData;
 
 extern "C"{
 
-    //*************************************
-    // MAIN KERNEL FUNCTION - START
-    //*************************************
     #ifdef MINI_DATASET
         void ker_vectorAdd_Opt0_mini(typeData *inD_vA, typeData *inD_vB, typeData *outD_result)
     #elif defined(SMALL_DATASET)
@@ -58,9 +55,6 @@ extern "C"{
             outD_result[i] = inD_vA[i] + inD_vB[i];
         }    
 
-    }
-    //*************************************
-    // MAIN KERNEL FUNCTION - END
-    //*************************************
-    
+        return;
+    }    
 }

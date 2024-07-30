@@ -11,6 +11,8 @@ def generate_plot(csv_url):
         x = data['X']
         y_cpu_energy = data['CPU energy consumption']
         y_cpu_time = data['CPU execution time']
+        y_cpuOpt_energy = data['CPU optimized energy consumption']
+        y_cpuOpt_time = data['CPU optimized execution time']
         y_opt0_energy = data['Opt0 energy consumption']
         y_opt0_time = data['Opt0 execution time']
         y_opt1_energy = data['Opt1 energy consumption']
@@ -32,6 +34,7 @@ def generate_plot(csv_url):
 
     plt.figure(figsize=(10, 6))
     plt.plot(x, y_cpu_energy, marker='o', label='Consumo energético de la CPU', color='red')
+    plt.plot(x, y_cpuOpt_energy, marker='o', label='Consumo energético de la CPU optimizadaa', color='darkred')
     plt.plot(x, y_opt0_energy, marker='^', label='Consumo energético del dispositivo Opt0', color='orange')
     plt.plot(x, y_opt1_energy, marker='s', label='Consumo energético del dispositivo Opt1', color='gold')
     plt.plot(x, y_opt2_energy, marker='p', label='Consumo energético del dispositivo Opt2', color='yellowgreen')

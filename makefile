@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_vectorAdd/configBenchmark_vectorAdd.json
+CONFIGFILE_ROUTE=../../../config/configTest_studyCase1/configTest_studyCase1_c_sw_emu.json
 
 #Kernel url specification - START
 #***********************************
@@ -59,6 +59,13 @@ KERNEL_VECTORADD_OPT3_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt3
 KERNEL_VECTORADD_OPT3_NAME=makeKer_vectorAdd_Opt3.mk
 KERNEL_VECTORADD_OPT4_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt4
 KERNEL_VECTORADD_OPT4_NAME=makeKer_vectorAdd_Opt4.mk
+
+KERNEL_STUDYCASE_A_SUBROUTE=ker_studyCase1/ker_studyCase1_a
+KERNEL_STUDYCASE_A_NAME=makeKer_studyCase1_a.mk
+KERNEL_STUDYCASE_B_SUBROUTE=ker_studyCase1/ker_studyCase1_b
+KERNEL_STUDYCASE_B_NAME=makeKer_studyCase1_b.mk
+KERNEL_STUDYCASE_C_SUBROUTE=ker_studyCase1/ker_studyCase1_c
+KERNEL_STUDYCASE_C_NAME=makeKer_studyCase1_c.mk
 #***********************************
 #Kernel url specification - END
 
@@ -501,6 +508,73 @@ kerVectorAdd_Opt4_build_hw:
 	@cd $(CURRENT_DIR);
 
 kerVectorAdd_All_build_hw: kerVectorAdd_Opt0_build_hw kerVectorAdd_Opt1_build_hw kerVectorAdd_Opt2_build_hw kerVectorAdd_Opt3_build_hw kerVectorAdd_Opt4_build_hw
+#***********************************************
+# COMMANDS FOR JACOBI_2D KERNELS COMPILE - START
+#***********************************************
+
+
+
+#***********************************************
+# COMMANDS FOR STUDYCASE1 KERNELS COMPILE - START
+#***********************************************
+# KERNEL TARGET sw_emu
+#*********************************
+kerStudyCase1_a_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_A_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase1_b_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_B_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase1_c_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_C_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_sw_emu: kerStudyCase1_a_build_sw_emu kerStudyCase1_b_build_sw_emu kerStudyCase1_c_build_sw_emu
+
+
+# KERNEL TARGET hw_emu
+#*********************************
+kerStudyCase1_a_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_A_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase1_b_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_B_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase1_c_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_C_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw_emu: kerStudyCase1_a_build_hw_emu kerStudyCase1_b_build_hw_emu kerStudyCase1_c_build_hw_emu
+
+
+# KERNEL TARGET hw
+#*********************************
+kerStudyCase1_a_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_A_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase1_b_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_B_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase1_c_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE_C_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw: kerStudyCase1_a_build_hw kerStudyCase1_b_build_hw kerStudyCase1_c_build_hw
 #***********************************************
 # COMMANDS FOR JACOBI_2D KERNELS COMPILE - START
 #***********************************************

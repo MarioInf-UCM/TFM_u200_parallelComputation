@@ -10,11 +10,12 @@ def generate_plot(csv_url):
         data = pd.read_csv(csv_url)
         x = data['X']
         y1 = data['CPU execution time']
-        y2 = data['Opt0 execution time']
-        y3 = data['Opt1 execution time']
-        y4 = data['Opt2 execution time']
-        y5 = data['Opt3 execution time']
-        y6 = data['Opt4 execution time']
+        y2 = data['CPU optimized execution time']
+        y3 = data['Opt0 execution time']
+        y4 = data['Opt1 execution time']
+        y5 = data['Opt2 execution time']
+        y6 = data['Opt3 execution time']
+        y7 = data['Opt4 execution time']
     except FileNotFoundError:
         print(f"GenarateGraphics_global_performance.py - ERROR..: File '{csv_url}' not found.")
         return
@@ -25,11 +26,12 @@ def generate_plot(csv_url):
 
     plt.figure(figsize=(10, 6))
     plt.plot(x, y1, marker='o', label='CPU', color='red')
-    plt.plot(x, y2, marker='^', label='Dispositivo Opt0 (ejec+Tras)', color='green')
-    plt.plot(x, y3, marker='s', label='Dispositivo Opt1 (ejec+Tras)', color='lime')
-    plt.plot(x, y4, marker='p', label='Dispositivo Opt2 (ejec+Tras)', color='mediumaquamarine')
-    plt.plot(x, y5, marker='P', label='Dispositivo Opt3 (ejec+Tras)', color='cyan')
-    plt.plot(x, y6, marker='*', label='Dispositivo Opt4 (ejec+Tras)', color='blue')
+    plt.plot(x, y2, marker='o', label='CPU opt', color='darkred')
+    plt.plot(x, y3, marker='^', label='Dispositivo Opt0 (ejec+Tras)', color='green')
+    plt.plot(x, y4, marker='s', label='Dispositivo Opt1 (ejec+Tras)', color='lime')
+    plt.plot(x, y5, marker='p', label='Dispositivo Opt2 (ejec+Tras)', color='mediumaquamarine')
+    plt.plot(x, y6, marker='P', label='Dispositivo Opt3 (ejec+Tras)', color='cyan')
+    plt.plot(x, y7, marker='*', label='Dispositivo Opt4 (ejec+Tras)', color='blue')
 
     plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
     #plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')

@@ -21,7 +21,7 @@
                     "dataSize": "mini", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
-                    "measurePower_device": false,   
+                    "measurePower_device": true,   
                     "printResults": false,
                     "numExecutions_cool": 0,
                     "numExecutions_hot": 1
@@ -33,7 +33,7 @@
                     "dataSize": "small", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
-                    "measurePower_device": false,   
+                    "measurePower_device": true,   
                     "printResults": false,
                     "numExecutions_cool": 0,
                     "numExecutions_hot": 1
@@ -45,7 +45,7 @@
                     "dataSize": "medium", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
-                    "measurePower_device": false,   
+                    "measurePower_device": true,   
                     "printResults": false,
                     "numExecutions_cool": 0,
                     "numExecutions_hot": 1
@@ -57,7 +57,7 @@
                     "dataSize": "large", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
-                    "measurePower_device": false,   
+                    "measurePower_device": true,   
                     "printResults": false,
                     "numExecutions_cool": 0,
                     "numExecutions_hot": 1
@@ -69,7 +69,7 @@
                     "dataSize": "extralarge", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
-                    "measurePower_device": false,   
+                    "measurePower_device": true,   
                     "printResults": false,
                     "numExecutions_cool": 0,
                     "numExecutions_hot": 1

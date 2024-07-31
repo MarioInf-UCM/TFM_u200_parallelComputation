@@ -61,6 +61,16 @@ list(APPEND kerPackList "kerPack_studyCase1_a_mini" "kerPack_studyCase1_a_small"
 list(APPEND kerPackList "kerPack_studyCase1_b_mini" "kerPack_studyCase1_b_small" "kerPack_studyCase1_b_medium" "kerPack_studyCase1_b_large" "kerPack_studyCase1_b_extralarge" )
 list(APPEND kerPackList "kerPack_studyCase1_c_mini" "kerPack_studyCase1_c_small" "kerPack_studyCase1_c_medium" "kerPack_studyCase1_c_large" "kerPack_studyCase1_c_extralarge" )
 
+list(APPEND kerPackList "kerPack_studyCase2_a_mini" "kerPack_studyCase2_a_small" "kerPack_studyCase2_a_medium" "kerPack_studyCase2_a_large" "kerPack_studyCase2_a_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase2_b_mini" "kerPack_studyCase2_b_small" "kerPack_studyCase2_b_medium" "kerPack_studyCase2_b_large" "kerPack_studyCase2_b_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase2_c_mini" "kerPack_studyCase2_c_small" "kerPack_studyCase2_c_medium" "kerPack_studyCase2_c_large" "kerPack_studyCase2_c_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase2_d_mini" "kerPack_studyCase2_d_small" "kerPack_studyCase2_d_medium" "kerPack_studyCase2_d_large" "kerPack_studyCase2_d_extralarge" )
+
+list(APPEND kerPackList "kerPack_studyCase3_a_mini" "kerPack_studyCase3_a_small" "kerPack_studyCase3_a_medium" "kerPack_studyCase3_a_large" "kerPack_studyCase3_a_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase3_b_mini" "kerPack_studyCase3_b_small" "kerPack_studyCase3_b_medium" "kerPack_studyCase3_b_large" "kerPack_studyCase3_b_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase3_c_mini" "kerPack_studyCase3_c_small" "kerPack_studyCase3_c_medium" "kerPack_studyCase3_c_large" "kerPack_studyCase3_c_extralarge" )
+list(APPEND kerPackList "kerPack_studyCase3_d_mini" "kerPack_studyCase3_d_small" "kerPack_studyCase3_d_medium" "kerPack_studyCase3_d_large" "kerPack_studyCase3_d_extralarge" )
+
 
 list(APPEND kerPackList "kerPack_cholesky_Opt0_mini" "kerPack_cholesky_Opt0_small" "kerPack_cholesky_Opt0_medium" "kerPack_cholesky_Opt0_large" "kerPack_cholesky_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_cholesky_Opt1_mini" "kerPack_cholesky_Opt1_small" "kerPack_cholesky_Opt1_medium" "kerPack_cholesky_Opt1_large" "kerPack_cholesky_Opt1_extralarge" )
@@ -237,6 +247,19 @@ add_executable(benchmarkExec
   ../src/host/studyCase1Host/studyCase1Host_b/studyCase1Host_b.cpp
   ../src/host/studyCase1Host/studyCase1Host_c/studyCase1Host_c.cpp
   ../src/kernel/studyCase1Kernel/studyCase1Kernel.cpp
+  
+  ../src/host/studyCase2Host/studyCase2Host.cpp
+  ../src/host/studyCase2Host/studyCase2Host_a/studyCase2Host_a.cpp
+  ../src/host/studyCase2Host/studyCase2Host_b/studyCase2Host_b.cpp
+  ../src/host/studyCase2Host/studyCase2Host_c/studyCase2Host_c.cpp
+  ../src/host/studyCase2Host/studyCase2Host_d/studyCase2Host_d.cpp
+  
+  ../src/host/studyCase3Host/studyCase3Host.cpp
+  ../src/host/studyCase3Host/studyCase3Host_a/studyCase3Host_a.cpp
+  ../src/host/studyCase3Host/studyCase3Host_b/studyCase3Host_b.cpp
+  ../src/host/studyCase3Host/studyCase3Host_c/studyCase3Host_c.cpp
+  ../src/host/studyCase3Host/studyCase3Host_d/studyCase3Host_d.cpp
+  ../src/kernel/studyCase3Kernel/studyCase3Kernel.cpp
 
   ../src/service/fileWriter_service/fileWriter_service.cpp
   ../src/service/json_service/json_service.cpp

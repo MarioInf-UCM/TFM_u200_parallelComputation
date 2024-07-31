@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_studyCase1/configTest_studyCase1_c_sw_emu.json
+CONFIGFILE_ROUTE=../../../config/configTest_studyCase3/configTest_studyCase3_c_sw_emu.json
 
 #Kernel url specification - START
 #***********************************
@@ -60,12 +60,30 @@ KERNEL_VECTORADD_OPT3_NAME=makeKer_vectorAdd_Opt3.mk
 KERNEL_VECTORADD_OPT4_SUBROUTE=ker_vectorAdd/ker_vectorAdd_Opt4
 KERNEL_VECTORADD_OPT4_NAME=makeKer_vectorAdd_Opt4.mk
 
-KERNEL_STUDYCASE_A_SUBROUTE=ker_studyCase1/ker_studyCase1_a
-KERNEL_STUDYCASE_A_NAME=makeKer_studyCase1_a.mk
-KERNEL_STUDYCASE_B_SUBROUTE=ker_studyCase1/ker_studyCase1_b
-KERNEL_STUDYCASE_B_NAME=makeKer_studyCase1_b.mk
-KERNEL_STUDYCASE_C_SUBROUTE=ker_studyCase1/ker_studyCase1_c
-KERNEL_STUDYCASE_C_NAME=makeKer_studyCase1_c.mk
+KERNEL_STUDYCASE1_A_SUBROUTE=ker_studyCase1/ker_studyCase1_a
+KERNEL_STUDYCASE1_A_NAME=makeKer_studyCase1_a.mk
+KERNEL_STUDYCASE1_B_SUBROUTE=ker_studyCase1/ker_studyCase1_b
+KERNEL_STUDYCASE1_B_NAME=makeKer_studyCase1_b.mk
+KERNEL_STUDYCASE1_C_SUBROUTE=ker_studyCase1/ker_studyCase1_c
+KERNEL_STUDYCASE1_C_NAME=makeKer_studyCase1_c.mk
+
+KERNEL_STUDYCASE2_A_SUBROUTE=ker_studyCase2/ker_studyCase2_a
+KERNEL_STUDYCASE2_A_NAME=makeKer_studyCase2_a.mk
+KERNEL_STUDYCASE2_B_SUBROUTE=ker_studyCase2/ker_studyCase2_b
+KERNEL_STUDYCASE2_B_NAME=makeKer_studyCase2_b.mk
+KERNEL_STUDYCASE2_C_SUBROUTE=ker_studyCase2/ker_studyCase2_c
+KERNEL_STUDYCASE2_C_NAME=makeKer_studyCase2_c.mk
+KERNEL_STUDYCASE2_D_SUBROUTE=ker_studyCase2/ker_studyCase2_d
+KERNEL_STUDYCASE2_D_NAME=makeKer_studyCase2_d.mk
+
+KERNEL_STUDYCASE3_A_SUBROUTE=ker_studyCase3/ker_studyCase3_a
+KERNEL_STUDYCASE3_A_NAME=makeKer_studyCase3_a.mk
+KERNEL_STUDYCASE3_B_SUBROUTE=ker_studyCase3/ker_studyCase3_b
+KERNEL_STUDYCASE3_B_NAME=makeKer_studyCase3_b.mk
+KERNEL_STUDYCASE3_C_SUBROUTE=ker_studyCase3/ker_studyCase3_c
+KERNEL_STUDYCASE3_C_NAME=makeKer_studyCase3_c.mk
+KERNEL_STUDYCASE3_D_SUBROUTE=ker_studyCase3/ker_studyCase3_d
+KERNEL_STUDYCASE3_D_NAME=makeKer_studyCase3_d.mk
 #***********************************
 #Kernel url specification - END
 
@@ -520,18 +538,18 @@ kerVectorAdd_All_build_hw: kerVectorAdd_Opt0_build_hw kerVectorAdd_Opt1_build_hw
 # KERNEL TARGET sw_emu
 #*********************************
 kerStudyCase1_a_build_sw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_A_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_A_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_A_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 	
 kerStudyCase1_b_build_sw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_B_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_B_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_B_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
 kerStudyCase1_c_build_sw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_C_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_C_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_C_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
 kerVectorAdd_All_build_sw_emu: kerStudyCase1_a_build_sw_emu kerStudyCase1_b_build_sw_emu kerStudyCase1_c_build_sw_emu
@@ -540,18 +558,18 @@ kerVectorAdd_All_build_sw_emu: kerStudyCase1_a_build_sw_emu kerStudyCase1_b_buil
 # KERNEL TARGET hw_emu
 #*********************************
 kerStudyCase1_a_build_hw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_A_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_A_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_A_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 	
 kerStudyCase1_b_build_hw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_B_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_B_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_B_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
 kerStudyCase1_c_build_hw_emu:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_C_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_C_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_C_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
 kerVectorAdd_All_build_hw_emu: kerStudyCase1_a_build_hw_emu kerStudyCase1_b_build_hw_emu kerStudyCase1_c_build_hw_emu
@@ -560,23 +578,187 @@ kerVectorAdd_All_build_hw_emu: kerStudyCase1_a_build_hw_emu kerStudyCase1_b_buil
 # KERNEL TARGET hw
 #*********************************
 kerStudyCase1_a_build_hw:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_A_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_A_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_A_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 	
 kerStudyCase1_b_build_hw:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_B_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_B_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_B_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
 kerStudyCase1_c_build_hw:
-	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE_C_SUBROUTE}; \
-	make -f $(KERNEL_STUDYCASE_C_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE1_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE1_C_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
 kerVectorAdd_All_build_hw: kerStudyCase1_a_build_hw kerStudyCase1_b_build_hw kerStudyCase1_c_build_hw
 #***********************************************
-# COMMANDS FOR JACOBI_2D KERNELS COMPILE - START
+# COMMANDS FOR STUDYCASE1 KERNELS COMPILE - START
+#***********************************************
+
+
+
+#***********************************************
+# COMMANDS FOR STUDYCASE2 KERNELS COMPILE - START
+#***********************************************
+# KERNEL TARGET sw_emu
+#*********************************
+kerStudyCase2_a_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_A_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase2_b_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_B_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase2_c_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_C_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase2_d_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_D_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_D_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_sw_emu: kerStudyCase2_a_build_sw_emu kerStudyCase2_b_build_sw_emu kerStudyCase2_c_build_sw_emu kerStudyCase2_d_build_sw_emu
+
+
+# KERNEL TARGET hw_emu
+#*********************************
+kerStudyCase2_a_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_A_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase2_b_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_B_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase2_c_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_C_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase2_d_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_D_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_D_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw_emu: kerStudyCase2_a_build_hw_emu kerStudyCase2_b_build_hw_emu kerStudyCase2_c_build_hw_emu kerStudyCase2_d_build_hw_emu
+
+
+# KERNEL TARGET hw
+#*********************************
+kerStudyCase2_a_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_A_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase2_b_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_B_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase2_c_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_C_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase2_d_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE2_D_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE2_D_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw: kerStudyCase2_a_build_hw kerStudyCase2_b_build_hw kerStudyCase2_c_build_hw kerStudyCase2_d_build_hw
+#***********************************************
+# COMMANDS FOR STUDYCASE2 KERNELS COMPILE - START
+#***********************************************
+
+
+#***********************************************
+# COMMANDS FOR STUDYCASE3 KERNELS COMPILE - START
+#***********************************************
+# KERNEL TARGET sw_emu
+#*********************************
+kerStudyCase3_a_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_A_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase3_b_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_B_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase3_c_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_C_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase3_d_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_D_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_D_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_sw_emu: kerStudyCase3_a_build_sw_emu kerStudyCase3_b_build_sw_emu kerStudyCase3_c_build_sw_emu kerStudyCase3_d_build_sw_emu
+
+
+# KERNEL TARGET hw_emu
+#*********************************
+kerStudyCase3_a_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_A_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase3_b_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_B_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase3_c_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_C_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase3_d_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_D_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_D_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw_emu: kerStudyCase3_a_build_hw_emu kerStudyCase3_b_build_hw_emu kerStudyCase3_c_build_hw_emu kerStudyCase3_d_build_hw_emu
+
+
+
+# KERNEL TARGET hw
+#*********************************
+kerStudyCase3_a_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_A_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_A_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+	
+kerStudyCase3_b_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_B_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_B_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase3_c_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_C_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_C_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerStudyCase3_d_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_STUDYCASE3_D_SUBROUTE}; \
+	make -f $(KERNEL_STUDYCASE3_D_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerVectorAdd_All_build_hw: kerStudyCase3_a_build_hw kerStudyCase3_b_build_hw kerStudyCase3_c_build_hw kerStudyCase3_d_build_hw
+#***********************************************
+# COMMANDS FOR STUDYCASE3 KERNELS COMPILE - START
 #***********************************************
 
 

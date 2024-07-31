@@ -8,6 +8,8 @@
 #include "host/jacobi2dHost/jacobi2dHost.hpp"
 #include "host/vectorAddHost/vectorAddHost.hpp"
 #include "host/studyCase1Host/studyCase1Host.hpp"
+#include "host/studyCase2Host/studyCase2Host.hpp"
+#include "host/studyCase3Host/studyCase3Host.hpp"
 #include "utilities/dateAndTime/dateAndTime.hpp"
 #include "service/json_service/json_service.hpp"
 #include "service/json_service/jsonConfiguration/jsonConfiguration.hpp"
@@ -368,6 +370,12 @@ bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<dou
     
     }else if(exec.get_host().find("studyCase1") != string::npos){
         result = StudyCase1Host::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
+    
+    }else if(exec.get_host().find("studyCase2") != string::npos){
+        result = StudyCase2Host::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
+    
+    }else if(exec.get_host().find("studyCase3") != string::npos){
+        result = StudyCase3Host::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else{
         fileWriter_logFile.writeln("ERROR..: Host name unknow.");

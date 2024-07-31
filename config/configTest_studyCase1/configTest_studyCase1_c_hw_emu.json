@@ -21,7 +21,7 @@
                     "dataSize": "mini", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
-                    "measurePower_device": false,   
+                    "measurePower_device": true,   
                     "printResults": false,
                     "numExecutions_cool": 0,
                     "numExecutions_hot": 1

@@ -53,8 +53,8 @@ extern "C"{
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_vA offset = slave bundle = gmem
-        #pragma HLS INTERFACE m_axi port = inD_vB offset = slave bundle = gmem
-        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem 
+        #pragma HLS INTERFACE m_axi port = inD_vB offset = slave bundle = gmem1
+        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem2
 
         #pragma HLS INTERFACE s_axilite port = inD_vA bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_vB bundle = control

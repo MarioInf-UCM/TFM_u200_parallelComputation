@@ -110,7 +110,7 @@ def csv_to_latex(csv_file):
 
 
     latex_table += "    \\end{tabular}\n"
-    latex_table += f"    \\caption[Resultados de consumo "+nameFile_parts[1]+" "+nameFile_parts[2]+"]{{Resultados de consumo "+nameFile_parts[1]+" "+nameFile_parts[2]+"}}\n"
+    latex_table += f"    \\caption[Resultados de consumo "+nameFile_parts[1]+" "+nameFile_parts[2]+"]{{Resultados de consumo "+nameFile_parts[1]+" "+nameFile_parts[2]+". Fuente: Creación propia}}\n"
     latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}}}\n"
     latex_table += "\\end{table}"
 

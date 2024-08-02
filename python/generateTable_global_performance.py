@@ -393,7 +393,7 @@ def generateSpeedupTable(csv_file):
 
 
     latex_table += "    \\end{tabular}\n"
-    latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+"}}\n"
+    latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+". Fuente: Creación propia}}\n"
     latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}_speedup}}\n"
     latex_table += "\\end{table}"
 
@@ -448,7 +448,7 @@ def generateDataTable(csv_file):
 
 
     latex_table += "    \\end{tabular}\n"
-    latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+"}}\n"
+    latex_table += f"    \\caption[Resultados generales de rendimiento "+nameFile_parts[1]+"]{{Resultados generales de rendimiento "+nameFile_parts[1]+". Fuente: Creación propia}}\n"
     latex_table += f"    \\label{{table_{os.path.splitext(os.path.basename(csv_file))[0]}_data}}\n"
     latex_table += "\\end{table}"
 

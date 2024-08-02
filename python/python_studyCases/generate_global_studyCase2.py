@@ -17,18 +17,30 @@ def format_dataframe(df):
     return df.apply(lambda col: col.apply(format_value, args=(col.name, df)))
 
 
+def format_value_percent(x, col, df):
+    if isinstance(x, (int, float)):
+        x = f"{x:.2f}\%"
+    if col in df.columns[-2:]:  # Las dos últimas columnas
+        x = f"\t{x}"
+    return x
+
+
+def format_dataframe_percent(df):
+    return df.apply(lambda col: col.apply(format_value_percent, args=(col.name, df)))
+
+
 
 
 def generate_plot(csv_url):
     try:
         data = pd.read_csv(csv_url)
         x = data['X']
-        y1 = data['CaseA CPU execution time']
+        y1 = data['CPU execution time']
         y2 = data['CaseA execution time']
-        y3 = data['CaseB CPU execution time']
-        y4 = data['CaseB execution time']
-        y5 = data['CaseC CPU execution time']
-        y6 = data['CaseC execution time']
+        y3 = data['CaseB execution time']
+        y3 = data['CaseB execution time']
+        y4 = data['CaseC execution time']
+        y5 = data['CaseD execution time']
     except FileNotFoundError:
         print(f"GenarateGraphics_performance.py - ERROR..: File '{csv_url}' not found.")
         return
@@ -38,12 +50,11 @@ def generate_plot(csv_url):
     categories = ['2Gb', '4Gb', '8Gb', '16Gb', '32Gb']                  #Categorias exclusivas del kernel VectorAdd
 
     plt.figure(figsize=(10, 7))
-    plt.plot(x, y1, marker='o', label='Ejecución CPU (n)', color='lightcoral')
-    plt.plot(x, y2, marker='s', label='Ejecución Dispositivo (n)', color='lightblue')
-    plt.plot(x, y3, marker='o', label='Ejecución CPU 10*(n)', color='red')
-    plt.plot(x, y4, marker='s', label='Ejecución Dispositivo 10*(n)', color='blue')
-    plt.plot(x, y5, marker='o', label='Ejecución CPU 100*(n)', color='darkred')
-    plt.plot(x, y6, marker='s', label='Ejecución Dispositivo 100*(n)', color='darkblue')
+    plt.plot(x, y1, marker='o', label='Ejecución CPU', color='red')
+    plt.plot(x, y2, marker='s', label='Ejecución Dispositivo (sin optimizacion)', color='lightblue')
+    plt.plot(x, y3, marker='s', label='Ejecución Dispositivo (stream)', color='dodgerblue')
+    plt.plot(x, y4, marker='s', label='Ejecución Dispositivo (pipeline)', color='blue')
+    plt.plot(x, y5, marker='s', label='Ejecución Dispositivo (stream + pipeline)', color='darkblue')
 
     plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
     #plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
@@ -73,75 +84,60 @@ def generateTable_data(csv_file):
 
 
     #################################
-    # Tratamiento de datos 0(n)
+    # Tratamiento tiempo de ejecución
     #################################
-    dfTemp=pd.DataFrame()
-    newEmptyRow_name = "\\textbf{{\\emph{{\\underline{{O(n)}}}}}}"
-    newEmptyRow = dfIni.iloc[0].copy()
-    newEmptyRow.loc[:]=""
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newEmptyRow], index=[newEmptyRow_name]) ])
-
     newRow_name="CPU"
     newRow = dfIni.iloc[1]
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="Dispositivo"
+    newRow_name="Dispositivo (sin Opt)"
     newRow = dfIni.iloc[2]
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="Dispositivo (stream)"
+    newRow = dfIni.iloc[3]
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="Dispositivo (pipeline)"
+    newRow = dfIni.iloc[4]
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="Dispositivo (stream+pipeline)"
+    newRow = dfIni.iloc[5]
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    dfTemp = format_dataframe(dfTemp)
+    df = pd.concat([df, dfTemp])
+
+
+    #################################
+    # Tratamiento aceleraciones
+    #################################
+    dfTemp=pd.DataFrame()
+    newEmptyRow_name = "\\textbf{{\\emph{{\\underline{{}}}}}}"
+    newEmptyRow = dfIni.iloc[0].copy()
+    newEmptyRow.loc[:]=""
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newEmptyRow], index=[newEmptyRow_name]) ])
 
     newRow_name="CPU->Dis"
     newRow = ((dfIni.iloc[1]-dfIni.iloc[2])/dfIni.iloc[2])*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
+    newRow_name="CPU->Dis (stream)"
+    newRow = ((dfIni.iloc[1]-dfIni.iloc[3])/dfIni.iloc[3])*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="CPU->Dis (pipeline)"
+    newRow = ((dfIni.iloc[1]-dfIni.iloc[4])/dfIni.iloc[4])*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name="CPU->Dis (stream+pipeline)"
+    newRow = ((dfIni.iloc[1]-dfIni.iloc[5])/dfIni.iloc[5])*100
+    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
+
+    dfTemp = format_dataframe_percent(dfTemp)
     df = pd.concat([df, dfTemp])
 
-
-    #################################
-    # Tratamiento de datos 0(10*n)
-    #################################
-    dfTemp=pd.DataFrame()
-    newEmptyRow_name = "\\textbf{{\\emph{{\\underline{{O(10*n)}}}}}}"
-    newEmptyRow = dfIni.iloc[0].copy()
-    newEmptyRow.loc[:]=""
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newEmptyRow], index=[newEmptyRow_name]) ])
-
-    newRow_name="CPU"
-    newRow = dfIni.iloc[3]
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
-
-    newRow_name="Dispositivo"
-    newRow = dfIni.iloc[4]
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
-
-    newRow_name="CPU->Dis"
-    newRow = ((dfIni.iloc[3]-dfIni.iloc[4])/dfIni.iloc[4])*100
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
-
-    df = pd.concat([df, dfTemp])
-
-
-    #################################
-    # Tratamiento de datos 0(100*n)
-    #################################
-    dfTemp=pd.DataFrame()
-    newEmptyRow_name = "\\textbf{{\\emph{{\\underline{{O(100*n)}}}}}}"
-    newEmptyRow = dfIni.iloc[0].copy()
-    newEmptyRow.loc[:]=""
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newEmptyRow], index=[newEmptyRow_name]) ])
-
-    newRow_name="CPU"
-    newRow = dfIni.iloc[5]
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
-
-    newRow_name="Dispositivo"
-    newRow = dfIni.iloc[6]
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
-
-    newRow_name="CPU->Dis"
-    newRow = ((dfIni.iloc[5]-dfIni.iloc[6])/dfI ni.iloc[6])*100
-    dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
-
-    df = pd.concat([df, dfTemp])
 
 
     HeaderRow = dfIni.iloc[0].copy()
@@ -151,14 +147,14 @@ def generateTable_data(csv_file):
     HeaderRow.iloc[3]="Large"
     HeaderRow.iloc[4]="Extralarge"
     df = pd.concat([pd.DataFrame([HeaderRow], index=[""]), df])
-    df = format_dataframe(df)
+    #df = format_dataframe(df)
 
 
 
     # Crear el contenido LaTeX para la tabla con colores
     latex_table = "\\begin{table}[H]\n"
     latex_table += "    \\centering\n"
-    latex_table += "    \\begin{tabular}{lllllll}\n"
+    latex_table += "    \\begin{tabular}{llllll}\n"
     
     numRow=0
     for idx, row in df.iterrows():

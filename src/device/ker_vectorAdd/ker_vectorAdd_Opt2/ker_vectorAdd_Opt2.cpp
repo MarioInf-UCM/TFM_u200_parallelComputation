@@ -32,8 +32,25 @@ typedef float typeData;
 #define STREAM_SIZE 1024
 
 
-
 extern "C"{
+
+    void read_data(typeData *inD, typeData *local, int offset, int chunk_size) {
+        for (int j = 0; j < chunk_size; j++) {
+            local[j] = inD[offset + j];
+        }
+    }
+
+    void process_data(typeData *localA, typeData *localB, typeData *result, int chunk_size) {
+        for (int j = 0; j < chunk_size; j++) {
+            result[j] = localA[j] + localB[j];
+        }
+    }
+
+    void write_data(typeData *outD, typeData *local, int offset, int chunk_size) {
+        for (int j = 0; j < chunk_size; j++) {
+            outD[offset + j] = local[j];
+        }
+    }
 
     //*************************************
     // MAIN KERNEL FUNCTION - START
@@ -54,7 +71,7 @@ extern "C"{
     {
         #pragma HLS INTERFACE m_axi port = inD_vA offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_vB offset = slave bundle = gmem1
-        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem2 
+        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem2
 
         #pragma HLS INTERFACE s_axilite port = inD_vA bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_vB bundle = control
@@ -63,31 +80,24 @@ extern "C"{
 
         typeData inD_vA_local[STREAM_SIZE];
         typeData inD_vB_local[STREAM_SIZE];
-        int actualChunkSize=0;
-
-        #pragma HLS DATAFLOW
-        #pragma HLS stream variable = inD_vA_local depth = STREAM_SIZE
-        #pragma HLS stream variable = inD_vB_local depth = STREAM_SIZE
+        typeData result_local[STREAM_SIZE];
+        int actualChunkSize = 0;
 
         for (int i = 0; i < SIZE; i += STREAM_SIZE) {
-
             actualChunkSize = STREAM_SIZE;
             if ((i + STREAM_SIZE) > SIZE){
                 actualChunkSize = SIZE - i;
             }
 
-            block_initialRading:
-            for (int j = 0; j < actualChunkSize; j++) {
-                #pragma HLS PIPELINE off
-                inD_vA_local[j] = inD_vA[i + j];
-                inD_vB_local[j] = inD_vB[i + j];
-            }
+            #pragma HLS DATAFLOW
+            #pragma HLS stream variable=inD_vA_local depth=STREAM_SIZE
+            #pragma HLS stream variable=inD_vB_local depth=STREAM_SIZE
+            #pragma HLS stream variable=result_local depth=STREAM_SIZE
 
-            block_add:
-            for (int j = 0; j < actualChunkSize; j++) {
-                #pragma HLS PIPELINE off
-                outD_result[i + j] = inD_vA_local[j] + inD_vB_local[j];
-            }
+            read_data(inD_vA, inD_vA_local, i, actualChunkSize);
+            read_data(inD_vB, inD_vB_local, i, actualChunkSize);
+            process_data(inD_vA_local, inD_vB_local, result_local, actualChunkSize);
+            write_data(outD_result, result_local, i, actualChunkSize);
         }
 
         return;

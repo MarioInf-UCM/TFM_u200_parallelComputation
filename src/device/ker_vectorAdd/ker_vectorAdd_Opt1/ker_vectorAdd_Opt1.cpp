@@ -63,23 +63,16 @@ extern "C"{
 
         typeData inD_vA_local[STREAM_SIZE];
         typeData inD_vB_local[STREAM_SIZE];
-        int actualChunkSize=0;
-
 
         for (int i = 0; i < SIZE; i += STREAM_SIZE) {
 
-            actualChunkSize = STREAM_SIZE;
-            if ((i + STREAM_SIZE) > SIZE){
-                actualChunkSize = SIZE - i;
-            }
-
-            for (int j = 0; j < actualChunkSize; j++) {
+            for (int j = 0; j < STREAM_SIZE; j++) {
                 #pragma HLS PIPELINE off
                 inD_vA_local[j] = inD_vA[i + j];
                 inD_vB_local[j] = inD_vB[i + j];
             }
 
-            for (int j = 0; j < actualChunkSize; j++) {
+            for (int j = 0; j < STREAM_SIZE; j++) {
                 #pragma HLS PIPELINE off
                 outD_result[i + j] = inD_vA_local[j] + inD_vB_local[j];
             }

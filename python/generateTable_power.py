@@ -24,7 +24,7 @@ def csv_to_latex(csv_file):
     newRow = df_ini.iloc[3].copy()
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "CPU opt"
+    newRow_name = "CPU Opt"
     newRow = df_ini.iloc[5].copy()
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
     
@@ -38,6 +38,14 @@ def csv_to_latex(csv_file):
 
     newRow_name = "Dispositivo"
     newRow = df_ini.iloc[1].copy()
+    df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name = "CPU->Disp"
+    newRow = ((df_ini.iloc[1] - df_ini.iloc[3])/df_ini.iloc[3])*100
+    df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
+
+    newRow_name = "CPU Opt->Disp"
+    newRow = ((df_ini.iloc[1] - df_ini.iloc[5])/df_ini.iloc[5])*100
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
 
@@ -54,7 +62,7 @@ def csv_to_latex(csv_file):
     newRow = (df_ini.iloc[3]/1000)*((df_ini.iloc[4]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name = "CPU opt"
+    newRow_name = "CPU Opt"
     newRow = df_ini.iloc[5].copy()
     newRow = (df_ini.iloc[5]/1000)*((df_ini.iloc[6]/3600000))
     df = pd.concat([df, pd.DataFrame([newRow], index=[newRow_name])])
@@ -78,7 +86,6 @@ def csv_to_latex(csv_file):
         return x
 
 
-
     df = df.apply(lambda col: col.map(lambda x: format_value(x, col.name)))
 
     # Crear el contenido LaTeX para la tabla con colores
@@ -96,10 +103,10 @@ def csv_to_latex(csv_file):
         else:
             latex_table += f"    \\rowcolor[HTML]{{EFEFEF}} \cellcolor[HTML]{{DAE8FC}} \\textbf{{{idx}}} & "
 
-        if numRow >=2 and numRow<=6 :
-            latex_table += " & ".join(row) + " \\\\\n"
-        elif numRow >=8 and numRow<=10 :
-            latex_table += " & ".join(row) + " \\\\\n"
+        if numRow == 0:
+            latex_table += " & ".join("\\textbf{"+row+"}") + " \\\\\n"
+        elif numRow >=7 and numRow<=8 :
+            latex_table += " & ".join(row+"\%") + " \\\\\n"
         else:
             latex_table += " & ".join(row) + " \\\\\n"
 

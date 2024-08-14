@@ -39,7 +39,7 @@ def generate_plot(csv_url):
     plt.plot(x, y_opt1_energy, marker='s', label='Consumo energético del dispositivo Opt1', color='gold')
     plt.plot(x, y_opt2_energy, marker='p', label='Consumo energético del dispositivo Opt2', color='yellowgreen')
     plt.plot(x, y_opt3_energy, marker='P', label='Consumo energético del dispositivo Opt3', color='lime')
-    plt.plot(x, y_opt4_energy, marker='*', label='Consumo energético del dispositivo Opt', color='green')
+    plt.plot(x, y_opt4_energy, marker='*', label='Consumo energético del dispositivo Opt4', color='green')
 
     plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
     #plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')

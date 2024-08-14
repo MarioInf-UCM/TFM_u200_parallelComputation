@@ -52,7 +52,7 @@ bool StudyCase2Host_a::exec(Execution exec, vector<double>& resultsPerformance, 
         cout << "\033[1;31mERROR..:Entry params unexpected. Fanalizating execution.\033[0m\n"  << endl;
         return false;
     }
-    VectorAddKernel data = VectorAddKernel(SIZE);
+    StudyCase2Kernel data = StudyCase2Kernel(SIZE);
     EventTimer event;
     Event event_sp;
     double resultMeasure_Device=0.0f, resultMeasure_CPU=0.0f, resultMeasure_CPUopt=0.0f;
@@ -83,7 +83,7 @@ bool StudyCase2Host_a::exec(Execution exec, vector<double>& resultsPerformance, 
     if(exec.get_measurePower_CPU()){
         resultMeasure_CPU = executeAndMeasure_CPU(data, event);    
     }else{
-        data.kernel_vectorAdd_CPU();
+        data.kernel_studyCase2_a_CPU();
     }
 
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
@@ -96,7 +96,7 @@ bool StudyCase2Host_a::exec(Execution exec, vector<double>& resultsPerformance, 
     if(exec.get_measurePower_CPUopt()){
         resultMeasure_CPUopt = executeAndMeasure_CPUopt(data, resultMeasure_CPUopt_byPack, event);    
     }else{
-        data.kernel_vectorAdd_CPU();
+        data.kernel_studyCase2_a_CPU_opt();
     }
 
     fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
@@ -297,7 +297,7 @@ bool StudyCase2Host_a::initParameter(Execution exec, unsigned int &SIZE){
 
 
 
-bool StudyCase2Host_a::compareResults(VectorAddKernel& data){
+bool StudyCase2Host_a::compareResults(StudyCase2Kernel& data){
     for (int i = 0; i < data.get_resultDevice().size() ; i++) {
         if(data.get_resultCPU()[i] != data.get_resultDevice()[i]){
             //cout << i << "  " << data.get_resultCPU()[i] << "  " << data.get_resultDevice()[i] << endl;
@@ -309,7 +309,7 @@ bool StudyCase2Host_a::compareResults(VectorAddKernel& data){
 
 
 
-void StudyCase2Host_a::ensamble_dataToBuffers(VectorAddKernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice){
+void StudyCase2Host_a::ensamble_dataToBuffers(StudyCase2Kernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice){
 
     for (int i = 0; i < data.get_SIZE(); i++) {
         temp_A[i] = data.get_vA()[i];
@@ -323,7 +323,7 @@ void StudyCase2Host_a::ensamble_dataToBuffers(VectorAddKernel& data, typeData *t
 
 
 
-void StudyCase2Host_a::ensamble_buffersToData(VectorAddKernel& data, typeData *temp_resultDevice){
+void StudyCase2Host_a::ensamble_buffersToData(StudyCase2Kernel& data, typeData *temp_resultDevice){
     
     for (int i = 0; i < data.get_SIZE() ; i++) {
         data.get_resultDevice()[i] = temp_resultDevice[i];
@@ -356,7 +356,7 @@ float StudyCase2Host_a::searchPropertyValue(const string& texto, const string& s
 }
 
 
-double StudyCase2Host_a::executeAndMeasure_CPU(VectorAddKernel& data, EventTimer &event){
+double StudyCase2Host_a::executeAndMeasure_CPU(StudyCase2Kernel& data, EventTimer &event){
 
     cout << "Measuring CPU Power...";
     pthread_t thread;
@@ -364,7 +364,7 @@ double StudyCase2Host_a::executeAndMeasure_CPU(VectorAddKernel& data, EventTimer
     cpu_set_t cpuset;
     CPU_ZERO(&cpuset);
     CPU_SET(core, &cpuset);
-    function<void()> func = [&data]() { data.kernel_vectorAdd_CPU(); };
+    function<void()> func = [&data]() { data.kernel_studyCase2_a_CPU(); };
     if (pthread_create(&thread, nullptr, [](void* arg) -> void* {
         auto* func = static_cast<function<void()>*>(arg);
         (*func)();
@@ -426,7 +426,7 @@ double StudyCase2Host_a::executeAndMeasure_CPU(VectorAddKernel& data, EventTimer
 
 
 
-double StudyCase2Host_a::executeAndMeasure_CPUopt(VectorAddKernel& data, vector<double> &measureByPack, EventTimer &event){
+double StudyCase2Host_a::executeAndMeasure_CPUopt(StudyCase2Kernel& data, vector<double> &measureByPack, EventTimer &event){
 
     cout << "Measuring CPU Power...";
     long long measureStart_0=0, measureEnd_0=0, measureStart_16=0, measureEnd_16=0;
@@ -462,7 +462,7 @@ double StudyCase2Host_a::executeAndMeasure_CPUopt(VectorAddKernel& data, vector<
     }  
 
     event.add("Running kernel in CPU optimizated");
-    data.kernel_vectorAdd_CPU_opt();
+    data.kernel_studyCase2_a_CPU_opt();
     event.finish();
 
 

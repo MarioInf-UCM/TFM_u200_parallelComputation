@@ -47,7 +47,7 @@ _x
 *.ltx
 *.xclbin
 *.info
-*.csv
+**/build/kernelBuild/*.csv
 *.fls
 *.fdb_latexmk
 *.compile_summary*

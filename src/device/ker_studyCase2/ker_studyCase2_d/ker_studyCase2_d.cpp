@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <stdlib.h>
+#include <hls_stream.h>
 
 // TYPEDATA COMPILER VARIABLE
 //**********************************
@@ -22,8 +23,8 @@ typedef float typeData;
 #else
     #define SIZE 0
 #endif
-        
-        
+    
+#define TIMES 3
 
 // READING BY CHUNKS
 //**********************************
@@ -31,10 +32,51 @@ typedef float typeData;
 #define SIZE_OF_TYPEDATA sizeof(typeData)
 #define VECTOR_SIZE (WIDTH_OF_ACCESS/SIZE_OF_TYPEDATA)
 #define STREAM_SIZE 1024
+#define UNROLL_FACTOR 8
 
+using namespace hls;
 
 
 extern "C"{
+
+    void read_data(typeData *inD_vA, typeData *inD_vB, stream<typeData> &outStreamA, stream<typeData> &outStreamB, int offset) {
+        for (int j = 0; j < STREAM_SIZE; j++) {
+            #pragma HLS STREAM variable=outStreamA depth=STREAM_SIZE
+            #pragma HLS STREAM variable=outStreamB depth=STREAM_SIZE
+            #pragma HLS PIPELINE II=1
+            #pragma HLS LOOP_TRIPCOUNT min=STREAM_SIZE max=STREAM_SIZE
+            #pragma HLS UNROLL factor=UNROLL_FACTOR
+            outStreamA.write(inD_vA[offset + j]);
+            outStreamB.write(inD_vB[offset + j]);
+        }
+        return;
+    }
+
+    void process_data(stream<typeData> &inStreamA, stream<typeData> &inStreamB, typeData *outD, int offset) {
+        typeData a[STREAM_SIZE];
+        typeData b[STREAM_SIZE];
+        typeData resultTemp[STREAM_SIZE];
+        #pragma HLS STREAM variable=inStreamA depth=STREAM_SIZE
+        #pragma HLS STREAM variable=inStreamB depth=STREAM_SIZE
+        #pragma HLS STREAM variable=a depth=STREAM_SIZE
+        #pragma HLS STREAM variable=b depth=STREAM_SIZE
+        #pragma HLS STREAM variable=resultTemp depth=STREAM_SIZE
+
+        for (int j = 0; j < STREAM_SIZE; j++) {
+            a[j] = inStreamA.read();
+            b[j] = inStreamB.read();
+            resultTemp[j] = 0.0;
+
+            for (int time = 0; time < TIMES ; time++) {
+            #pragma HLS PIPELINE II=1
+            #pragma HLS LOOP_TRIPCOUNT min=STREAM_SIZE max=STREAM_SIZE
+            #pragma HLS UNROLL factor=UNROLL_FACTOR
+                resultTemp[j] += a[j] + b[j];
+            }
+            outD[offset + j] = resultTemp[j];
+        }
+        return;
+    }
 
     //*************************************
     // MAIN KERNEL FUNCTION - START
@@ -61,38 +103,14 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = inD_vB bundle = control
         #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
-
-        typeData inD_vA_local[STREAM_SIZE];
-        typeData inD_vB_local[STREAM_SIZE];
-        int actualChunkSize=0;
-
+        
+        stream<typeData> inD_vA_localStream;
+        stream<typeData> inD_vB_localStream;
 
         for (int i = 0; i < SIZE; i += STREAM_SIZE) {
             #pragma HLS DATAFLOW
-            #pragma HLS stream variable = inD_vA_local depth = STREAM_SIZE
-            #pragma HLS stream variable = inD_vB_local depth = STREAM_SIZE
-
-            actualChunkSize = STREAM_SIZE;
-            if ((i + STREAM_SIZE) > SIZE){
-                actualChunkSize = SIZE - i;
-            }
-
-            block_initialRading:
-            for (int j = 0; j < actualChunkSize; j++) {
-                #pragma HLS PIPELINE II=1
-                #pragma HLS LOOP_TRIPCOUNT min=1  max=STREAM_SIZE 
-                #pragma HLS UNROLL factor=8
-                inD_vA_local[j] = inD_vA[i + j];
-                inD_vB_local[j] = inD_vB[i + j];
-            }
-
-            block_add:
-            for (int j = 0; j < actualChunkSize; j++) {
-                #pragma HLS PIPELINE II=1
-                #pragma HLS LOOP_TRIPCOUNT min=1  max=STREAM_SIZE 
-                #pragma HLS UNROLL factor=8
-                outD_result[i + j] = inD_vA_local[j] + inD_vB_local[j];
-            }
+            read_data(inD_vA, inD_vB, inD_vA_localStream, inD_vB_localStream, i);
+            process_data(inD_vA_localStream, inD_vB_localStream, outD_result, i);
         }
 
         return;

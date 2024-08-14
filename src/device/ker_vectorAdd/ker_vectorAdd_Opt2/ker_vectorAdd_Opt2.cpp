@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <stdlib.h>
+#include <hls_stream.h>
 
 // TYPEDATA COMPILER VARIABLE
 //**********************************
@@ -31,25 +32,32 @@ typedef float typeData;
 #define VECTOR_SIZE (WIDTH_OF_ACCESS/SIZE_OF_TYPEDATA)
 #define STREAM_SIZE 1024
 
+using namespace hls;
+
 
 extern "C"{
 
-    void read_data(typeData *inD, typeData *local, int offset, int chunk_size) {
-        for (int j = 0; j < chunk_size; j++) {
-            local[j] = inD[offset + j];
+    void read_data(typeData *inD_vA, typeData *inD_vB, stream<typeData> &outStreamA, stream<typeData> &outStreamB, int offset) {
+        for (int j = 0; j < STREAM_SIZE; j++) {
+            #pragma HLS STREAM variable=outStreamA depth=STREAM_SIZE
+            #pragma HLS STREAM variable=outStreamB depth=STREAM_SIZE
+            #pragma HLS PIPELINE off
+            outStreamA.write(inD_vA[offset + j]);
+            outStreamB.write(inD_vB[offset + j]);
         }
+        return;
     }
 
-    void process_data(typeData *localA, typeData *localB, typeData *result, int chunk_size) {
-        for (int j = 0; j < chunk_size; j++) {
-            result[j] = localA[j] + localB[j];
+    void process_data(stream<typeData> &inStreamA, stream<typeData> &inStreamB, typeData *outD, int offset) {
+        for (int j = 0; j < STREAM_SIZE; j++) {
+            #pragma HLS STREAM variable=inStreamA depth=STREAM_SIZE
+            #pragma HLS STREAM variable=inStreamB depth=STREAM_SIZE
+            #pragma HLS PIPELINE off
+            typeData a = inStreamA.read();
+            typeData b = inStreamB.read();
+            outD[offset + j] = a + b;
         }
-    }
-
-    void write_data(typeData *outD, typeData *local, int offset, int chunk_size) {
-        for (int j = 0; j < chunk_size; j++) {
-            outD[offset + j] = local[j];
-        }
+        return;
     }
 
     //*************************************
@@ -77,29 +85,16 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = inD_vB bundle = control
         #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
-
-        typeData inD_vA_local[STREAM_SIZE];
-        typeData inD_vB_local[STREAM_SIZE];
-        typeData result_local[STREAM_SIZE];
-        int actualChunkSize = 0;
+        
+        hls::stream<typeData> inD_vA_localStream;
+        hls::stream<typeData> inD_vB_localStream;
 
         for (int i = 0; i < SIZE; i += STREAM_SIZE) {
-            actualChunkSize = STREAM_SIZE;
-            if ((i + STREAM_SIZE) > SIZE){
-                actualChunkSize = SIZE - i;
-            }
-
             #pragma HLS DATAFLOW
-            #pragma HLS stream variable=inD_vA_local depth=STREAM_SIZE
-            #pragma HLS stream variable=inD_vB_local depth=STREAM_SIZE
-            #pragma HLS stream variable=result_local depth=STREAM_SIZE
-
-            read_data(inD_vA, inD_vA_local, i, actualChunkSize);
-            read_data(inD_vB, inD_vB_local, i, actualChunkSize);
-            process_data(inD_vA_local, inD_vB_local, result_local, actualChunkSize);
-            write_data(outD_result, result_local, i, actualChunkSize);
+            read_data(inD_vA, inD_vB, inD_vA_localStream, inD_vB_localStream, i);
+            process_data(inD_vA_localStream, inD_vB_localStream, outD_result, i);
         }
-
+        
         return;
     }
 }

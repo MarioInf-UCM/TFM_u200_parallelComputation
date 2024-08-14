@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <stdlib.h>
+#include <hls_stream.h>
 #include <ap_fixed.h>
 #include <hls_math.h>
 
@@ -9,7 +10,6 @@
 #define TYPEDATA_BITS_SIZE 16
 #define TYPEDATA_BITS_INT 7
 typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
-#define INCREMENT_FACTOR_STREAM (sizeof(float)/sizeof(typeData))
 
 
 // DATASIZE COMPILER VARIABLE
@@ -27,19 +27,44 @@ typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 #else
     #define SIZE 0
 #endif
-        
-        
+
+  #define UNROLL_FACTOR 8
+
 
 // READING BY CHUNKS
 //**********************************
 #define WIDTH_OF_ACCESS 512
 #define SIZE_OF_TYPEDATA sizeof(typeData)
 #define VECTOR_SIZE (WIDTH_OF_ACCESS/SIZE_OF_TYPEDATA)
-#define STREAM_SIZE 1024 * INCREMENT_FACTOR_STREAM
+#define STREAM_SIZE 1024
 
+using namespace hls;
 
 
 extern "C"{
+
+    void read_data(typeData *inD_vA, stream<typeData> &outStreamA, int offset) {
+        for (int j = 0; j < STREAM_SIZE; j++) {
+            #pragma HLS STREAM variable=outStreamA depth=STREAM_SIZE
+            #pragma HLS PIPELINE II=1
+            #pragma HLS LOOP_TRIPCOUNT min=STREAM_SIZE max=STREAM_SIZE
+            #pragma HLS UNROLL factor=UNROLL_FACTOR
+            outStreamA.write(inD_vA[offset + j]);
+        }
+        return;
+    }
+
+    void process_data(stream<typeData> &inStreamA, typeData *outD, int offset) {
+        for (int j = 0; j < STREAM_SIZE; j++) {
+            #pragma HLS STREAM variable=inStreamA depth=STREAM_SIZE
+            #pragma HLS PIPELINE II=1
+            #pragma HLS LOOP_TRIPCOUNT min=STREAM_SIZE max=STREAM_SIZE
+            #pragma HLS UNROLL factor=UNROLL_FACTOR
+            typeData a = inStreamA.read();
+            outD[offset + j] =  hls::sqrt(a);
+        }
+        return;
+    }
 
     //*************************************
     // MAIN KERNEL FUNCTION - START
@@ -55,7 +80,7 @@ extern "C"{
     #elif defined(EXTRALARGE_DATASET)
         void ker_studyCase3_d_extralarge(typeData *inD_vA, typeData *inD_vB, typeData *outD_result)
     #else
-        void ker_studyCase3_c(typeData *inD_vA, typeData *inD_vB, typeData *outD_result)
+        void ker_studyCase3_d(typeData *inD_vA, typeData *inD_vB, typeData *outD_result)
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_vA offset = slave bundle = gmem
@@ -66,35 +91,13 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = inD_vB bundle = control
         #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
-
-        typeData inD_vA_local[STREAM_SIZE];
-        int actualChunkSize=0;
-
+        
+        hls::stream<typeData> inD_vA_localStream;
 
         for (int i = 0; i < SIZE; i += STREAM_SIZE) {
             #pragma HLS DATAFLOW
-            #pragma HLS stream variable = inD_vA_local depth = STREAM_SIZE
-
-            actualChunkSize = STREAM_SIZE;
-            if ((i + STREAM_SIZE) > SIZE){
-                actualChunkSize = SIZE - i;
-            }
-
-            block_initialRading:
-            for (int j = 0; j < actualChunkSize; j++) {
-                #pragma HLS PIPELINE II=1
-                #pragma HLS LOOP_TRIPCOUNT min=1  max=STREAM_SIZE 
-                #pragma HLS UNROLL factor=8
-                inD_vA_local[j] = inD_vA[i + j];
-            }
-
-            block_add:
-            for (int j = 0; j < actualChunkSize; j++) {
-                #pragma HLS PIPELINE II=1
-                #pragma HLS LOOP_TRIPCOUNT min=1  max=STREAM_SIZE 
-                #pragma HLS UNROLL factor=8
-                outD_result[i + j] = hls::sqrt(inD_vA_local[j]);
-            }   
+            read_data(inD_vA, inD_vA_localStream, i);
+            process_data(inD_vA_localStream, outD_result, i);
         }
 
         return;

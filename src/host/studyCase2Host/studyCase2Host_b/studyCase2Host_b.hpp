@@ -9,7 +9,7 @@
 #include "../../../utilities/event_timer/event_timer.hpp"
 #include "../../../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
 #include "../../../configParams/configParams.hpp"
-#include "../../../kernel/vectorAddKernel/vectorAddKernel.hpp"
+#include "../../../kernel/studyCase2Kernel/studyCase2Kernel.hpp"
 
 using globalConfiguration_typeData::typeData;
 
@@ -39,12 +39,12 @@ class StudyCase2Host_b {
 
         static float searchPropertyValue(const string& texto, const string& subcadena);
         static void threadFunction_DevicePowerMeasure();
-        static double executeAndMeasure_CPU(VectorAddKernel& data, EventTimer &event);
-        static double executeAndMeasure_CPUopt(VectorAddKernel& data, vector<double> &measureByPack, EventTimer &event);
+        static double executeAndMeasure_CPU(StudyCase2Kernel& data, EventTimer &event);
+        static double executeAndMeasure_CPUopt(StudyCase2Kernel& data, vector<double> &measureByPack, EventTimer &event);
 
-        static void ensamble_dataToBuffers(VectorAddKernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice);
-        static void ensamble_buffersToData(VectorAddKernel& data, typeData *temp_resultDevice);
-        static bool compareResults(VectorAddKernel& data);
+        static void ensamble_dataToBuffers(StudyCase2Kernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice);
+        static void ensamble_buffersToData(StudyCase2Kernel& data, typeData *temp_resultDevice);
+        static bool compareResults(StudyCase2Kernel& data);
  
 };
 #endif

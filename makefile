@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_vectorAdd/configBenchmark_vectorAdd.json
+CONFIGFILE_ROUTE=../../../config/configTest_studyCase2/configBenchmark_studyCase2.json
 
 #Kernel url specification - START
 #***********************************
@@ -552,7 +552,7 @@ kerStudyCase1_c_build_sw_emu:
 	make -f $(KERNEL_STUDYCASE1_C_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_sw_emu: kerStudyCase1_a_build_sw_emu kerStudyCase1_b_build_sw_emu kerStudyCase1_c_build_sw_emu
+kerStudyCase1_All_build_sw_emu: kerStudyCase1_a_build_sw_emu kerStudyCase1_b_build_sw_emu kerStudyCase1_c_build_sw_emu
 
 
 # KERNEL TARGET hw_emu
@@ -572,7 +572,7 @@ kerStudyCase1_c_build_hw_emu:
 	make -f $(KERNEL_STUDYCASE1_C_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_hw_emu: kerStudyCase1_a_build_hw_emu kerStudyCase1_b_build_hw_emu kerStudyCase1_c_build_hw_emu
+kerStudyCase1_All_build_hw_emu: kerStudyCase1_a_build_hw_emu kerStudyCase1_b_build_hw_emu kerStudyCase1_c_build_hw_emu
 
 
 # KERNEL TARGET hw
@@ -592,7 +592,7 @@ kerStudyCase1_c_build_hw:
 	make -f $(KERNEL_STUDYCASE1_C_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_hw: kerStudyCase1_a_build_hw kerStudyCase1_b_build_hw kerStudyCase1_c_build_hw
+kerStudyCase1_All_build_hw: kerStudyCase1_a_build_hw kerStudyCase1_b_build_hw kerStudyCase1_c_build_hw
 #***********************************************
 # COMMANDS FOR STUDYCASE1 KERNELS COMPILE - START
 #***********************************************
@@ -624,7 +624,7 @@ kerStudyCase2_d_build_sw_emu:
 	make -f $(KERNEL_STUDYCASE2_D_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_sw_emu: kerStudyCase2_a_build_sw_emu kerStudyCase2_b_build_sw_emu kerStudyCase2_c_build_sw_emu kerStudyCase2_d_build_sw_emu
+kerStudyCase2_All_build_sw_emu: kerStudyCase2_a_build_sw_emu kerStudyCase2_b_build_sw_emu kerStudyCase2_c_build_sw_emu kerStudyCase2_d_build_sw_emu
 
 
 # KERNEL TARGET hw_emu
@@ -649,7 +649,7 @@ kerStudyCase2_d_build_hw_emu:
 	make -f $(KERNEL_STUDYCASE2_D_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_hw_emu: kerStudyCase2_a_build_hw_emu kerStudyCase2_b_build_hw_emu kerStudyCase2_c_build_hw_emu kerStudyCase2_d_build_hw_emu
+kerStudyCase2_All_build_hw_emu: kerStudyCase2_a_build_hw_emu kerStudyCase2_b_build_hw_emu kerStudyCase2_c_build_hw_emu kerStudyCase2_d_build_hw_emu
 
 
 # KERNEL TARGET hw
@@ -674,7 +674,7 @@ kerStudyCase2_d_build_hw:
 	make -f $(KERNEL_STUDYCASE2_D_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_hw: kerStudyCase2_a_build_hw kerStudyCase2_b_build_hw kerStudyCase2_c_build_hw kerStudyCase2_d_build_hw
+kerStudyCase2_All_build_hw: kerStudyCase2_a_build_hw kerStudyCase2_b_build_hw kerStudyCase2_c_build_hw kerStudyCase2_d_build_hw
 #***********************************************
 # COMMANDS FOR STUDYCASE2 KERNELS COMPILE - START
 #***********************************************
@@ -705,7 +705,7 @@ kerStudyCase3_d_build_sw_emu:
 	make -f $(KERNEL_STUDYCASE3_D_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_sw_emu: kerStudyCase3_a_build_sw_emu kerStudyCase3_b_build_sw_emu kerStudyCase3_c_build_sw_emu kerStudyCase3_d_build_sw_emu
+kerStudyCase3_All_build_sw_emu: kerStudyCase3_a_build_sw_emu kerStudyCase3_b_build_sw_emu kerStudyCase3_c_build_sw_emu kerStudyCase3_d_build_sw_emu
 
 
 # KERNEL TARGET hw_emu
@@ -730,7 +730,7 @@ kerStudyCase3_d_build_hw_emu:
 	make -f $(KERNEL_STUDYCASE3_D_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_hw_emu: kerStudyCase3_a_build_hw_emu kerStudyCase3_b_build_hw_emu kerStudyCase3_c_build_hw_emu kerStudyCase3_d_build_hw_emu
+kerStudyCase3_All_build_hw_emu: kerStudyCase3_a_build_hw_emu kerStudyCase3_b_build_hw_emu kerStudyCase3_c_build_hw_emu kerStudyCase3_d_build_hw_emu
 
 
 
@@ -756,7 +756,7 @@ kerStudyCase3_d_build_hw:
 	make -f $(KERNEL_STUDYCASE3_D_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerVectorAdd_All_build_hw: kerStudyCase3_a_build_hw kerStudyCase3_b_build_hw kerStudyCase3_c_build_hw kerStudyCase3_d_build_hw
+kerStudyCase3_All_build_hw: kerStudyCase3_a_build_hw kerStudyCase3_b_build_hw kerStudyCase3_c_build_hw kerStudyCase3_d_build_hw
 #***********************************************
 # COMMANDS FOR STUDYCASE3 KERNELS COMPILE - START
 #***********************************************

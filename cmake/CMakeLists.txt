@@ -253,6 +253,7 @@ add_executable(benchmarkExec
   ../src/host/studyCase2Host/studyCase2Host_b/studyCase2Host_b.cpp
   ../src/host/studyCase2Host/studyCase2Host_c/studyCase2Host_c.cpp
   ../src/host/studyCase2Host/studyCase2Host_d/studyCase2Host_d.cpp
+  ../src/kernel/studyCase2Kernel/studyCase2Kernel.cpp
   
   ../src/host/studyCase3Host/studyCase3Host.cpp
   ../src/host/studyCase3Host/studyCase3Host_a/studyCase3Host_a.cpp

@@ -74,8 +74,11 @@ bool Jacobi2dHost_Opt2::exec(Execution exec, vector<double>& resultsPerformance,
     if(exec.get_measurePower_CPU()){
         resultMeasure_CPU = executeAndMeasure_CPU(data, event);    
     }else{
+        event.add("Running kernel in CPU");
         data.kernel_jacobi_2d_CPU();
+        event.finish();
     }
+    data.saveResults();
 
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
     //STEP 2 - END: Running kernel in CPU"
@@ -87,8 +90,11 @@ bool Jacobi2dHost_Opt2::exec(Execution exec, vector<double>& resultsPerformance,
     if(exec.get_measurePower_CPUopt()){
         resultMeasure_CPUopt = executeAndMeasure_CPUopt(data, resultMeasure_CPUopt_byPack, event);    
     }else{
+        event.add("Running kernel in CPU optimizated");
         data.kernel_jacobi_2d_CPU_opt();
+        event.finish();
     }
+    data.saveResults_opt();
 
     fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
     //STEP 3 - END: Running kernel in CPU optimizated"
@@ -110,32 +116,20 @@ bool Jacobi2dHost_Opt2::exec(Execution exec, vector<double>& resultsPerformance,
     bank_ext1.obj   = NULL;
     bank_ext1.param = 0;
 
-    cl_mem_ext_ptr_t bank_ext2;
-    bank_ext2.flags = 2 | XCL_MEM_TOPOLOGY;
-    bank_ext2.obj   = NULL;
-    bank_ext2.param = 0;
-
     Buffer sendBuff_A(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX),
                         data.get_SIZE_N() * data.get_SIZE_N() * sizeof(typeData),
                         &bank_ext0,
                         NULL);
 
     Buffer sendBuff_B(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX),
                         data.get_SIZE_N() * data.get_SIZE_N() * sizeof(typeData),
                         &bank_ext1,
                         NULL);
 
-    Buffer recvBuff_resultDevice(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX),
-                        data.get_SIZE_N() * data.get_SIZE_N() * 2 * sizeof(typeData),
-                        &bank_ext2,
-                        NULL);
-
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_B);
-    ker.setArg(2, recvBuff_resultDevice);
 
     typeData *temp_A = (typeData *)q.enqueueMapBuffer(sendBuff_A,
                                                         CL_TRUE,
@@ -149,13 +143,8 @@ bool Jacobi2dHost_Opt2::exec(Execution exec, vector<double>& resultsPerformance,
                                                         0,
                                                         data.get_SIZE_N() * data.get_SIZE_N() * sizeof(typeData));
 
-    typeData *temp_resultDevice = (typeData *)q.enqueueMapBuffer(recvBuff_resultDevice,
-                                                        CL_TRUE,
-                                                        CL_MAP_WRITE | CL_MAP_READ,
-                                                        0,
-                                                        data.get_SIZE_N() * data.get_SIZE_N() * 2 * sizeof(typeData));
 
-    ensamble_dataToBuffers(data, temp_A, temp_B, temp_resultDevice);
+    ensamble_dataToBuffers(data, temp_A, temp_B);
 
     event.finish();
     fileWriter_logFile.write("STEP 4 - END: Creating buffer (" + event.getInfoEvents(3)); 
@@ -190,17 +179,16 @@ bool Jacobi2dHost_Opt2::exec(Execution exec, vector<double>& resultsPerformance,
     fileWriter_logFile.writeln("STEP 7 - START: Transmision data from device");
     event.add("Transmision data from device ");
 
-    q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
+    q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_B}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
     q.finish();
 
-    ensamble_buffersToData(data, temp_resultDevice);
     event.finish();
     fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
     //STEP 7 - END: Transmision data from device 
     
     
-    ensamble_buffersToData(data, temp_resultDevice);
+    ensamble_buffersToData(data, temp_A, temp_B);
     if(exec.get_printResults()){
         fileWriter_logFile.write(data.printAll());
     }
@@ -292,27 +280,25 @@ bool Jacobi2dHost_Opt2::compareResults(Jacobi_2dKernel& data){
 
 
 
-void Jacobi2dHost_Opt2::ensamble_dataToBuffers(Jacobi_2dKernel& data, typeData *temp_A, typeData *temp_B, typeData *temp_resultDevice){
+void Jacobi2dHost_Opt2::ensamble_dataToBuffers(Jacobi_2dKernel& data, typeData *temp_A, typeData *temp_B){
 
     for (int n1 = 0; n1 < data.get_SIZE_N(); n1++) {
         for (int n2 = 0; n2 < data.get_SIZE_N(); n2++) {
-            temp_A[n1*data.get_SIZE_N()+n2] = data.get_A()[n1][n2];
-            temp_B[n1*data.get_SIZE_N()+n2] = data.get_B()[n1][n2];
-            temp_resultDevice[n1*data.get_SIZE_N()+n2] = 0.0;
-            temp_resultDevice[(n1*n2) + n1*data.get_SIZE_N()+n2] = 0.0;
+            temp_A[(n1*data.get_SIZE_N())+n2] = data.get_A()[n1][n2];
+            temp_B[(n1*data.get_SIZE_N())+n2] = data.get_B()[n1][n2];
         }
     }
-
-  return;
+    return;
 }
 
 
-void Jacobi2dHost_Opt2::ensamble_buffersToData(Jacobi_2dKernel& data, typeData *temp_resultDevice){
+void Jacobi2dHost_Opt2::ensamble_buffersToData(Jacobi_2dKernel& data, typeData *temp_A, typeData *temp_B){
     
     int i=0;
-    for (int n1 = 0; n1 < data.get_resultDevice().size() ; n1++) {
-        for (int n2 = 0; n2 < data.get_resultDevice()[n1].size() ; n2++) {
-            data.get_resultDevice()[n1][n2] = temp_resultDevice[i];
+    for (int n1 = 0; n1 < data.get_SIZE_N() ; n1++) {
+        for (int n2 = 0; n2 < data.get_SIZE_N() ; n2++) {
+            data.get_resultDevice()[n1][n2] = temp_B[i];
+            data.get_resultDevice()[data.get_SIZE_N()+n1][n2] = temp_A[i];
             i++;
         }
     }

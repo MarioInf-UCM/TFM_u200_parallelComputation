@@ -37,8 +37,8 @@ class Jacobi2dHost_Opt1 {
     private:
         static bool initParameter(Execution exec, unsigned int &STEPS, unsigned int &SIZE_N);
 
-        static void ensamble_dataToBuffers(Jacobi_2dKernel& data, vector<typeData> &temp_A, vector<typeData> &temp_B, vector<typeData>& temp_resultDevice);
-        static void ensamble_buffersToData(Jacobi_2dKernel& data, vector<typeData>& temp_resultDevice);
+        static void ensamble_dataToBuffers(Jacobi_2dKernel& data, vector<typeData> &temp_A, vector<typeData> &temp_B);
+        static void ensamble_buffersToData(Jacobi_2dKernel &data, vector<typeData> &temp_A, vector<typeData> &temp_B);
         static bool compareResults(Jacobi_2dKernel& data);
  
         static float searchPropertyValue(const string& texto, const string& subcadena);

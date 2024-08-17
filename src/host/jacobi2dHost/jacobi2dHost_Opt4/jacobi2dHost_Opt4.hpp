@@ -11,6 +11,7 @@
 #include "../../../kernel/jacobi_2dKernel/jacobi_2dKernel.hpp"
 
 using globalConfiguration_typeData::typeData;
+using globalConfiguration_typeData::typeData_fixed;
 
 class Jacobi2dHost_Opt4 {
 
@@ -19,7 +20,8 @@ class Jacobi2dHost_Opt4 {
     //* DEFINITION ZONE ATRIBUTES *
     //*****************************
     private:
-
+        static atomic<bool> stop_thread;
+        static double sharedVariable;
 
 
     //*****************************
@@ -34,9 +36,15 @@ class Jacobi2dHost_Opt4 {
 
     private:
         static bool initParameter(Execution exec, unsigned int &STEPS, unsigned int &SIZE_N);
-        static void ensamble_dataToBuffers(Jacobi_2dKernel& data, vector<typeData> &temp_A, vector<typeData> &temp_B, vector<typeData>& temp_resultDevice);
-        static void ensamble_buffersToData(Jacobi_2dKernel& data, vector<typeData>& temp_resultDevice);
+
+        static void ensamble_dataToBuffers(Jacobi_2dKernel& data, typeData_fixed *temp_A, typeData_fixed *temp_B);
+        static void ensamble_buffersToData(Jacobi_2dKernel& data, typeData_fixed *temp_A, typeData_fixed *temp_B);
         static bool compareResults(Jacobi_2dKernel& data);
+ 
+        static float searchPropertyValue(const string& texto, const string& subcadena);
+        static void threadFunction_DevicePowerMeasure();
+        static double executeAndMeasure_CPU(Jacobi_2dKernel& data, EventTimer &event);
+        static double executeAndMeasure_CPUopt(Jacobi_2dKernel& data, vector<double> &measureByPack, EventTimer &event);
  
 };
 #endif

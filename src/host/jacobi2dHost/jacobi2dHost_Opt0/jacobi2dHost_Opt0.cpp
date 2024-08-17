@@ -72,8 +72,11 @@ bool Jacobi2dHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance,
     if(exec.get_measurePower_CPU()){
         resultMeasure_CPU = executeAndMeasure_CPU(data, event);    
     }else{
+        event.add("Running kernel in CPU");
         data.kernel_jacobi_2d_CPU();
+        event.finish();
     }
+    data.saveResults();
 
     fileWriter_logFile.write("STEP 2 - END: Running kernel in CPU (" + event.getInfoEvents(1));
     //STEP 2 - END: Running kernel in CPU"
@@ -85,12 +88,14 @@ bool Jacobi2dHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance,
     if(exec.get_measurePower_CPUopt()){
         resultMeasure_CPUopt = executeAndMeasure_CPUopt(data, resultMeasure_CPUopt_byPack, event);    
     }else{
+        event.add("Running kernel in CPU optimizated");
         data.kernel_jacobi_2d_CPU_opt();
+        event.finish();
     }
+    data.saveResults_opt();
 
     fileWriter_logFile.write("STEP 3 - END: Running kernel in CPU optimizated (" + event.getInfoEvents(2));
     //STEP 3 - END: Running kernel in CPU optimizated"
-
 
 
     //STEP 4 - START: Creating buffer 
@@ -101,30 +106,22 @@ bool Jacobi2dHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance,
     data.initData_B(data.get_SIZE_N());
     vector<typeData> temp_A = vector<typeData>();
     vector<typeData> temp_B = vector<typeData>();
-    vector<typeData> temp_resultDevice = vector<typeData>();
-    ensamble_dataToBuffers(data, temp_A, temp_B, temp_resultDevice);
+    ensamble_dataToBuffers(data, temp_A, temp_B);
 
     Buffer sendBuff_A(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR),
                         temp_A.size() * sizeof(typeData),
                         temp_A.data(),
                         NULL);
 
     Buffer sendBuff_B(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR),
                         temp_B.size() * sizeof(typeData),
                         temp_B.data(),
                         NULL);
 
-    Buffer recvBuff_resultDevice(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_resultDevice.size() * sizeof(typeData),
-                        temp_resultDevice.data(),
-                        NULL);
-
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_B);
-    ker.setArg(2, recvBuff_resultDevice);
 
     event.finish();
     fileWriter_logFile.write("STEP 4 - END: Creating buffer (" + event.getInfoEvents(3)); 
@@ -159,18 +156,17 @@ bool Jacobi2dHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance,
     fileWriter_logFile.writeln("STEP 7 - START: Transmision data from device");
     event.add("Transmision data from device ");
 
-    q.enqueueMigrateMemObjects({recvBuff_resultDevice}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
+    q.enqueueMigrateMemObjects({sendBuff_A, sendBuff_B}, CL_MIGRATE_MEM_OBJECT_HOST, NULL, &event_sp);
     clWaitForEvents(1, (const cl_event *)&event_sp);
     q.finish();
 
-    ensamble_buffersToData(data, temp_resultDevice);
     event.finish();
     fileWriter_logFile.write("STEP 7 - END: Transmision data from device (" + event.getInfoEvents(6));
     //STEP 7 - END: Transmision data from device 
     
     
     
-    ensamble_buffersToData(data, temp_resultDevice);
+    ensamble_buffersToData(data, temp_A, temp_B);
     if(exec.get_printResults()){
         fileWriter_logFile.write(data.printAll());
     }
@@ -258,30 +254,27 @@ bool Jacobi2dHost_Opt0::compareResults(Jacobi_2dKernel& data){
 
 
 
-void Jacobi2dHost_Opt0::ensamble_dataToBuffers(Jacobi_2dKernel& data, vector<typeData> &temp_A, vector<typeData> &temp_B, vector<typeData>& temp_resultDevice){
+void Jacobi2dHost_Opt0::ensamble_dataToBuffers(Jacobi_2dKernel& data, vector<typeData> &temp_A, vector<typeData> &temp_B){
 
     temp_A.clear();
     temp_B.clear();
-    temp_resultDevice.clear();
     for (int n1 = 0; n1 < data.get_SIZE_N(); n1++) {
         for (int n2 = 0; n2 < data.get_SIZE_N(); n2++) {
             temp_A.push_back( data.get_A()[n1][n2] );
             temp_B.push_back( data.get_B()[n1][n2] );
-            temp_resultDevice.push_back( 0.0 );
-            temp_resultDevice.push_back( 0.0 );
         }
     }
-
-  return;
+    return;
 }
 
 
-void Jacobi2dHost_Opt0::ensamble_buffersToData(Jacobi_2dKernel& data, vector<typeData>& temp_resultDevice){
+void Jacobi2dHost_Opt0::ensamble_buffersToData(Jacobi_2dKernel &data, vector<typeData> &temp_A, vector<typeData> &temp_B){
     
     int i=0;
-    for (int n1 = 0; n1 < data.get_resultDevice().size() ; n1++) {
-        for (int n2 = 0; n2 < data.get_resultDevice()[n1].size() ; n2++) {
-            data.get_resultDevice()[n1][n2] = temp_resultDevice[i];
+    for (int n1 = 0; n1 < data.get_SIZE_N() ; n1++) {
+        for (int n2 = 0; n2 < data.get_SIZE_N() ; n2++) {
+            data.get_resultDevice()[n1][n2] = temp_B[i];
+            data.get_resultDevice()[data.get_SIZE_N()+n1][n2] = temp_A[i];
             i++;
         }
     }

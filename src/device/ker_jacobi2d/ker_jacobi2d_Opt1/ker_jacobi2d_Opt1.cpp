@@ -40,26 +40,24 @@ extern "C"{
     // MAIN KERNEL FUNCTION - START
     //*************************************
     #ifdef MINI_DATASET
-        void ker_jacobi2d_Opt1_mini(typeData *inD_A, typeData *inD_B, typeData *outD_result)
+        void ker_jacobi2d_Opt1_mini(typeData *inD_A, typeData *inD_B)
     #elif defined(SMALL_DATASET)
-        void ker_jacobi2d_Opt1_small(typeData *inD_A, typeData *inD_B, typeData *outD_result)
+        void ker_jacobi2d_Opt1_small(typeData *inD_A, typeData *inD_B)
     #elif defined(MEDIUM_DATASET)
-        void ker_jacobi2d_Opt1_medium(typeData *inD_A, typeData *inD_B, typeData *outD_result)
+        void ker_jacobi2d_Opt1_medium(typeData *inD_A, typeData *inD_B)
     #elif defined(LARGE_DATASET)
-        void ker_jacobi2d_Opt1_large(typeData *inD_A, typeData *inD_B, typeData *outD_result)
+        void ker_jacobi2d_Opt1_large(typeData *inD_A, typeData *inD_B)
     #elif defined(EXTRALARGE_DATASET)
-        void ker_jacobi2d_Opt1_extralarge(typeData *inD_A, typeData *inD_B, typeData *outD_result)
+        void ker_jacobi2d_Opt1_extralarge(typeData *inD_A, typeData *inD_B)
     #else
-        void ker_jacobi2d_Opt1(typeData *inD_A, typeData *inD_B, typeData *outD_result)
+        void ker_jacobi2d_Opt1(typeData *inD_A, typeData *inD_B)
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_B offset = slave bundle = gmem1
-        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem2 
 
         #pragma HLS INTERFACE s_axilite port = inD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_B bundle = control
-        #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
         typeData inD_A_local[SIZE_N*SIZE_N];
@@ -82,24 +80,22 @@ extern "C"{
                 for (int j = 1; j < SIZE_N - 1 ; j++){
                     #pragma HLS PIPELINE off
                     inD_B_local[(i*SIZE_N)+j] = 0.2 * (inD_A_local[(i*SIZE_N)+j] + inD_A_local[(i*SIZE_N)+(j-1)] + inD_A_local[(i*SIZE_N)+(j+1)] + inD_A_local[((i+1)*SIZE_N)+j] + inD_A_local[((i-1)*SIZE_N)+j]);
-                    outD_result_local[(i*SIZE_N)+j] = inD_B_local[(i*SIZE_N)+j];
                 }
-
             }
+
             for (int i = 1; i < SIZE_N - 1 ; i++){
                 #pragma HLS PIPELINE off
                 for (int j = 1; j < SIZE_N - 1 ; j++){
                     #pragma HLS PIPELINE off
-
                     inD_A_local[(i*SIZE_N)+j] = 0.2 * (inD_B_local[(i*SIZE_N)+j] + inD_B_local[(i*SIZE_N)+(j-1)] + inD_B_local[(i*SIZE_N)+(j+1)] + inD_B_local[((i+1)*SIZE_N)+j] + inD_B_local[((i-1)*SIZE_N)+j]);
-                    outD_result_local[(SIZE_N*SIZE_N)+(i*SIZE_N)+j] = inD_A_local[(i*SIZE_N)+j];
                 }
             }
         }
 
-        for (int i = 0; i < (SIZE_N*SIZE_N*2) ; i++){
+        for (int i = 0; i < (SIZE_N*SIZE_N) ; i++){
             #pragma HLS PIPELINE off
-            outD_result[i] = outD_result_local[i];
+            inD_A[i] = inD_A_local[i];
+            inD_B[i] = inD_B_local[i];
         }
 
         return;   

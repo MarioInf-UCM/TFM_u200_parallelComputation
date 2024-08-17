@@ -169,13 +169,11 @@ void Jacobi_2dKernel::kernel_jacobi_2d_CPU(){
         for (int i = 1; i < get_SIZE_N() - 1 ; i++){
             for (int j = 1; j < get_SIZE_N() - 1 ; j++){
                 get_B()[i][j] = 0.2 * (get_A()[i][j] + get_A()[i][j-1] + get_A()[i][1+j] + get_A()[1+i][j] + get_A()[i-1][j]);
-                get_resultCPU()[i][j] = get_B()[i][j];
             }
         }
         for (int i = 1; i < get_SIZE_N() - 1 ; i++){
             for (int j = 1; j < get_SIZE_N() - 1 ; j++){
                 get_A()[i][j] = 0.2 * (get_B()[i][j] + get_B()[i][j-1] + get_B()[i][1+j] + get_B()[1+i][j] + get_B()[i-1][j]);
-                get_resultCPU()[get_SIZE_N()+i][j] = get_A()[i][j];
             }
         }
     }
@@ -193,15 +191,35 @@ void Jacobi_2dKernel::kernel_jacobi_2d_CPU_opt() {
         for (int i = 1; i < SIZE_N - 1; i++) {
             for (int j = 1; j < SIZE_N - 1; j++) {
                 B[i][j] = 0.2 * (A[i][j] + A[i][j - 1] + A[i][j + 1] + A[i + 1][j] + A[i - 1][j]);
-                resultCPU_opt[i][j] = B[i][j];
             }
         }
         #pragma omp parallel for collapse(2) shared(A, B)
         for (int i = 1; i < SIZE_N - 1; i++) {
             for (int j = 1; j < SIZE_N - 1; j++) {
                 A[i][j] = 0.2 * (B[i][j] + B[i][j - 1] + B[i][j + 1] + B[i + 1][j] + B[i - 1][j]);
-                resultCPU_opt[SIZE_N+i][j] = A[i][j];
             }
+        }
+    }
+    return;
+}
+
+
+void Jacobi_2dKernel::saveResults(){
+    for (int i = 0; i < get_SIZE_N() ; i++){
+        for (int j = 0; j < get_SIZE_N() ; j++){
+            get_resultCPU()[i][j] = get_B()[i][j];
+            get_resultCPU()[get_SIZE_N()+i][j] = get_A()[i][j];
+        }
+    }
+    return;
+}
+
+
+void Jacobi_2dKernel::saveResults_opt(){
+    for (int i = 0; i < get_SIZE_N() ; i++){
+        for (int j = 0; j < get_SIZE_N() ; j++){
+            get_resultCPU_opt()[i][j] = get_B()[i][j];
+            get_resultCPU_opt()[get_SIZE_N()+i][j] = get_A()[i][j];
         }
     }
     return;

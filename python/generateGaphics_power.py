@@ -32,8 +32,8 @@ def generate_plot(csv_url):
 
 
     plt.title(f'Comparación de energía consumida - {os.path.basename(csv_url)}')
-    #plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
-    plt.xlabel('Tamaño de datos de entrada')                          #Etiqueta exclusivas del kernel VectorAdd
+    plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
+    #plt.xlabel('Tamaño de datos de entrada')                          #Etiqueta exclusivas del kernel VectorAdd
 
     plt.ylabel('Consumo (Vatios)')
     plt.legend()

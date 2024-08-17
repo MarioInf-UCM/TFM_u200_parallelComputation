@@ -52,7 +52,7 @@ extern "C"{
     {
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
         #pragma HLS INTERFACE m_axi port = inD_B offset = slave bundle = gmem
-        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem 
+        #pragma HLS INTERFACE m_axi port = outD_result offset = slave bundle = gmem
 
         #pragma HLS INTERFACE s_axilite port = inD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_B bundle = control
@@ -60,23 +60,28 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = return bundle = control
     
         for (int t=0; t<STEPS ; t++){
+            #pragma HLS PIPELINE off
+
             for (int i = 1; i < SIZE_N - 1 ; i++){
+                #pragma HLS PIPELINE off
                 for (int j = 1; j < SIZE_N - 1 ; j++){
+                    #pragma HLS PIPELINE off
                     inD_B[(i*SIZE_N)+j] = 0.2 * (inD_A[(i*SIZE_N)+j] + inD_A[(i*SIZE_N)+(j-1)] + inD_A[(i*SIZE_N)+(j+1)] + inD_A[((i+1)*SIZE_N)+j] + inD_A[((i-1)*SIZE_N)+j]);
                     outD_result[(i*SIZE_N)+j] = inD_B[(i*SIZE_N)+j];
                 }
             }
+
             for (int i = 1; i < SIZE_N - 1 ; i++){
+                #pragma HLS PIPELINE off
                 for (int j = 1; j < SIZE_N - 1 ; j++){
+                    #pragma HLS PIPELINE off
                     inD_A[(i*SIZE_N)+j] = 0.2 * (inD_B[(i*SIZE_N)+j] + inD_B[(i*SIZE_N)+(j-1)] + inD_B[(i*SIZE_N)+(j+1)] + inD_B[((i+1)*SIZE_N)+j] + inD_B[((i-1)*SIZE_N)+j]);
                     outD_result[(SIZE_N*SIZE_N)+(i*SIZE_N)+j] = inD_A[(i*SIZE_N)+j];
                 }
             }
         }
         
+        return; 
     }
-    //*************************************
-    // MAIN KERNEL FUNCTION - END
-    //*************************************
     
 }

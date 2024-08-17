@@ -363,7 +363,7 @@ bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<dou
         //result = GemmHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("jacobi2d") != string::npos){
-        //result = Jacobi2dHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
+        result = Jacobi2dHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("vectorAdd") != string::npos){
         result = VectorAddHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   

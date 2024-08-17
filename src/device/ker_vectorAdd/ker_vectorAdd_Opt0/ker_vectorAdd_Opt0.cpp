@@ -49,7 +49,6 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = outD_result bundle = control
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
-
         for (int i = 0; i < SIZE; i++) {
         #pragma HLS PIPELINE off
             outD_result[i] = inD_vA[i] + inD_vB[i];

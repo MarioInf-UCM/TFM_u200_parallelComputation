@@ -8,16 +8,16 @@
     "generate_global_PowerGraphics": true,
     "testList":[
         {
-            "name":"test_jacobi2d_Opt0_hw_emu",
-            "performanceFile":"test_jacobi2d_Opt0_hw_emu_performanceResults.csv",
-            "powerFile":"test_jacobi2d_Opt0_hw_emu_powerResults.csv",
+            "name":"test_jacobi2d_Opt4_hw_emu",
+            "performanceFile":"test_jacobi2d_Opt4_hw_emu_performanceResults.csv",
+            "powerFile":"test_jacobi2d_Opt4_hw_emu_powerResults.csv",
             "generate_powerGraphics": true,
             "generate_performanceGraphics": true,
             "executionList":[
                 {
-                    "host": "jacobi2dHost_Opt0",
-                    "kernelPackage": "kerPack_jacobi2d_Opt0_mini_hw_emu.xclbin",
-                    "kernel": "ker_jacobi2d_Opt0_mini",
+                    "host": "jacobi2dHost_Opt4",
+                    "kernelPackage": "kerPack_jacobi2d_Opt4_mini_hw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt4_mini",
                     "dataSize": "mini", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 

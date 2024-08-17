@@ -58,10 +58,10 @@ VPPLFLAGS_SPECIFIC_EXTRALARGE := --config $(CONNECTIVITY_NAME_EXTRALARGE) --conf
 MAKEFILE_NAME := makeKer_jacobi2d_Opt0.mk
 
 PackKerList := kerPack_jacobi2d_Opt0_mini
-#PackKerList += kerPack_jacobi2d_Opt0_small
-#PackKerList += kerPack_jacobi2d_Opt0_medium
-#PackKerList += kerPack_jacobi2d_Opt0_large
-#PackKerList += kerPack_jacobi2d_Opt0_extralarge
+PackKerList += kerPack_jacobi2d_Opt0_small
+PackKerList += kerPack_jacobi2d_Opt0_medium
+PackKerList += kerPack_jacobi2d_Opt0_large
+PackKerList += kerPack_jacobi2d_Opt0_extralarge
 
 
 ker_jacobi2d_Opt0_mini_XOS := ker_jacobi2d_Opt0_mini.xo

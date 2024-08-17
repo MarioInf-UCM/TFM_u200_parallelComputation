@@ -8,16 +8,16 @@
     "generate_global_PowerGraphics": true,
     "testList":[
         {
-            "name":"test_jacobi2d_Opt0_sw_emu",
-            "performanceFile":"test_jacobi2d_Opt0_sw_emu_performanceResults.csv",
-            "powerFile":"test_jacobi2d_Opt0_sw_emu_powerResults.csv",
+            "name":"test_jacobi2d_Opt3_sw_emu",
+            "performanceFile":"test_jacobi2d_Opt3_sw_emu_performanceResults.csv",
+            "powerFile":"test_jacobi2d_Opt3_sw_emu_powerResults.csv",
             "generate_powerGraphics": true,
             "generate_performanceGraphics": true,
             "executionList":[
                 {
-                    "host": "jacobi2dHost_Opt0",
-                    "kernelPackage": "kerPack_jacobi2d_Opt0_mini_sw_emu.xclbin",
-                    "kernel": "ker_jacobi2d_Opt0_mini",
+                    "host": "jacobi2dHost_Opt3",
+                    "kernelPackage": "kerPack_jacobi2d_Opt3_mini_sw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt3_mini",
                     "dataSize": "mini", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
@@ -27,9 +27,9 @@
                     "numExecutions_hot": 1
                 },
                 {
-                    "host": "jacobi2dHost_Opt0",
-                    "kernelPackage": "kerPack_jacobi2d_Opt0_small_sw_emu.xclbin",
-                    "kernel": "ker_jacobi2d_Opt0_small",
+                    "host": "jacobi2dHost_Opt3",
+                    "kernelPackage": "kerPack_jacobi2d_Opt3_small_sw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt3_small",
                     "dataSize": "small", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
@@ -39,9 +39,9 @@
                     "numExecutions_hot": 1
                 },
                 {
-                    "host": "jacobi2dHost_Opt0",
-                    "kernelPackage": "kerPack_jacobi2d_Opt0_medium_sw_emu.xclbin",
-                    "kernel": "ker_jacobi2d_Opt0_medium",
+                    "host": "jacobi2dHost_Opt3",
+                    "kernelPackage": "kerPack_jacobi2d_Opt3_medium_sw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt3_medium",
                     "dataSize": "medium", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
@@ -51,9 +51,9 @@
                     "numExecutions_hot": 1
                 },
                 {
-                    "host": "jacobi2dHost_Opt0",
-                    "kernelPackage": "kerPack_jacobi2d_Opt0_large_sw_emu.xclbin",
-                    "kernel": "ker_jacobi2d_Opt0_large",
+                    "host": "jacobi2dHost_Opt3",
+                    "kernelPackage": "kerPack_jacobi2d_Opt3_large_sw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt3_large",
                     "dataSize": "large", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 
@@ -63,9 +63,9 @@
                     "numExecutions_hot": 1
                 },
                 {
-                    "host": "jacobi2dHost_Opt0",
-                    "kernelPackage": "kerPack_jacobi2d_Opt0_extralarge_sw_emu.xclbin",
-                    "kernel": "ker_jacobi2d_Opt0_extralarge",
+                    "host": "jacobi2dHost_Opt3",
+                    "kernelPackage": "kerPack_jacobi2d_Opt3_extralarge_sw_emu.xclbin",
+                    "kernel": "ker_jacobi2d_Opt3_extralarge",
                     "dataSize": "extralarge", 
                     "measurePower_CPU": true, 
                     "measurePower_CPUopt": true, 

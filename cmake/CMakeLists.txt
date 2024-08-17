@@ -86,6 +86,9 @@ list(APPEND kerPackList "kerPack_gemmPer_Opt1_mini" "kerPack_gemmPer_Opt1_small"
 
 list(APPEND kerPackList "kerPack_jacobi2d_Opt0_mini" "kerPack_jacobi2d_Opt0_small" "kerPack_jacobi2d_Opt0_medium" "kerPack_jacobi2d_Opt0_large" "kerPack_jacobi2d_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_jacobi2d_Opt1_mini" "kerPack_jacobi2d_Opt1_small" "kerPack_jacobi2d_Opt1_medium" "kerPack_jacobi2d_Opt1_large" "kerPack_jacobi2d_Opt1_extralarge" )
+list(APPEND kerPackList "kerPack_jacobi2d_Opt2_mini" "kerPack_jacobi2d_Opt2_small" "kerPack_jacobi2d_Opt2_medium" "kerPack_jacobi2d_Opt2_large" "kerPack_jacobi2d_Opt2_extralarge" )
+list(APPEND kerPackList "kerPack_jacobi2d_Opt3_mini" "kerPack_jacobi2d_Opt3_small" "kerPack_jacobi2d_Opt3_medium" "kerPack_jacobi2d_Opt3_large" "kerPack_jacobi2d_Opt3_extralarge" )
+list(APPEND kerPackList "kerPack_jacobi2d_Opt4_mini" "kerPack_jacobi2d_Opt4_small" "kerPack_jacobi2d_Opt4_medium" "kerPack_jacobi2d_Opt4_large" "kerPack_jacobi2d_Opt4_extralarge" )
 
 
 
@@ -226,6 +229,8 @@ add_executable(benchmarkExec
   ../src/host/jacobi2dHost/jacobi2dHost_Opt0/jacobi2dHost_Opt0.cpp
   ../src/host/jacobi2dHost/jacobi2dHost_Opt1/jacobi2dHost_Opt1.cpp
   ../src/host/jacobi2dHost/jacobi2dHost_Opt2/jacobi2dHost_Opt2.cpp
+  ../src/host/jacobi2dHost/jacobi2dHost_Opt3/jacobi2dHost_Opt3.cpp
+  ../src/host/jacobi2dHost/jacobi2dHost_Opt4/jacobi2dHost_Opt4.cpp
   ../src/kernel/jacobi_2dKernel/jacobi_2dKernel.cpp
   
   ../src/host/gemmHost/gemmHost.cpp

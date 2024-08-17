@@ -2,11 +2,11 @@
 #* CHECK ENTRY PARAMS *
 #**********************
 ifeq ($(TARGET),sw_emu)
-	KERNEL_BUILD_SUBFOLDER := ker_jacobi2d_Opt0/sw_emu/
+	KERNEL_BUILD_SUBFOLDER := ker_jacobi2d_Opt3/sw_emu/
 else ifeq ($(TARGET),hw_emu)
-	KERNEL_BUILD_SUBFOLDER := ker_jacobi2d_Opt0/hw_emu/
+	KERNEL_BUILD_SUBFOLDER := ker_jacobi2d_Opt3/hw_emu/
 else ifeq ($(TARGET),hw)
-	KERNEL_BUILD_SUBFOLDER := ker_jacobi2d_Opt0/hw/
+	KERNEL_BUILD_SUBFOLDER := ker_jacobi2d_Opt3/hw/
 else
     @echo "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|hw_emu|hw"
     $(error "Incorret value of TARGET. Please, try again using: make -f <makeFileName> TARGET=sw_emu|hw_emu|hw")
@@ -33,11 +33,11 @@ VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vi
 BUILD_DIR := ../../../../build/kernelBuild
 
 CONNECTIVITY_FOLDER := connectivityConfig/
-CONNECTIVITY_NAME_MINI := jacobi2d_Opt0_mini_connec.ini
-CONNECTIVITY_NAME_SMALL := jacobi2d_Opt0_small_connec.ini
-CONNECTIVITY_NAME_MEDIUM := jacobi2d_Opt0_medium_connec.ini
-CONNECTIVITY_NAME_LARGE := jacobi2d_Opt0_large_connec.ini
-CONNECTIVITY_NAME_EXTRALARGE := jacobi2d_Opt0_extralarge_connec.ini
+CONNECTIVITY_NAME_MINI := jacobi2d_Opt3_mini_connec.ini
+CONNECTIVITY_NAME_SMALL := jacobi2d_Opt3_small_connec.ini
+CONNECTIVITY_NAME_MEDIUM := jacobi2d_Opt3_medium_connec.ini
+CONNECTIVITY_NAME_LARGE := jacobi2d_Opt3_large_connec.ini
+CONNECTIVITY_NAME_EXTRALARGE := jacobi2d_Opt3_extralarge_connec.ini
 
 PROFILE_FOLDER := connectivityConfig/
 PROFILE_NAME := profile.ini
@@ -53,39 +53,39 @@ VPPLFLAGS_SPECIFIC_EXTRALARGE := --config $(CONNECTIVITY_NAME_EXTRALARGE) --conf
 
 
 #********************************************
-#* COMPILATION OF kerjacobi2d_Opt0imization *
+#* COMPILATION OF kerjacobi2d_Opt3imization *
 #********************************************
-MAKEFILE_NAME := makeKer_jacobi2d_Opt0.mk
+MAKEFILE_NAME := makeKer_jacobi2d_Opt3.mk
 
-PackKerList := kerPack_jacobi2d_Opt0_mini
-PackKerList += kerPack_jacobi2d_Opt0_small
-PackKerList += kerPack_jacobi2d_Opt0_medium
-PackKerList += kerPack_jacobi2d_Opt0_large
-PackKerList += kerPack_jacobi2d_Opt0_extralarge
-
-
-ker_jacobi2d_Opt0_mini_XOS := ker_jacobi2d_Opt0_mini.xo
-ker_jacobi2d_Opt0_small_XOS := ker_jacobi2d_Opt0_small.xo
-ker_jacobi2d_Opt0_medium_XOS := ker_jacobi2d_Opt0_medium.xo
-ker_jacobi2d_Opt0_large_XOS := ker_jacobi2d_Opt0_large.xo
-ker_jacobi2d_Opt0_extralarge_XOS := ker_jacobi2d_Opt0_extralarge.xo
-
-ker_jacobi2d_Opt0_mini_KERNEL := ker_jacobi2d_Opt0_mini
-ker_jacobi2d_Opt0_small_KERNEL := ker_jacobi2d_Opt0_small
-ker_jacobi2d_Opt0_medium_KERNEL := ker_jacobi2d_Opt0_medium
-ker_jacobi2d_Opt0_large_KERNEL := ker_jacobi2d_Opt0_large
-ker_jacobi2d_Opt0_extralarge_KERNEL := ker_jacobi2d_Opt0_extralarge
+PackKerList := kerPack_jacobi2d_Opt3_mini
+PackKerList += kerPack_jacobi2d_Opt3_small
+PackKerList += kerPack_jacobi2d_Opt3_medium
+PackKerList += kerPack_jacobi2d_Opt3_large
+PackKerList += kerPack_jacobi2d_Opt3_extralarge
 
 
-ker_jacobi2d_Opt0_mini_CUSTOMPARAMS := -DMINI_DATASET
-ker_jacobi2d_Opt0_small_CUSTOMPARAMS := -DSMALL_DATASET
-ker_jacobi2d_Opt0_medium_CUSTOMPARAMS := -DMEDIUM_DATASET
-ker_jacobi2d_Opt0_large_CUSTOMPARAMS := -DLARGE_DATASET
-ker_jacobi2d_Opt0_extralarge_CUSTOMPARAMS := -DEXTRALARGE_DATASET
+ker_jacobi2d_Opt3_mini_XOS := ker_jacobi2d_Opt3_mini.xo
+ker_jacobi2d_Opt3_small_XOS := ker_jacobi2d_Opt3_small.xo
+ker_jacobi2d_Opt3_medium_XOS := ker_jacobi2d_Opt3_medium.xo
+ker_jacobi2d_Opt3_large_XOS := ker_jacobi2d_Opt3_large.xo
+ker_jacobi2d_Opt3_extralarge_XOS := ker_jacobi2d_Opt3_extralarge.xo
+
+ker_jacobi2d_Opt3_mini_KERNEL := ker_jacobi2d_Opt3_mini
+ker_jacobi2d_Opt3_small_KERNEL := ker_jacobi2d_Opt3_small
+ker_jacobi2d_Opt3_medium_KERNEL := ker_jacobi2d_Opt3_medium
+ker_jacobi2d_Opt3_large_KERNEL := ker_jacobi2d_Opt3_large
+ker_jacobi2d_Opt3_extralarge_KERNEL := ker_jacobi2d_Opt3_extralarge
 
 
-ker_jacobi2d_Opt0_SRC := ker_jacobi2d_Opt0.cpp
-ker_jacobi2d_Opt0_HEADER :=
+ker_jacobi2d_Opt3_mini_CUSTOMPARAMS := -DMINI_DATASET
+ker_jacobi2d_Opt3_small_CUSTOMPARAMS := -DSMALL_DATASET
+ker_jacobi2d_Opt3_medium_CUSTOMPARAMS := -DMEDIUM_DATASET
+ker_jacobi2d_Opt3_large_CUSTOMPARAMS := -DLARGE_DATASET
+ker_jacobi2d_Opt3_extralarge_CUSTOMPARAMS := -DEXTRALARGE_DATASET
+
+
+ker_jacobi2d_Opt3_SRC := ker_jacobi2d_Opt3.cpp
+ker_jacobi2d_Opt3_HEADER :=
 
 
 #********************
@@ -102,7 +102,7 @@ copy_files:
 	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_LARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	cp -r ${CONNECTIVITY_FOLDER}${CONNECTIVITY_NAME_EXTRALARGE} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	cp -r ${PROFILE_FOLDER}${PROFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
-	cp -r ${ker_jacobi2d_Opt0_SRC} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
+	cp -r ${ker_jacobi2d_Opt3_SRC} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	cp -r ${MAKEFILE_NAME} ${BUILD_DIR}/${KERNEL_BUILD_SUBFOLDER};
 	$(foreach val,$(PackKerList), \
 		$(if $(filter $(TARGET),sw_emu), \
@@ -122,69 +122,69 @@ copy_files:
 
 
 
-kerPack_jacobi2d_Opt0_mini_sw_emu.xclbin: $(ker_jacobi2d_Opt0_mini_XOS) $(CONNECTIVITY_NAME_MINI)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_jacobi2d_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_mini_sw_emu.xclbin: $(ker_jacobi2d_Opt3_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_jacobi2d_Opt3_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_small_sw_emu.xclbin: $(ker_jacobi2d_Opt0_small_XOS) $(CONNECTIVITY_NAME_SMALL)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_jacobi2d_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_small_sw_emu.xclbin: $(ker_jacobi2d_Opt3_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_jacobi2d_Opt3_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_medium_sw_emu.xclbin: $(ker_jacobi2d_Opt0_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_jacobi2d_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_medium_sw_emu.xclbin: $(ker_jacobi2d_Opt3_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_jacobi2d_Opt3_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_large_sw_emu.xclbin: $(ker_jacobi2d_Opt0_large_XOS) $(CONNECTIVITY_NAME_LARGE)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_jacobi2d_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_large_sw_emu.xclbin: $(ker_jacobi2d_Opt3_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_jacobi2d_Opt3_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_extralarge_sw_emu.xclbin: $(ker_jacobi2d_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_jacobi2d_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-
-
-kerPack_jacobi2d_Opt0_mini_hw_emu.xclbin: $(ker_jacobi2d_Opt0_mini_XOS) $(CONNECTIVITY_NAME_MINI)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_jacobi2d_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_jacobi2d_Opt0_small_hw_emu.xclbin: $(ker_jacobi2d_Opt0_small_XOS) $(CONNECTIVITY_NAME_SMALL)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_jacobi2d_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_jacobi2d_Opt0_medium_hw_emu.xclbin: $(ker_jacobi2d_Opt0_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_jacobi2d_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_jacobi2d_Opt0_large_hw_emu.xclbin: $(ker_jacobi2d_Opt0_large_XOS) $(CONNECTIVITY_NAME_LARGE)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_jacobi2d_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-kerPack_jacobi2d_Opt0_extralarge_hw_emu.xclbin: $(ker_jacobi2d_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_jacobi2d_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_extralarge_sw_emu.xclbin: $(ker_jacobi2d_Opt3_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_jacobi2d_Opt3_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
 
 
-kerPack_jacobi2d_Opt0_mini_hw.xclbin: $(ker_jacobi2d_Opt0_mini_XOS) $(CONNECTIVITY_NAME_MINI)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_jacobi2d_Opt0_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_mini_hw_emu.xclbin: $(ker_jacobi2d_Opt3_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_jacobi2d_Opt3_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_small_hw.xclbin: $(ker_jacobi2d_Opt0_small_XOS) $(CONNECTIVITY_NAME_SMALL)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_jacobi2d_Opt0_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_small_hw_emu.xclbin: $(ker_jacobi2d_Opt3_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_jacobi2d_Opt3_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_medium_hw.xclbin: $(ker_jacobi2d_Opt0_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_jacobi2d_Opt0_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_medium_hw_emu.xclbin: $(ker_jacobi2d_Opt3_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_jacobi2d_Opt3_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_large_hw.xclbin: $(ker_jacobi2d_Opt0_large_XOS) $(CONNECTIVITY_NAME_LARGE)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_jacobi2d_Opt0_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+kerPack_jacobi2d_Opt3_large_hw_emu.xclbin: $(ker_jacobi2d_Opt3_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_jacobi2d_Opt3_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-kerPack_jacobi2d_Opt0_extralarge_hw.xclbin: $(ker_jacobi2d_Opt0_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
-	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_jacobi2d_Opt0_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
-
-
+kerPack_jacobi2d_Opt3_extralarge_hw_emu.xclbin: $(ker_jacobi2d_Opt3_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_jacobi2d_Opt3_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
 
-ker_jacobi2d_Opt0_mini.xo: $(ker_jacobi2d_Opt0_SRC) $(ker_jacobi2d_Opt0_HEADER)
-	v++ --kernel $(ker_jacobi2d_Opt0_mini_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) $(ker_jacobi2d_Opt0_mini_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt0_SRC) $<
 
-ker_jacobi2d_Opt0_small.xo: $(ker_jacobi2d_Opt0_SRC) $(ker_jacobi2d_Opt0_HEADER)
-	v++ --kernel $(ker_jacobi2d_Opt0_small_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) $(ker_jacobi2d_Opt0_small_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt0_SRC) $<
+kerPack_jacobi2d_Opt3_mini_hw.xclbin: $(ker_jacobi2d_Opt3_mini_XOS) $(CONNECTIVITY_NAME_MINI)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) -o $@ $(ker_jacobi2d_Opt3_mini_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-ker_jacobi2d_Opt0_medium.xo: $(ker_jacobi2d_Opt0_SRC) $(ker_jacobi2d_Opt0_HEADER)
-	v++ --kernel $(ker_jacobi2d_Opt0_medium_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) $(ker_jacobi2d_Opt0_medium_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt0_SRC) $<
+kerPack_jacobi2d_Opt3_small_hw.xclbin: $(ker_jacobi2d_Opt3_small_XOS) $(CONNECTIVITY_NAME_SMALL)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) -o $@ $(ker_jacobi2d_Opt3_small_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-ker_jacobi2d_Opt0_large.xo: $(ker_jacobi2d_Opt0_SRC) $(ker_jacobi2d_Opt0_HEADER)
-	v++ --kernel $(ker_jacobi2d_Opt0_large_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) $(ker_jacobi2d_Opt0_large_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt0_SRC) $<
+kerPack_jacobi2d_Opt3_medium_hw.xclbin: $(ker_jacobi2d_Opt3_medium_XOS) $(CONNECTIVITY_NAME_MEDIUM)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) -o $@ $(ker_jacobi2d_Opt3_medium_XOS) --remote_ip_cache ${IP_CACHE_DIR}
 
-ker_jacobi2d_Opt0_extralarge.xo: $(ker_jacobi2d_Opt0_SRC) $(ker_jacobi2d_Opt0_HEADER)
-	v++ --kernel $(ker_jacobi2d_Opt0_extralarge_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) $(ker_jacobi2d_Opt0_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt0_SRC) $<
+kerPack_jacobi2d_Opt3_large_hw.xclbin: $(ker_jacobi2d_Opt3_large_XOS) $(CONNECTIVITY_NAME_LARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) -o $@ $(ker_jacobi2d_Opt3_large_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+kerPack_jacobi2d_Opt3_extralarge_hw.xclbin: $(ker_jacobi2d_Opt3_extralarge_XOS) $(CONNECTIVITY_NAME_EXTRALARGE)
+	v++ -l $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) -o $@ $(ker_jacobi2d_Opt3_extralarge_XOS) --remote_ip_cache ${IP_CACHE_DIR}
+
+
+
+
+ker_jacobi2d_Opt3_mini.xo: $(ker_jacobi2d_Opt3_SRC) $(ker_jacobi2d_Opt3_HEADER)
+	v++ --kernel $(ker_jacobi2d_Opt3_mini_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MINI) $(ker_jacobi2d_Opt3_mini_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt3_SRC) $<
+
+ker_jacobi2d_Opt3_small.xo: $(ker_jacobi2d_Opt3_SRC) $(ker_jacobi2d_Opt3_HEADER)
+	v++ --kernel $(ker_jacobi2d_Opt3_small_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_SMALL) $(ker_jacobi2d_Opt3_small_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt3_SRC) $<
+
+ker_jacobi2d_Opt3_medium.xo: $(ker_jacobi2d_Opt3_SRC) $(ker_jacobi2d_Opt3_HEADER)
+	v++ --kernel $(ker_jacobi2d_Opt3_medium_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_MEDIUM) $(ker_jacobi2d_Opt3_medium_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt3_SRC) $<
+
+ker_jacobi2d_Opt3_large.xo: $(ker_jacobi2d_Opt3_SRC) $(ker_jacobi2d_Opt3_HEADER)
+	v++ --kernel $(ker_jacobi2d_Opt3_large_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_LARGE) $(ker_jacobi2d_Opt3_large_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt3_SRC) $<
+
+ker_jacobi2d_Opt3_extralarge.xo: $(ker_jacobi2d_Opt3_SRC) $(ker_jacobi2d_Opt3_HEADER)
+	v++ --kernel $(ker_jacobi2d_Opt3_extralarge_KERNEL) $(VPPFLAGS_GENERAL) $(VPPLFLAGS_SPECIFIC_EXTRALARGE) $(ker_jacobi2d_Opt3_extralarge_CUSTOMPARAMS) -c -o $@ $(ker_jacobi2d_Opt3_SRC) $<

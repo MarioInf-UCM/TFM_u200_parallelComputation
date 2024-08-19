@@ -45,17 +45,17 @@ typedef float typeData;
 extern "C"{
 
     #ifdef MINI_DATASET
-        void ker_doitgen_Opt2_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt3_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(SMALL_DATASET)
-        void ker_doitgen_Opt2_small(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt3_small(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(MEDIUM_DATASET)
-        void ker_doitgen_Opt2_medium(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt3_medium(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(LARGE_DATASET)
-        void ker_doitgen_Opt2_large(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt3_large(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(EXTRALARGE_DATASET)
-        void ker_doitgen_Opt2_extralarge(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgen_Opt3_extralarge(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #else
-        void ker_doitgenOpt2(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgenOpt3(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_A max_read_burst_length = 32 offset = slave bundle = gmem

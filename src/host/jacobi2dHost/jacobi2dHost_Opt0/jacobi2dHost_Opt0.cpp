@@ -142,12 +142,36 @@ bool Jacobi2dHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance,
 
     //STEP 6 - START: Device execution
     fileWriter_logFile.writeln("STEP 6 - START: Device execution");
-    event.add("Device execution");
+    
+    if(exec.get_measurePower_device() && exec.get_kernelPackage().find("hw.xclbin") != string::npos){
+        if(exec.get_kernelPackage().find("hw.xclbin") == string::npos){
+            fileWriter_logFile.writeln("ERROR..: We can't measure power device in sw_emu or hw_emu.");
+        }else{
 
-    q.enqueueTask(ker, NULL, &event_sp);
-    clWaitForEvents(1, (const cl_event *)&event_sp);
+            stop_thread.store(false);
+            q.enqueueTask(ker, NULL, &event_sp);
+            event.add("Device execution");
 
-    event.finish();
+            thread thread_deviceMeasure(threadFunction_DevicePowerMeasure);
+            
+            clWaitForEvents(1, (const cl_event *)&event_sp);
+            event.finish();
+
+            stop_thread.store(true);
+            if (thread_deviceMeasure.joinable()) {
+                thread_deviceMeasure.join();
+            }
+            
+            resultMeasure_Device = sharedVariable;
+        }
+
+    }else{
+        q.enqueueTask(ker, NULL, &event_sp);
+        event.add("Device execution");
+        clWaitForEvents(1, (const cl_event *)&event_sp);  
+        event.finish();      
+    }
+
     fileWriter_logFile.write("STEP 6 - END: Device execution (" + event.getInfoEvents(5));
     //STEP 6 - END: Device execution
 

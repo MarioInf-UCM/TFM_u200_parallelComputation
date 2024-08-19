@@ -20,8 +20,9 @@ def generate_plot(csv_url):
         return
 
     # Define the order of the categories
+    categories = ['mini', 'small', 'medium']
     #categories = ['mini', 'small', 'medium', 'large', 'extralarge']
-    categories = ['2Gb', '4Gb', '8Gb', '16Gb', '32Gb']                  #Categorias exclusivas del kernel VectorAdd
+    #categories = ['2Gb', '4Gb', '8Gb', '16Gb', '32Gb']                  #Categorias exclusivas del kernel VectorAdd
 
     plt.figure(figsize=(10, 6))
     plt.plot(x, y1, marker='o', label='Ejecucion de la CPU', color='red')

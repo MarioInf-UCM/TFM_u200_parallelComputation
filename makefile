@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_jacobi2d/configTest_jacobi2d_Opt4_sw_emu.json
+CONFIGFILE_ROUTE=../../../config/configTest_jacobi2d/configBenchmark_jacobi2d.json
 
 #Kernel url specification - START
 #***********************************

@@ -64,13 +64,11 @@ extern "C"{
         typeData inD_B_local[SIZE_N*SIZE_N];
         typeData outD_result_local[SIZE_N*SIZE_N*2];
         
-
         for (int i = 0 ; i < SIZE_N*SIZE_N ; i++) {
             #pragma HLS PIPELINE off
             inD_A_local[i] = inD_A[i];
             inD_B_local[i] = inD_B[i];
         }
-
 
         for (int t=0; t<STEPS ; t++){
             #pragma HLS PIPELINE off
@@ -82,7 +80,6 @@ extern "C"{
                     inD_B_local[(i*SIZE_N)+j] = 0.2 * (inD_A_local[(i*SIZE_N)+j] + inD_A_local[(i*SIZE_N)+(j-1)] + inD_A_local[(i*SIZE_N)+(j+1)] + inD_A_local[((i+1)*SIZE_N)+j] + inD_A_local[((i-1)*SIZE_N)+j]);
                 }
             }
-
             for (int i = 1; i < SIZE_N - 1 ; i++){
                 #pragma HLS PIPELINE off
                 for (int j = 1; j < SIZE_N - 1 ; j++){
@@ -91,13 +88,11 @@ extern "C"{
                 }
             }
         }
-
         for (int i = 0; i < (SIZE_N*SIZE_N) ; i++){
             #pragma HLS PIPELINE off
             inD_A[i] = inD_A_local[i];
             inD_B[i] = inD_B_local[i];
         }
-
         return;   
     }
 }

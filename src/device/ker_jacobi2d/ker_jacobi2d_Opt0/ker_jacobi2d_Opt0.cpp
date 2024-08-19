@@ -67,7 +67,6 @@ extern "C"{
                     inD_B[(i*SIZE_N)+j] = 0.2 * (inD_A[(i*SIZE_N)+j] + inD_A[(i*SIZE_N)+(j-1)] + inD_A[(i*SIZE_N)+(j+1)] + inD_A[((i+1)*SIZE_N)+j] + inD_A[((i-1)*SIZE_N)+j]);
                 }
             }
-
             for (int i = 1; i < SIZE_N - 1 ; i++){
                 #pragma HLS PIPELINE off
                 for (int j = 1; j < SIZE_N - 1 ; j++){
@@ -75,9 +74,7 @@ extern "C"{
                     inD_A[(i*SIZE_N)+j] = 0.2 * (inD_B[(i*SIZE_N)+j] + inD_B[(i*SIZE_N)+(j-1)] + inD_B[(i*SIZE_N)+(j+1)] + inD_B[((i+1)*SIZE_N)+j] + inD_B[((i-1)*SIZE_N)+j]);
                 }
             }
-        }
-        
+        }   
         return; 
     }
-    
 }

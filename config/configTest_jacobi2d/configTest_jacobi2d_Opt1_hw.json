@@ -49,6 +49,30 @@
                     "printResults": false,
                     "numExecutions_cool": 0,
                     "numExecutions_hot": 1
+                },
+                {
+                    "host": "jacobi2dHost_Opt1",
+                    "kernelPackage": "kerPack_jacobi2d_Opt1_large_hw.xclbin",
+                    "kernel": "ker_jacobi2d_Opt1_large",
+                    "dataSize": "large", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
+                    "printResults": false,
+                    "numExecutions_cool": 0,
+                    "numExecutions_hot": 1
+                },
+                {
+                    "host": "jacobi2dHost_Opt1",
+                    "kernelPackage": "kerPack_jacobi2d_Opt1_extralarge_hw.xclbin",
+                    "kernel": "ker_jacobi2d_Opt1_extralarge",
+                    "dataSize": "extralarge", 
+                    "measurePower_CPU": true, 
+                    "measurePower_CPUopt": true, 
+                    "measurePower_device": false,   
+                    "printResults": false,
+                    "numExecutions_cool": 0,
+                    "numExecutions_hot": 1
                 }
             ]
         }

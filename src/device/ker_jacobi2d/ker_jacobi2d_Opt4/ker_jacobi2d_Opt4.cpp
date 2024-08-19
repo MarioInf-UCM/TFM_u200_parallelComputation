@@ -42,9 +42,9 @@ extern "C"{
 
     void readData(typeData *inD_A, typeData *inD_B, typeData *inD_A_local, typeData *inD_B_local){
         for (int i = 0 ; i < SIZE_N*SIZE_N ; i++) {
-            #pragma HLS STREAM variable=inD_A_local depth=SIZE_N*SIZE_N 
-            #pragma HLS STREAM variable=inD_B_local depth=SIZE_N*SIZE_N 
-            #pragma HLS PIPELINE off
+            #pragma HLS PIPELINE II=1
+            #pragma HLS LOOP_TRIPCOUNT min=SIZE_N-1 max=SIZE_N-1
+            #pragma HLS UNROLL factor=2
             inD_A_local[i] = inD_A[i];
             inD_B_local[i] = inD_B[i];
         }
@@ -54,8 +54,6 @@ extern "C"{
     void innerLoop1(typeData *inD_A_local, typeData *inD_B_local, int i){
         typeData factor=0.2;
         for (int j = 1; j < SIZE_N - 1 ; j++){
-            #pragma HLS STREAM variable=inD_B_local depth=SIZE_N-1
-            #pragma HLS PIPELINE off      
             #pragma HLS PIPELINE II=1
             #pragma HLS LOOP_TRIPCOUNT min=SIZE_N-1 max=SIZE_N-1
             #pragma HLS UNROLL factor=2      
@@ -67,8 +65,6 @@ extern "C"{
     void innerLoop2(typeData *inD_A_local, typeData *inD_B_local, int i){
         typeData factor=0.2;
         for (int j = 1; j < SIZE_N - 1 ; j++){
-            #pragma HLS STREAM variable=inD_A_local depth=SIZE_N-1
-            #pragma HLS PIPELINE off
             #pragma HLS PIPELINE II=1
             #pragma HLS LOOP_TRIPCOUNT min=SIZE_N-1 max=SIZE_N-1
             #pragma HLS UNROLL factor=2
@@ -79,9 +75,6 @@ extern "C"{
 
     void writeData(typeData *inD_A, typeData *inD_B, typeData *inD_A_local, typeData *inD_B_local) {
         for (int i = 0 ; i < SIZE_N*SIZE_N ; i++) {
-            #pragma HLS STREAM variable=inD_A_local depth=SIZE_N*SIZE_N
-            #pragma HLS STREAM variable=inD_B_local depth=SIZE_N*SIZE_N
-            #pragma HLS PIPELINE off
             #pragma HLS PIPELINE II=1
             #pragma HLS LOOP_TRIPCOUNT min=SIZE_N-1 max=SIZE_N-1
             #pragma HLS UNROLL factor=2
@@ -121,7 +114,6 @@ extern "C"{
         typeData inD_B_local[SIZE_N*SIZE_N];
 
         readData(inD_A, inD_B, inD_A_local, inD_B_local);
-
         for (int t=0; t<STEPS ; t++){
             #pragma HLS PIPELINE off
             
@@ -134,10 +126,8 @@ extern "C"{
                 innerLoop2(inD_A_local, inD_B_local, i);
             }
         }
-
         writeData(inD_A, inD_B, inD_A_local, inD_B_local);
-
-
+        
         return;   
     }
 }

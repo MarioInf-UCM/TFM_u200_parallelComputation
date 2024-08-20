@@ -354,7 +354,7 @@ bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<dou
 
     bool result = false;
     if(exec.get_host().find("doitgen") != string::npos){
-        //result = DoitgenHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);
+        result = DoitgenHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);
 
     }else if(exec.get_host().find("cholesky") != string::npos){
         //result = CholeskyHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   

@@ -32,14 +32,14 @@ VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vi
 
 BUILD_DIR := ../../../../build/kernelBuild
 
-CONNECTIVITY_FOLDER := ../doitgen_connectivityConfig/
+CONNECTIVITY_FOLDER := connectivityConfig/
 CONNECTIVITY_NAME_MINI := doitgen_Opt4_mini_connec.ini
 CONNECTIVITY_NAME_SMALL := doitgen_Opt4_small_connec.ini
 CONNECTIVITY_NAME_MEDIUM := doitgen_Opt4_medium_connec.ini
 CONNECTIVITY_NAME_LARGE := doitgen_Opt4_large_connec.ini
 CONNECTIVITY_NAME_EXTRALARGE := doitgen_Opt4_extralarge_connec.ini
 
-PROFILE_FOLDER := ../doitgen_connectivityConfig/
+PROFILE_FOLDER := connectivityConfig/
 PROFILE_NAME := profile.ini
 
 

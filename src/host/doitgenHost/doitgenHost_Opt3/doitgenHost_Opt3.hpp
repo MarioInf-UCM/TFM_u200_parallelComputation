@@ -1,19 +1,20 @@
-#ifndef _JACOBI2DHOST_OPT0_HPP_
-#define _JACOBI2DHOST_OPT0_HPP_
+#ifndef _DOITGENHOST_OPT3_HPP_
+#define _DOITGENHOST_OPT3_HPP_
 
 #include <iostream>
 #include <typeinfo>
 #include <atomic>
+#include "../../../configParams/configParams.hpp"
+#include "../../../kernel/doitgenKernel/doitgenKernel.hpp"
 #include "../../../service/fileWriter_service/fileWriter_service.hpp"
 #include "../../../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../../../utilities/event_timer/event_timer.hpp"
 #include "../../../utilities/xilinx_ocl_helper/xilinx_ocl_helper.hpp"
-#include "../../../configParams/configParams.hpp"
-#include "../../../kernel/jacobi_2dKernel/jacobi_2dKernel.hpp"
 
 using globalConfiguration_typeData::typeData;
 
-class Jacobi2dHost_Opt0 {
+
+class DoitgenHost_Opt3{
 
 
     //*****************************
@@ -28,22 +29,23 @@ class Jacobi2dHost_Opt0 {
     //* DEFINITION ZONE FUNCTIONS *
     //*****************************
     public:
-        Jacobi2dHost_Opt0();
-        ~Jacobi2dHost_Opt0();
+        DoitgenHost_Opt3();
+        ~DoitgenHost_Opt3();
 
         static bool exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:
-        static bool initParameter(Execution exec, unsigned int &STEPS, unsigned int &SIZE_N);
+        static bool initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P);
 
-        static void ensamble_dataToBuffers(Jacobi_2dKernel& data, vector<typeData> &temp_A, vector<typeData> &temp_B);
-        static void ensamble_buffersToData(Jacobi_2dKernel &data, vector<typeData> &temp_A, vector<typeData> &temp_B);
-        static bool compareResults(Jacobi_2dKernel& data);
- 
+        static void emsamble_dataToBuffers(DoitgenKernel& data, typeData *temp_A,  typeData *temp_C4, typeData *temp_resultDevice);
+        static void emsamble_buffersToData(DoitgenKernel& data, typeData *temp_resultDevice);
+        static bool compareResults(DoitgenKernel& data);
+
         static float searchPropertyValue(const string& texto, const string& subcadena);
         static void threadFunction_DevicePowerMeasure();
-        static double executeAndMeasure_CPU(Jacobi_2dKernel& data, EventTimer &event);
-        static double executeAndMeasure_CPUopt(Jacobi_2dKernel& data, vector<double> &measureByPack, EventTimer &event);
+        static double executeAndMeasure_CPU(DoitgenKernel& data, EventTimer &event);
+        static double executeAndMeasure_CPUopt(DoitgenKernel& data, vector<double> &measureByPack, EventTimer &event);
+
 };
 #endif

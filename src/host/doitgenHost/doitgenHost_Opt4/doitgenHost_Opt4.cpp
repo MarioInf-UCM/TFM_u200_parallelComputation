@@ -14,32 +14,33 @@
 #include <sys/ioctl.h>
 #include <xrt.h>
 #include <xrt/xrt_device.h>
-#include "doitgenHost_Opt0.hpp"
+#include "doitgenHost_Opt4.hpp"
 
 using namespace std;
 using globalConfiguration_typeData::typeData;
+using globalConfiguration_typeData::typeData_fixed;
 
 using cl::Event;
 using cl::CommandQueue;
 using cl::Kernel;
 using cl::Buffer;
 
-atomic<bool> DoitgenHost_Opt0::stop_thread(false);
-double DoitgenHost_Opt0::sharedVariable=0.0f;
+atomic<bool> DoitgenHost_Opt4::stop_thread(false);
+double DoitgenHost_Opt4::sharedVariable=0.0f;
 
 //********************************
 //* CONSTRUCTORS AND DESTRUCTORS *
 //********************************
-DoitgenHost_Opt0::DoitgenHost_Opt0(){}
-DoitgenHost_Opt0::~DoitgenHost_Opt0(){}
+DoitgenHost_Opt4::DoitgenHost_Opt4(){}
+DoitgenHost_Opt4::~DoitgenHost_Opt4(){}
 
 
 
 //*************************************
 // MAIN FUNCTION - START
 //*************************************
-bool DoitgenHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
-    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_Opt0_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
+bool DoitgenHost_Opt4::exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
+    fileWriter_logFile.writeln("Executing host function \"DoitgenHost::doitgenHost_Opt4_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_R=0, SIZE_Q=0, SIZE_P=0;    
     bool result = initParameter(exec, SIZE_R, SIZE_Q, SIZE_P);
@@ -53,6 +54,7 @@ bool DoitgenHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance, 
     Event event_sp;
     double resultMeasure_Device=0.0f, resultMeasure_CPU=0.0f, resultMeasure_CPUopt=0.0f;
     vector<double> resultMeasure_CPUopt_byPack = vector<double>();
+
 
     //STEP 1 - START: Initializaton OpenCL and load kernels"
     fileWriter_logFile.writeln("STEP 1 - START: Initializaton OpenCL and load kernels");
@@ -102,32 +104,62 @@ bool DoitgenHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance, 
     fileWriter_logFile.writeln("STEP 4 - START: Creating buffer");
     event.add("Creating buffers");
 
-    vector<typeData> temp_A = vector<typeData>();
-    vector<typeData> temp_C4 = vector<typeData>();
-    vector<typeData> temp_resultDevice = vector<typeData>();
-    emsamble_dataToBuffers(data, temp_A, temp_C4, temp_resultDevice);
+    cl_mem_ext_ptr_t bank_ext0;
+    bank_ext0.flags = 0 | XCL_MEM_TOPOLOGY;
+    bank_ext0.obj   = NULL;
+    bank_ext0.param = 0;
+
+    cl_mem_ext_ptr_t bank_ext1;
+    bank_ext1.flags = 1 | XCL_MEM_TOPOLOGY;
+    bank_ext1.obj   = NULL;
+    bank_ext1.param = 0;
+    
+    cl_mem_ext_ptr_t bank_ext2;
+    bank_ext2.flags = 2 | XCL_MEM_TOPOLOGY;
+    bank_ext2.obj   = NULL;
+    bank_ext2.param = 0;
 
     Buffer sendBuff_A(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_A.size() * sizeof(typeData),
-                        temp_A.data(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
+                        data.get_SIZE_R() * data.get_SIZE_Q() * data.get_SIZE_P() * sizeof(typeData),
+                        &bank_ext0,
                         NULL);
 
     Buffer sendBuff_C4(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_C4.size() * sizeof(typeData),
-                        temp_C4.data(),
+                        static_cast<cl_mem_flags>(CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX),
+                        data.get_SIZE_P() * data.get_SIZE_P() * sizeof(typeData),
+                        &bank_ext1,
                         NULL);
 
     Buffer recvBuff_resultDevice(xocl.get_context(),
-                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR),
-                        temp_resultDevice.size() * sizeof(typeData),
-                        temp_resultDevice.data(),
+                        static_cast<cl_mem_flags>(CL_MEM_WRITE_ONLY | CL_MEM_EXT_PTR_XILINX),
+                        data.get_SIZE_R() * data.get_SIZE_Q() * data.get_SIZE_P() * sizeof(typeData),
+                        &bank_ext2,
                         NULL);
 
     ker.setArg(0, sendBuff_A);
     ker.setArg(1, sendBuff_C4);
     ker.setArg(2, recvBuff_resultDevice);
+
+    typeData_fixed *temp_A = (typeData_fixed *)q.enqueueMapBuffer(sendBuff_A,
+                                                 CL_TRUE,
+                                                 CL_MAP_WRITE,
+                                                 0,
+                                                 data.get_SIZE_R() * data.get_SIZE_Q() * data.get_SIZE_P() * sizeof(typeData_fixed));
+
+    typeData_fixed *temp_C4 = (typeData_fixed *)q.enqueueMapBuffer(sendBuff_C4,
+                                                 CL_TRUE,
+                                                 CL_MAP_WRITE,
+                                                 0,
+                                                 data.get_SIZE_P() * data.get_SIZE_P() * sizeof(typeData_fixed));
+
+    typeData_fixed *temp_resultDevice = (typeData_fixed *)q.enqueueMapBuffer(recvBuff_resultDevice,
+                                                 CL_TRUE,
+                                                 CL_MAP_WRITE | CL_MAP_READ,
+                                                 0,
+                                                 data.get_SIZE_R() * data.get_SIZE_Q() * data.get_SIZE_P() * sizeof(typeData_fixed));
+
+    emsamble_dataToBuffers(data, temp_A, temp_C4, temp_resultDevice);
 
     event.finish();
     fileWriter_logFile.write("STEP 4 - END: Creating buffer (" + event.getInfoEvents(3)); 
@@ -247,7 +279,7 @@ bool DoitgenHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance, 
 
 
 
-bool DoitgenHost_Opt0::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
+bool DoitgenHost_Opt4::initParameter(Execution exec, unsigned int &SIZE_R, unsigned int &SIZE_Q, unsigned int &SIZE_P){
     if(exec.get_dataSize() == "mini"){
         SIZE_R=DOITGEN_R_MINI;
         SIZE_Q=DOITGEN_Q_MINI;
@@ -276,46 +308,53 @@ bool DoitgenHost_Opt0::initParameter(Execution exec, unsigned int &SIZE_R, unsig
 
 
 
-bool DoitgenHost_Opt0::compareResults(DoitgenKernel& data){
+bool DoitgenHost_Opt4::compareResults(DoitgenKernel& data){
+    typeData_fixed tolerance = 0.1;
+    typeData_fixed tempDataCPU, tempDataDevice;
+
     for (int r = 0; r < data.get_SIZE_R(); r++){
-      for (int q = 0; q < data.get_SIZE_Q(); q++){
-        for (int p = 0; p < data.get_SIZE_P(); p++){
-          if(data.get_resultCPU()[r][q][p] != data.get_resultDevice()[r][q][p]){
-              return false;
-          }
+        for (int q = 0; q < data.get_SIZE_Q(); q++){
+            for (int p = 0; p < data.get_SIZE_P(); p++){
+                tempDataCPU = data.get_resultCPU()[r][q][p];
+                tempDataDevice = data.get_resultDevice()[r][q][p];
+                if( !((tempDataCPU > tempDataDevice ? tempDataCPU - tempDataDevice : tempDataDevice - tempDataCPU) < tolerance) ){
+                    //cout << r << "  " << q << "  " << p << "  " << data.get_resultCPU()[r][q][p] << "  " << data.get_resultDevice()[r][q][p] << endl;
+                    return false;
+                }
+            }
         }
-      }
     }
     return true;
 }
 
 
 
-void DoitgenHost_Opt0::emsamble_dataToBuffers(DoitgenKernel& data, vector<typeData> &temp_A,  vector<typeData>& temp_C4, vector<typeData>& temp_resultDevice){
+void DoitgenHost_Opt4::emsamble_dataToBuffers(DoitgenKernel& data, typeData_fixed *temp_A,  typeData_fixed *temp_C4, typeData_fixed *temp_resultDevice){
 
-    temp_A.clear();
-    temp_resultDevice.clear();
+    int pos=0;
     for (int r = 0; r < data.get_SIZE_R(); r++) {
         for (int q = 0; q < data.get_SIZE_Q(); q++) {
             for (int p = 0; p < data.get_SIZE_P(); p++){
-                temp_A.push_back( data.get_A()[r][q][p] );
-                temp_resultDevice.push_back( 0.0 );
+                temp_A[pos] = data.get_A()[r][q][p];
+                temp_resultDevice[pos] = 0.0;
+                pos++;
             }
         }
     }
 
-    temp_C4.clear();
+    pos=0;
     for (int p1 = 0; p1 < data.get_SIZE_P(); p1++) {
         for (int p2 = 0; p2 < data.get_SIZE_P(); p2++) {
-            temp_C4.push_back( data.get_C4()[p1][p2] );
+            temp_C4[pos]=data.get_C4()[p1][p2];
+            pos++;
         }
     }
-
-  return;
+    return;
 }
 
 
-void DoitgenHost_Opt0::emsamble_buffersToData(DoitgenKernel& data, vector<typeData>& temp_resultDevice){
+
+void DoitgenHost_Opt4::emsamble_buffersToData(DoitgenKernel& data, typeData_fixed *temp_resultDevice){
     
     int i=0;
     for (int r = 0; r < data.get_SIZE_R(); r++) {
@@ -331,7 +370,8 @@ void DoitgenHost_Opt0::emsamble_buffersToData(DoitgenKernel& data, vector<typeDa
 
 
 
-float DoitgenHost_Opt0::searchPropertyValue(const string& texto, const string& subcadena) {
+
+float DoitgenHost_Opt4::searchPropertyValue(const string& texto, const string& subcadena) {
     istringstream stream(texto);
     string linea;
     string resultado;
@@ -354,7 +394,7 @@ float DoitgenHost_Opt0::searchPropertyValue(const string& texto, const string& s
 }
 
 
-double DoitgenHost_Opt0::executeAndMeasure_CPU(DoitgenKernel& data, EventTimer &event){
+double DoitgenHost_Opt4::executeAndMeasure_CPU(DoitgenKernel& data, EventTimer &event){
 
     cout << "Measuring CPU Power...";
     pthread_t thread;
@@ -425,7 +465,7 @@ double DoitgenHost_Opt0::executeAndMeasure_CPU(DoitgenKernel& data, EventTimer &
 
 
 
-double DoitgenHost_Opt0::executeAndMeasure_CPUopt(DoitgenKernel& data, vector<double> &measureByPack, EventTimer &event){
+double DoitgenHost_Opt4::executeAndMeasure_CPUopt(DoitgenKernel& data, vector<double> &measureByPack, EventTimer &event){
 
     cout << "Measuring CPU Power...";
     long long measureStart_0=0, measureEnd_0=0, measureStart_16=0, measureEnd_16=0;
@@ -495,7 +535,7 @@ double DoitgenHost_Opt0::executeAndMeasure_CPUopt(DoitgenKernel& data, vector<do
 
 
 
-void DoitgenHost_Opt0::threadFunction_DevicePowerMeasure() {
+void DoitgenHost_Opt4::threadFunction_DevicePowerMeasure() {
 
     cout << "Measuring device Power...";
     unsigned int numIter=0; 

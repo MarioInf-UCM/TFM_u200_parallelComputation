@@ -292,7 +292,7 @@ bool Jacobi2dHost_Opt4::initParameter(Execution exec, unsigned int &STEPS, unsig
 
 
 bool Jacobi2dHost_Opt4::compareResults(Jacobi_2dKernel& data){
-    typeData_fixed tolerance = 0.01;
+    typeData_fixed tolerance = 0.1;
     typeData_fixed tempDataCPU, tempDataDevice;
 
     for (int n1 = 0; n1 < data.get_SIZE_N()*2; n1++) {

@@ -9,6 +9,8 @@
 #include "doitgenHost_Opt0/doitgenHost_Opt0.hpp"
 #include "doitgenHost_Opt1/doitgenHost_Opt1.hpp"
 #include "doitgenHost_Opt2/doitgenHost_Opt2.hpp"
+#include "doitgenHost_Opt3/doitgenHost_Opt3.hpp"
+#include "doitgenHost_Opt4/doitgenHost_Opt4.hpp"
 
 class DoitgenHost {
 
@@ -31,7 +33,7 @@ class DoitgenHost {
         DoitgenHost();
         ~DoitgenHost();
 
-        static bool exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+        static bool exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:

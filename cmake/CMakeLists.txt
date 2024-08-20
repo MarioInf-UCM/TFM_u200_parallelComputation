@@ -77,6 +77,9 @@ list(APPEND kerPackList "kerPack_cholesky_Opt1_mini" "kerPack_cholesky_Opt1_smal
 
 list(APPEND kerPackList "kerPack_doitgen_Opt0_mini" "kerPack_doitgen_Opt0_small" "kerPack_doitgen_Opt0_medium" "kerPack_doitgen_Opt0_large" "kerPack_doitgen_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_doitgen_Opt1_mini" "kerPack_doitgen_Opt1_small" "kerPack_doitgen_Opt1_medium" "kerPack_doitgen_Opt1_large" "kerPack_doitgen_Opt1_extralarge" )
+list(APPEND kerPackList "kerPack_doitgen_Opt2_mini" "kerPack_doitgen_Opt2_small" "kerPack_doitgen_Opt2_medium" "kerPack_doitgen_Opt2_large" "kerPack_doitgen_Opt2_extralarge" )
+list(APPEND kerPackList "kerPack_doitgen_Opt3_mini" "kerPack_doitgen_Opt3_small" "kerPack_doitgen_Opt3_medium" "kerPack_doitgen_Opt3_large" "kerPack_doitgen_Opt3_extralarge" )
+list(APPEND kerPackList "kerPack_doitgen_Opt4_mini" "kerPack_doitgen_Opt4_small" "kerPack_doitgen_Opt4_medium" "kerPack_doitgen_Opt4_large" "kerPack_doitgen_Opt4_extralarge" )
 
 list(APPEND kerPackList "kerPack_gemm_Opt0_mini" "kerPack_gemm_Opt0_small" "kerPack_gemm_Opt0_medium" "kerPack_gemm_Opt0_large" "kerPack_gemm_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_gemm_Opt1_mini" "kerPack_gemm_Opt1_small" "kerPack_gemm_Opt1_medium" "kerPack_gemm_Opt1_large" "kerPack_gemm_Opt1_extralarge" )
@@ -217,6 +220,8 @@ add_executable(benchmarkExec
   ../src/host/doitgenHost/doitgenHost_Opt0/doitgenHost_Opt0.cpp
   ../src/host/doitgenHost/doitgenHost_Opt1/doitgenHost_Opt1.cpp
   ../src/host/doitgenHost/doitgenHost_Opt2/doitgenHost_Opt2.cpp
+  ../src/host/doitgenHost/doitgenHost_Opt3/doitgenHost_Opt3.cpp
+  ../src/host/doitgenHost/doitgenHost_Opt4/doitgenHost_Opt4.cpp
   ../src/kernel/doitgenKernel/doitgenKernel.cpp
   
   ../src/host/choleskyHost/choleskyHost.cpp

@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_jacobi2d/configBenchmark_jacobi2d.json
+CONFIGFILE_ROUTE=../../../config/configTest_doitgen/configTest_doitgen_Opt4_sw_emu.json
 
 #Kernel url specification - START
 #***********************************
@@ -27,6 +27,10 @@ KERNEL_DOITGEN_OPT1_SUBROUTE=ker_doitgen/ker_doitgen_Opt1
 KERNEL_DOITGEN_OPT1_NAME=makeKer_doitgen_Opt1.mk
 KERNEL_DOITGEN_OPT2_SUBROUTE=ker_doitgen/ker_doitgen_Opt2
 KERNEL_DOITGEN_OPT2_NAME=makeKer_doitgen_Opt2.mk
+KERNEL_DOITGEN_OPT3_SUBROUTE=ker_doitgen/ker_doitgen_Opt3
+KERNEL_DOITGEN_OPT3_NAME=makeKer_doitgen_Opt3.mk
+KERNEL_DOITGEN_OPT4_SUBROUTE=ker_doitgen/ker_doitgen_Opt4
+KERNEL_DOITGEN_OPT4_NAME=makeKer_doitgen_Opt4.mk
 
 KERNEL_GEMM_OPT0_SUBROUTE=ker_gemm/ker_gemm_Opt0
 KERNEL_GEMM_OPT0_NAME=makeKer_gemm_Opt0.mk
@@ -185,7 +189,17 @@ kerDoitgen_Opt2_build_sw_emu:
 	make -f $(KERNEL_DOITGEN_OPT2_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerDoitgen_All_build_sw_emu: kerDoitgen_Opt0_build_sw_emu kerDoitgen_Opt1_build_sw_emu kerDoitgen_Opt2_build_sw_emu
+kerDoitgen_Opt3_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_OPT3_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerDoitgen_Opt4_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_OPT4_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerDoitgen_All_build_sw_emu: kerDoitgen_Opt0_build_sw_emu kerDoitgen_Opt1_build_sw_emu kerDoitgen_Opt2_build_sw_emu kerDoitgen_Opt3_build_sw_emu kerDoitgen_Opt4_build_sw_emu
 
 
 # KERNEL TARGET hw_emu
@@ -205,7 +219,17 @@ kerDoitgen_Opt2_build_hw_emu:
 	make -f $(KERNEL_DOITGEN_OPT2_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerDoitgen_All_build_hw_emu: kerDoitgen_Opt0_build_hw_emu kerDoitgen_Opt1_build_hw_emu kerDoitgen_Opt2_build_hw_emu
+kerDoitgen_Opt3_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_OPT3_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerDoitgen_Opt4_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_OPT4_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerDoitgen_All_build_hw_emu: kerDoitgen_Opt0_build_hw_emu kerDoitgen_Opt1_build_hw_emu kerDoitgen_Opt2_build_hw_emu kerDoitgen_Opt3_build_hw_emu kerDoitgen_Opt4_build_hw_emu
 
 
 # KERNEL TARGET hw
@@ -225,7 +249,17 @@ kerDoitgen_Opt2_build_hw:
 	make -f $(KERNEL_DOITGEN_OPT2_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerDoitgen_All_build_hw: kerDoitgen_Opt0_build_hw kerDoitgen_Opt1_build_hw kerDoitgen_Opt2_build_hw
+kerDoitgen_Opt3_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_OPT3_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerDoitgen_Opt4_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_DOITGEN_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_DOITGEN_OPT4_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerDoitgen_All_build_hw: kerDoitgen_Opt0_build_hw kerDoitgen_Opt1_build_hw kerDoitgen_Opt2_build_hw kerDoitgen_Opt3_build_hw kerDoitgen_Opt4_build_hw
 #*********************************************
 # COMMANDS FOR DOITGEN KERNELS COMPILE - END
 #*********************************************

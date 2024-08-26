@@ -8,7 +8,9 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_doitgen/configTest_doitgen_Opt4_sw_emu.json
+CONFIGFILE_ROUTE=../../../config/configTest_cholesky/configBenchmark_cholesky.json
+
+
 
 #Kernel url specification - START
 #***********************************
@@ -20,6 +22,10 @@ KERNEL_CHOLESKY_OPT1_SUBROUTE=ker_cholesky/ker_cholesky_Opt1
 KERNEL_CHOLESKY_OPT1_NAME=makeKer_cholesky_Opt1.mk
 KERNEL_CHOLESKY_OPT2_SUBROUTE=ker_cholesky/ker_cholesky_Opt2
 KERNEL_CHOLESKY_OPT2_NAME=makeKer_cholesky_Opt2.mk
+KERNEL_CHOLESKY_OPT3_SUBROUTE=ker_cholesky/ker_cholesky_Opt3
+KERNEL_CHOLESKY_OPT3_NAME=makeKer_cholesky_Opt3.mk
+KERNEL_CHOLESKY_OPT4_SUBROUTE=ker_cholesky/ker_cholesky_Opt4
+KERNEL_CHOLESKY_OPT4_NAME=makeKer_cholesky_Opt4.mk
 
 KERNEL_DOITGEN_OPT0_SUBROUTE=ker_doitgen/ker_doitgen_Opt0
 KERNEL_DOITGEN_OPT0_NAME=makeKer_doitgen_Opt0.mk
@@ -119,8 +125,18 @@ kerCholesky_Opt2_build_sw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_CHOLESKY_OPT2_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerCholesky_Opt3_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_CHOLESKY_OPT3_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerCholesky_All_build_sw_emu: kerCholesky_Opt0_build_sw_emu kerCholesky_Opt1_build_sw_emu kerCholesky_Opt2_build_sw_emu
+kerCholesky_Opt4_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_CHOLESKY_OPT4_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerCholesky_All_build_sw_emu: kerCholesky_Opt0_build_sw_emu kerCholesky_Opt1_build_sw_emu kerCholesky_Opt2_build_sw_emu kerCholesky_Opt3_build_sw_emu kerCholesky_Opt4_build_sw_emu
 
 
 # KERNEL TARGET hw_emu
@@ -139,8 +155,18 @@ kerCholesky_Opt2_build_hw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_CHOLESKY_OPT2_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerCholesky_Opt3_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_CHOLESKY_OPT3_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerCholesky_All_build_hw_emu: kerCholesky_Opt0_build_hw_emu kerCholesky_Opt1_build_hw_emu kerCholesky_Opt2_build_hw_emu
+kerCholesky_Opt4_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_CHOLESKY_OPT4_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerCholesky_All_build_hw_emu: kerCholesky_Opt0_build_hw_emu kerCholesky_Opt1_build_hw_emu kerCholesky_Opt2_build_hw_emu kerCholesky_Opt3_build_hw_emu kerCholesky_Opt4_build_hw_emu
 
 
 # KERNEL TARGET hw
@@ -159,8 +185,18 @@ kerCholesky_Opt2_build_hw:
 	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_CHOLESKY_OPT2_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerCholesky_Opt3_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_CHOLESKY_OPT3_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerCholesky_All_build_hw: kerCholesky_Opt0_build_hw kerCholesky_Opt1_build_hw kerCholesky_Opt2_build_hw
+kerCholesky_Opt4_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_CHOLESKY_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_CHOLESKY_OPT4_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerCholesky_All_build_hw: kerCholesky_Opt0_build_hw kerCholesky_Opt1_build_hw kerCholesky_Opt2_build_hw kerCholesky_Opt3_build_hw kerCholesky_Opt4_build_hw
 #**********************************************
 # COMMANDS FOR CHOLESKY KERNELS COMPILE - END
 #**********************************************

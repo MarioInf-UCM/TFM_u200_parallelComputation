@@ -52,21 +52,23 @@ extern "C"{
         #pragma HLS INTERFACE s_axilite port = return bundle = control
 
         for (int i = 0; i < SIZE_N; i++) {
+            #pragma HLS PIPELINE off
             for (int j = 0; j < i; j++) {
+                #pragma HLS PIPELINE off
                 for (int k = 0; k < j; k++) {
+                    #pragma HLS PIPELINE off
                     outD_A[(i*SIZE_N) + j] -= inD_A[(i*SIZE_N) + k] * inD_A[(j*SIZE_N) + k];
                 }
                 outD_A[(i*SIZE_N) + j] /= inD_A[(j*SIZE_N) + j];
             }
+
             for (int k = 0; k < i; k++) {
+                #pragma HLS PIPELINE off
                 outD_A[(i*SIZE_N) + i] -= inD_A[(i*SIZE_N) + k] * inD_A[(i*SIZE_N) + k];
             }
             outD_A[(i*SIZE_N) + i] = sqrt(inD_A[(i*SIZE_N) + i]);
         }
         
+        return;        
     }
-    //*************************************
-    // MAIN KERNEL FUNCTION - END
-    //*************************************
-    
 }

@@ -74,6 +74,9 @@ list(APPEND kerPackList "kerPack_studyCase3_d_mini" "kerPack_studyCase3_d_small"
 
 list(APPEND kerPackList "kerPack_cholesky_Opt0_mini" "kerPack_cholesky_Opt0_small" "kerPack_cholesky_Opt0_medium" "kerPack_cholesky_Opt0_large" "kerPack_cholesky_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_cholesky_Opt1_mini" "kerPack_cholesky_Opt1_small" "kerPack_cholesky_Opt1_medium" "kerPack_cholesky_Opt1_large" "kerPack_cholesky_Opt1_extralarge" )
+list(APPEND kerPackList "kerPack_cholesky_Opt2_mini" "kerPack_cholesky_Opt2_small" "kerPack_cholesky_Opt2_medium" "kerPack_cholesky_Opt2_large" "kerPack_cholesky_Opt2_extralarge" )
+list(APPEND kerPackList "kerPack_cholesky_Opt3_mini" "kerPack_cholesky_Opt3_small" "kerPack_cholesky_Opt3_medium" "kerPack_cholesky_Opt3_large" "kerPack_cholesky_Opt3_extralarge" )
+list(APPEND kerPackList "kerPack_cholesky_Opt4_mini" "kerPack_cholesky_Opt4_small" "kerPack_cholesky_Opt4_medium" "kerPack_cholesky_Opt4_large" "kerPack_cholesky_Opt4_extralarge" )
 
 list(APPEND kerPackList "kerPack_doitgen_Opt0_mini" "kerPack_doitgen_Opt0_small" "kerPack_doitgen_Opt0_medium" "kerPack_doitgen_Opt0_large" "kerPack_doitgen_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_doitgen_Opt1_mini" "kerPack_doitgen_Opt1_small" "kerPack_doitgen_Opt1_medium" "kerPack_doitgen_Opt1_large" "kerPack_doitgen_Opt1_extralarge" )
@@ -83,9 +86,15 @@ list(APPEND kerPackList "kerPack_doitgen_Opt4_mini" "kerPack_doitgen_Opt4_small"
 
 list(APPEND kerPackList "kerPack_gemm_Opt0_mini" "kerPack_gemm_Opt0_small" "kerPack_gemm_Opt0_medium" "kerPack_gemm_Opt0_large" "kerPack_gemm_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_gemm_Opt1_mini" "kerPack_gemm_Opt1_small" "kerPack_gemm_Opt1_medium" "kerPack_gemm_Opt1_large" "kerPack_gemm_Opt1_extralarge" )
+list(APPEND kerPackList "kerPack_gemm_Opt2_mini" "kerPack_gemm_Opt2_small" "kerPack_gemm_Opt2_medium" "kerPack_gemm_Opt2_large" "kerPack_gemm_Opt2_extralarge" )
+list(APPEND kerPackList "kerPack_gemm_Opt3_mini" "kerPack_gemm_Opt3_small" "kerPack_gemm_Opt3_medium" "kerPack_gemm_Opt3_large" "kerPack_gemm_Opt3_extralarge" )
+list(APPEND kerPackList "kerPack_gemm_Opt4_mini" "kerPack_gemm_Opt4_small" "kerPack_gemm_Opt4_medium" "kerPack_gemm_Opt4_large" "kerPack_gemm_Opt4_extralarge" )
 
 list(APPEND kerPackList "kerPack_gemmPer_Opt0_mini" "kerPack_gemmPer_Opt0_small" "kerPack_gemmPer_Opt0_medium" "kerPack_gemmPer_Opt0_large" "kerPack_gemmPer_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_gemmPer_Opt1_mini" "kerPack_gemmPer_Opt1_small" "kerPack_gemmPer_Opt1_medium" "kerPack_gemmPer_Opt1_large" "kerPack_gemmPer_Opt1_extralarge" )
+list(APPEND kerPackList "kerPack_gemmPer_Opt2_mini" "kerPack_gemmPer_Opt2_small" "kerPack_gemmPer_Opt2_medium" "kerPack_gemmPer_Opt2_large" "kerPack_gemmPer_Opt2_extralarge" )
+list(APPEND kerPackList "kerPack_gemmPer_Opt3_mini" "kerPack_gemmPer_Opt3_small" "kerPack_gemmPer_Opt3_medium" "kerPack_gemmPer_Opt3_large" "kerPack_gemmPer_Opt3_extralarge" )
+list(APPEND kerPackList "kerPack_gemmPer_Opt4_mini" "kerPack_gemmPer_Opt4_small" "kerPack_gemmPer_Opt4_medium" "kerPack_gemmPer_Opt4_large" "kerPack_gemmPer_Opt4_extralarge" )
 
 list(APPEND kerPackList "kerPack_jacobi2d_Opt0_mini" "kerPack_jacobi2d_Opt0_small" "kerPack_jacobi2d_Opt0_medium" "kerPack_jacobi2d_Opt0_large" "kerPack_jacobi2d_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_jacobi2d_Opt1_mini" "kerPack_jacobi2d_Opt1_small" "kerPack_jacobi2d_Opt1_medium" "kerPack_jacobi2d_Opt1_large" "kerPack_jacobi2d_Opt1_extralarge" )
@@ -228,6 +237,8 @@ add_executable(benchmarkExec
   ../src/host/choleskyHost/choleskyHost_Opt0/choleskyHost_Opt0.cpp
   ../src/host/choleskyHost/choleskyHost_Opt1/choleskyHost_Opt1.cpp
   ../src/host/choleskyHost/choleskyHost_Opt2/choleskyHost_Opt2.cpp
+  ../src/host/choleskyHost/choleskyHost_Opt3/choleskyHost_Opt3.cpp
+  ../src/host/choleskyHost/choleskyHost_Opt4/choleskyHost_Opt4.cpp
   ../src/kernel/choleskyKernel/choleskyKernel.cpp
   
   ../src/host/jacobi2dHost/jacobi2dHost.cpp

@@ -1,0 +1,6 @@
+X,CPU energy consumption,CPU execution time,CPU optimized energy consumption,CPU optimized execution time,Opt0 energy consumption,Opt0 execution time,Opt1 energy consumption,Opt1 execution time,Opt2 energy consumption,Opt2 execution time,Opt3 energy consumption,Opt3 execution time,Opt4 energy consumption,Opt4 execution time
+mini,66.730582,0.306480,132.533665,8.662360,0.000000,4.073600,0.000000,0.768000,0.000000,0.757400,0.000000,0.446600,0.000000,0.409800
+small,71.435708,5.420760,142.466410,10.725880,0.000000,22.370800,0.000000,13.696600,0.000000,13.379200,0.000000,4.959800,0.000000,2.906400
+medium,70.505400,194.529120,154.334765,25.307080,0.000000,3249.339800,0.000000,471.211800,0.000000,467.588400,0.000000,206.489400,0.000000,48.715200
+large,-nan,-nan,-nan,-nan
+extralarge,-nan,-nan,-nan,-nan

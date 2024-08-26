@@ -138,7 +138,7 @@ def generateTable_data(csv_file):
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
     newRow_name="CPU->Dis"
-    newRow = ((dfIni.iloc[5]-dfIni.iloc[6])/dfI ni.iloc[6])*100
+    newRow = ((dfIni.iloc[5]-dfIni.iloc[6])/dfIni.iloc[6])*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
     df = pd.concat([df, dfTemp])

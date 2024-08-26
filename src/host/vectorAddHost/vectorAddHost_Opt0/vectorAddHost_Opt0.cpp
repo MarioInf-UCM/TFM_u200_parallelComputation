@@ -19,7 +19,6 @@
 
 using namespace std;
 using globalConfiguration_typeData::typeData;
-using globalConfiguration_typeData::typeData_fixed;
 
 using cl::Event;
 using cl::CommandQueue;

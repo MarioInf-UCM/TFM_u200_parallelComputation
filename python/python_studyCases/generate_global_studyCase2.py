@@ -119,7 +119,7 @@ def generateTable_data(csv_file):
     newEmptyRow.loc[:]=""
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newEmptyRow], index=[newEmptyRow_name]) ])
 
-    newRow_name="CPU->Dis"
+    newRow_name="CPU->Dis (sin Opt)"
     newRow = ((dfIni.iloc[1]-dfIni.iloc[2])/dfIni.iloc[2])*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 

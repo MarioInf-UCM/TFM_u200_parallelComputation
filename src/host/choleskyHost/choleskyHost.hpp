@@ -9,6 +9,8 @@
 #include "choleskyHost_Opt0/choleskyHost_Opt0.hpp"
 #include "choleskyHost_Opt1/choleskyHost_Opt1.hpp"
 #include "choleskyHost_Opt2/choleskyHost_Opt2.hpp"
+#include "choleskyHost_Opt3/choleskyHost_Opt3.hpp"
+#include "choleskyHost_Opt4/choleskyHost_Opt4.hpp"
 
 class CholeskyHost {
 
@@ -30,8 +32,9 @@ class CholeskyHost {
         //********************************
         CholeskyHost();
         ~CholeskyHost();
+        
+        static bool exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
-        static bool exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:

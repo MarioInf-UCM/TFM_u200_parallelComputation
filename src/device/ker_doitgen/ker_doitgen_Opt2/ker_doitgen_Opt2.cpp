@@ -41,7 +41,6 @@ typedef float typeData;
 #define VECTOR_SIZE (DATAWIDTH / sizeof(typeData) )
 
 
-
 extern "C"{
 
     void readData_A(typeData *inD_A, typeData *inD_A_local){
@@ -93,7 +92,6 @@ extern "C"{
     }
 
 
-
     #ifdef MINI_DATASET
         void ker_doitgen_Opt2_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(SMALL_DATASET)
@@ -125,5 +123,4 @@ extern "C"{
 
         return;
     }
-
 }

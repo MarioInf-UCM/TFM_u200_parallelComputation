@@ -2,6 +2,7 @@
 #define _GEMMHOST_OPT1_HPP_
 
 #include <iostream>
+#include <atomic>
 #include "../../../service/fileWriter_service/fileWriter_service.hpp"
 #include "../../../service/json_service/jsonConfiguration/execution/execution.hpp"
 #include "../../../utilities/event_timer/event_timer.hpp"
@@ -18,7 +19,8 @@ class GemmHost_Opt1 {
     //* DEFINITION ZONE ATRIBUTES *
     //*****************************
     private:
-
+        static atomic<bool> stop_thread;
+        static double sharedVariable;
 
 
     //*****************************
@@ -28,14 +30,20 @@ class GemmHost_Opt1 {
         GemmHost_Opt1();
         ~GemmHost_Opt1();
 
-        static bool exec(Execution exec, vector<double>& results, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
+        static bool exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile);
 
 
     private:
          
         static bool initParameter(Execution exec, unsigned int &SIZE_I, unsigned int &SIZE_J, unsigned int &SIZE_K);
-        static void emsamble_dataToBuffers(GemmKernel& data, typeData *temp_A, typeData *emp_B, typeData *temp_C, typeData *temp_resultDevice);
-        static void emsamble_buffersToData(GemmKernel& data, typeData *temp_resultDevice);
+
+        static float searchPropertyValue(const string& texto, const string& subcadena);
+        static void threadFunction_DevicePowerMeasure();
+        static double executeAndMeasure_CPU(GemmKernel& data, EventTimer &event);
+        static double executeAndMeasure_CPUopt(GemmKernel& data, vector<double> &measureByPack, EventTimer &event);
+
+        static void emsamble_dataToBuffers(GemmKernel& data, vector<typeData> &temp_A, vector<typeData>& temp_B, vector<typeData>& temp_C, vector<typeData>& temp_resultDevice);
+        static void emsamble_buffersToData(GemmKernel& data, vector<typeData>& temp_resultDevice);
         static bool compareResults(GemmKernel& data);
 };
 #endif

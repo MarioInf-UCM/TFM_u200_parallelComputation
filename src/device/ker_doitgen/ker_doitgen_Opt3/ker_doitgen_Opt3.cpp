@@ -41,7 +41,6 @@ typedef float typeData;
 #define VECTOR_SIZE (DATAWIDTH / sizeof(typeData) )
 
 
-
 extern "C"{
 
     void readData(typeData *inD_A, typeData *inD_C4, typeData *inD_A_local, typeData *inD_C4_local){
@@ -88,7 +87,6 @@ extern "C"{
     }
 
 
-
     #ifdef MINI_DATASET
         void ker_doitgen_Opt3_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(SMALL_DATASET)
@@ -100,7 +98,7 @@ extern "C"{
     #elif defined(EXTRALARGE_DATASET)
         void ker_doitgen_Opt3_extralarge(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #else
-        void ker_doitgenOpt2(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgenOpt3(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
@@ -120,5 +118,4 @@ extern "C"{
 
         return;
     }
-
 }

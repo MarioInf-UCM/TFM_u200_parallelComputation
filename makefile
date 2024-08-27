@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_cholesky/configBenchmark_cholesky.json
+CONFIGFILE_ROUTE=../../../config/configTest_gemm/configTest_gemm_Opt4_sw_emu.json
 
 
 
@@ -44,6 +44,10 @@ KERNEL_GEMM_OPT1_SUBROUTE=ker_gemm/ker_gemm_Opt1
 KERNEL_GEMM_OPT1_NAME=makeKer_gemm_Opt1.mk
 KERNEL_GEMM_OPT2_SUBROUTE=ker_gemm/ker_gemm_Opt2
 KERNEL_GEMM_OPT2_NAME=makeKer_gemm_Opt2.mk
+KERNEL_GEMM_OPT3_SUBROUTE=ker_gemm/ker_gemm_Opt3
+KERNEL_GEMM_OPT3_NAME=makeKer_gemm_Opt3.mk
+KERNEL_GEMM_OPT4_SUBROUTE=ker_gemm/ker_gemm_Opt4
+KERNEL_GEMM_OPT4_NAME=makeKer_gemm_Opt4.mk
 
 KERNEL_GEMMPER_OPT0_SUBROUTE=ker_gemmPer/ker_gemmPer_Opt0
 KERNEL_GEMMPER_OPT0_NAME=makeKer_gemmPer_Opt0.mk
@@ -51,6 +55,10 @@ KERNEL_GEMMPER_OPT1_SUBROUTE=ker_gemmPer/ker_gemmPer_Opt1
 KERNEL_GEMMPER_OPT1_NAME=makeKer_gemmPer_Opt1.mk
 KERNEL_GEMMPER_OPT2_SUBROUTE=ker_gemmPer/ker_gemmPer_Opt2
 KERNEL_GEMMPER_OPT2_NAME=makeKer_gemmPer_Opt2.mk
+KERNEL_GEMMPER_OPT3_SUBROUTE=ker_gemmPer/ker_gemmPer_Opt3
+KERNEL_GEMMPER_OPT3_NAME=makeKer_gemmPer_Opt3.mk
+KERNEL_GEMMPER_OPT4_SUBROUTE=ker_gemmPer/ker_gemmPer_Opt4
+KERNEL_GEMMPER_OPT4_NAME=makeKer_gemmPer_Opt4.mk
 
 KERNEL_JACOBI2D_OPT0_SUBROUTE=ker_jacobi2d/ker_jacobi2d_Opt0
 KERNEL_JACOBI2D_OPT0_NAME=makeKer_jacobi2d_Opt0.mk
@@ -323,8 +331,18 @@ kerGemm_Opt2_build_sw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_GEMM_OPT2_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerGemm_Opt3_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_OPT3_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerGemm_All_build_sw_emu: kerGemm_Opt0_build_sw_emu kerGemm_Opt1_build_sw_emu kerGemm_Opt2_build_sw_emu
+kerGemm_Opt4_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_OPT4_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerGemm_All_build_sw_emu: kerGemm_Opt0_build_sw_emu kerGemm_Opt1_build_sw_emu kerGemm_Opt2_build_sw_emu kerGemm_Opt3_build_sw_emu kerGemm_Opt4_build_sw_emu
 
 
 # KERNEL TARGET hw_emu
@@ -343,8 +361,18 @@ kerGemm_Opt2_build_hw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_GEMM_OPT2_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerGemm_Opt3_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_OPT3_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerGemm_All_build_hw_emu: kerGemm_Opt0_build_hw_emu kerGemm_Opt1_build_hw_emu kerGemm_Opt2_build_hw_emu
+kerGemm_Opt4_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_OPT4_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerGemm_All_build_hw_emu: kerGemm_Opt0_build_hw_emu kerGemm_Opt1_build_hw_emu kerGemm_Opt2_build_hw_emu kerGemm_Opt3_build_hw_emu kerGemm_Opt4_build_hw_emu
 
 
 # KERNEL TARGET hw
@@ -363,8 +391,18 @@ kerGemm_Opt2_build_hw:
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_GEMM_OPT2_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerGemm_Opt3_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_OPT3_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerGemm_All_build_hw: kerGemm_Opt0_build_hw kerGemm_Opt1_build_hw kerGemm_Opt2_build_hw
+kerGemm_Opt4_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMM_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_GEMM_OPT4_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerGemm_All_build_hw: kerGemm_Opt0_build_hw kerGemm_Opt1_build_hw kerGemm_Opt2_build_hw kerGemm_Opt3_build_hw kerGemm_Opt4_build_hw
 #******************************************
 # COMMANDS FOR GEMM KERNELS COMPILE - END
 #******************************************
@@ -392,8 +430,18 @@ kerGemmPer_Opt2_build_sw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_GEMMPER_OPT2_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerGemmPer_Opt3_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_GEMMPER_OPT3_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerGemmPer_All_build_sw_emu: kerGemmPer_Opt0_build_sw_emu kerGemmPer_Opt1_build_sw_emu kerGemmPer_Opt2_build_sw_emu
+kerGemmPer_Opt4_build_sw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_GEMMPER_OPT4_NAME) TARGET=sw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerGemmPer_All_build_sw_emu: kerGemmPer_Opt0_build_sw_emu kerGemmPer_Opt1_build_sw_emu kerGemmPer_Opt2_build_sw_emu kerGemmPer_Opt3_build_sw_emu kerGemmPer_Opt4_build_sw_emu
 
 
 # KERNEL TARGET hw_emu
@@ -412,8 +460,18 @@ kerGemmPer_Opt2_build_hw_emu:
 	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT2_SUBROUTE}; \
 	make -f $(KERNEL_GEMMPER_OPT2_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
+	
+kerGemmPer_Opt3_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_GEMMPER_OPT3_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
 
-kerGemmPer_All_build_hw_emu: kerGemmPer_Opt0_build_hw_emu kerGemmPer_Opt1_build_hw_emu kerGemmPer_Opt2_build_hw_emu
+kerGemmPer_Opt4_build_hw_emu:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_GEMMPER_OPT4_NAME) TARGET=hw_emu JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerGemmPer_All_build_hw_emu: kerGemmPer_Opt0_build_hw_emu kerGemmPer_Opt1_build_hw_emu kerGemmPer_Opt2_build_hw_emu kerGemmPer_Opt3_build_hw_emu kerGemmPer_Opt4_build_hw_emu
 
 
 # KERNEL TARGET hw
@@ -433,7 +491,17 @@ kerGemmPer_Opt2_build_hw:
 	make -f $(KERNEL_GEMMPER_OPT2_NAME) TARGET=hw JOBS=$(JOBS) build;
 	@cd $(CURRENT_DIR);
 
-kerGemmPer_All_build_hw: kerGemmPer_Opt0_build_hw kerGemmPer_Opt1_build_hw kerGemmPer_Opt2_build_hw
+kerGemmPer_Opt3_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT3_SUBROUTE}; \
+	make -f $(KERNEL_GEMMPER_OPT3_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerGemmPer_Opt4_build_hw:
+	@cd ${KERNELS_ROUTE}${KERNEL_GEMMPER_OPT4_SUBROUTE}; \
+	make -f $(KERNEL_GEMMPER_OPT4_NAME) TARGET=hw JOBS=$(JOBS) build;
+	@cd $(CURRENT_DIR);
+
+kerGemmPer_All_build_hw: kerGemmPer_Opt0_build_hw kerGemmPer_Opt1_build_hw kerGemmPer_Opt2_build_hw kerGemmPer_Opt3_build_hw kerGemmPer_Opt4_build_hw
 #**********************************************
 # COMMANDS FOR GEMM_PER KERNELS COMPILE - END
 #**********************************************

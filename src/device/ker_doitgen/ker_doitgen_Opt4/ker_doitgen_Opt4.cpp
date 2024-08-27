@@ -90,7 +90,6 @@ extern "C"{
     }
 
 
-
     #ifdef MINI_DATASET
         void ker_doitgen_Opt4_mini(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #elif defined(SMALL_DATASET)
@@ -102,7 +101,7 @@ extern "C"{
     #elif defined(EXTRALARGE_DATASET)
         void ker_doitgen_Opt4_extralarge(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #else
-        void ker_doitgenOpt2(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
+        void ker_doitgenOpt4(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #endif
     {
         #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
@@ -122,5 +121,4 @@ extern "C"{
 
         return;
     }
-
 }

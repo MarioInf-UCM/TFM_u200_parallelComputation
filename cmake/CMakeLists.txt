@@ -253,6 +253,8 @@ add_executable(benchmarkExec
   ../src/host/gemmHost/gemmHost_Opt0/gemmHost_Opt0.cpp
   ../src/host/gemmHost/gemmHost_Opt1/gemmHost_Opt1.cpp
   ../src/host/gemmHost/gemmHost_Opt2/gemmHost_Opt2.cpp
+  ../src/host/gemmHost/gemmHost_Opt3/gemmHost_Opt3.cpp
+  ../src/host/gemmHost/gemmHost_Opt4/gemmHost_Opt4.cpp
   ../src/kernel/gemmKernel/gemmKernel.cpp
   
   ../src/host/vectorAddHost/vectorAddHost.cpp

@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <cmath>
 #include <stdlib.h>
+#include <hls_math.h>
+
 
 // TYPEDATA COMPILATOR VARIABLE
 //**********************************
 #define TYPEDATA_BITS_SIZE 16
 #define TYPEDATA_BITS_INT 7
 typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
-
 
 
 // DATASIZE COMPILATOR VARIABLE
@@ -58,7 +59,7 @@ extern "C"{
                 #pragma HLS UNROLL factor=4
                 outD_A_local[(i*SIZE_N) + i] -= inD_A_local[(i*SIZE_N) + k] * inD_A_local[(i*SIZE_N) + k];
             }
-            outD_A_local[(i*SIZE_N) + i] = sqrt(inD_A_local[(i*SIZE_N) + i]);
+            outD_A_local[(i*SIZE_N) + i] = hls::sqrt(inD_A_local[(i*SIZE_N) + i]);
         }        
     }
 

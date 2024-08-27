@@ -6,7 +6,6 @@
 typedef float typeData;
 
 
-
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET
@@ -34,7 +33,6 @@ typedef float typeData;
     #define SIZE_R 0
     #define SIZE_P 0
 #endif
-
 
 
 extern "C"{

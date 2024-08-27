@@ -201,7 +201,7 @@ void GemmKernel::kernel_gemm_CPU(){
     for (int i=0 ; i<get_SIZE_I() ; i++){
         for (int j=0; j<get_SIZE_J(); j++){
             get_resultCPU()[i][j] = get_C()[i][j] * get_beta();
-            for (int k=0; k< get_SIZE_K(); ++k){
+            for (int k=0; k< get_SIZE_K(); k++){
                 get_resultCPU()[i][j] += get_alpha() * get_A()[i][k] * get_B()[k][j];
             }
         }

@@ -360,7 +360,7 @@ bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<dou
         result = CholeskyHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("gemm") != string::npos){
-        //result = GemmHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
+        result = GemmHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("jacobi2d") != string::npos){
         result = Jacobi2dHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   

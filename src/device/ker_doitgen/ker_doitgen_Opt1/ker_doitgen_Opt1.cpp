@@ -41,7 +41,6 @@ typedef float typeData;
 #define VECTOR_SIZE (DATAWIDTH / sizeof(typeData) )
 
 
-
 extern "C"{
 
     #ifdef MINI_DATASET
@@ -82,7 +81,6 @@ extern "C"{
             #pragma HLS PIPELINE off
             inD_C4_local[i] = inD_C4[i];
         }
-
 
         for (int r = 0; r < SIZE_R; r++){
             #pragma HLS PIPELINE off

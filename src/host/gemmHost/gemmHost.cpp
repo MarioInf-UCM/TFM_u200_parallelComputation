@@ -36,7 +36,7 @@ bool GemmHost::exec(Execution exec, vector<double>& resultsPerformance, vector<d
         result = GemmHost_Opt4::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_statsFile);
 
     }else{
-        fileWriter_logFile.writeln("ERROR..: Doitgen host name unknow (" + hostName + ").");
+        fileWriter_logFile.writeln("ERROR..: Gemm host name unknow (" + hostName + ").");
         return false;
     }
 

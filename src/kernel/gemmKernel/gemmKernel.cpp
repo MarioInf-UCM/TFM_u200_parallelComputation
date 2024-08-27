@@ -234,53 +234,6 @@ void GemmKernel::kernel_gemm_CPU_opt() {
 }
 
 
-void GemmKernel::kernel_gemm_per_CPU(){
-
-    for (int i = 0; i < get_SIZE_I(); i++) {
-        for (int j = 0; j < get_SIZE_J(); j++){
-            get_resultCPU()[i][j] *= get_beta();
-        }
-        for (int k = 0; k < get_SIZE_K(); k++){
-            for (int j = 0; j < get_SIZE_J(); j++){
-                get_resultCPU()[i][j] += get_alpha() * get_A()[i][k] * get_B()[k][j];
-            }
-        }
-    }
-
-    return;
-}
-
-
-void GemmKernel::kernel_gemm_per_CPU_opt(){
-    int size_i = get_SIZE_I();
-    int size_j = get_SIZE_J();
-    int size_k = get_SIZE_K();
-    double beta = get_beta();
-    double alpha = get_alpha();
-    auto result = get_resultCPU_opt();
-    auto A = get_A();
-    auto B = get_B();
-
-    #pragma omp parallel for
-    for (int i = 0; i < size_i; i++) {
-        for (int j = 0; j < size_j; j++) {
-            get_resultCPU_opt()[i][j] *= beta;
-        }
-        
-        for (int k = 0; k < size_k; k++) {
-            for (int j = 0; j < size_j; j++) {
-                get_resultCPU_opt()[i][j] += alpha * A[i][k] * B[k][j];
-            }
-        }
-    }
-
-    return;
-}
-
-
-
-
-
 
 //*************************
 //* GET AND SET FUNCTIONS *

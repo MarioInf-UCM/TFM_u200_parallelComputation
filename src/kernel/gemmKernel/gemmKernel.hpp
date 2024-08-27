@@ -61,8 +61,6 @@ class GemmKernel{
 
         void kernel_gemm_CPU();
         void kernel_gemm_CPU_opt();
-        void kernel_gemm_per_CPU();
-        void kernel_gemm_per_CPU_opt();
 
 
 

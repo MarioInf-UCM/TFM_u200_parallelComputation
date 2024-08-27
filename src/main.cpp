@@ -5,6 +5,7 @@
 #include "host/choleskyHost/choleskyHost.hpp"
 #include "host/doitgenHost/doitgenHost.hpp"
 #include "host/gemmHost/gemmHost.hpp"
+#include "host/gemmPerHost/gemmPerHost.hpp"
 #include "host/jacobi2dHost/jacobi2dHost.hpp"
 #include "host/vectorAddHost/vectorAddHost.hpp"
 #include "host/studyCase1Host/studyCase1Host.hpp"
@@ -358,6 +359,9 @@ bool runExecution(Execution exec, vector<double>& resultsPerformance, vector<dou
 
     }else if(exec.get_host().find("cholesky") != string::npos){
         result = CholeskyHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
+    
+    }else if(exec.get_host().find("gemmPer") != string::npos){
+        result = GemmPerHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   
     
     }else if(exec.get_host().find("gemm") != string::npos){
         result = GemmHost::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_performanceFile);   

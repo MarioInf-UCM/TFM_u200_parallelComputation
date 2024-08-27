@@ -71,7 +71,6 @@ list(APPEND kerPackList "kerPack_studyCase3_b_mini" "kerPack_studyCase3_b_small"
 list(APPEND kerPackList "kerPack_studyCase3_c_mini" "kerPack_studyCase3_c_small" "kerPack_studyCase3_c_medium" "kerPack_studyCase3_c_large" "kerPack_studyCase3_c_extralarge" )
 list(APPEND kerPackList "kerPack_studyCase3_d_mini" "kerPack_studyCase3_d_small" "kerPack_studyCase3_d_medium" "kerPack_studyCase3_d_large" "kerPack_studyCase3_d_extralarge" )
 
-
 list(APPEND kerPackList "kerPack_cholesky_Opt0_mini" "kerPack_cholesky_Opt0_small" "kerPack_cholesky_Opt0_medium" "kerPack_cholesky_Opt0_large" "kerPack_cholesky_Opt0_extralarge" )
 list(APPEND kerPackList "kerPack_cholesky_Opt1_mini" "kerPack_cholesky_Opt1_small" "kerPack_cholesky_Opt1_medium" "kerPack_cholesky_Opt1_large" "kerPack_cholesky_Opt1_extralarge" )
 list(APPEND kerPackList "kerPack_cholesky_Opt2_mini" "kerPack_cholesky_Opt2_small" "kerPack_cholesky_Opt2_medium" "kerPack_cholesky_Opt2_large" "kerPack_cholesky_Opt2_extralarge" )
@@ -256,6 +255,14 @@ add_executable(benchmarkExec
   ../src/host/gemmHost/gemmHost_Opt3/gemmHost_Opt3.cpp
   ../src/host/gemmHost/gemmHost_Opt4/gemmHost_Opt4.cpp
   ../src/kernel/gemmKernel/gemmKernel.cpp
+
+  ../src/host/gemmPerHost/gemmPerHost.cpp
+  ../src/host/gemmPerHost/gemmPerHost_Opt0/gemmPerHost_Opt0.cpp
+  ../src/host/gemmPerHost/gemmPerHost_Opt1/gemmPerHost_Opt1.cpp
+  ../src/host/gemmPerHost/gemmPerHost_Opt2/gemmPerHost_Opt2.cpp
+  ../src/host/gemmPerHost/gemmPerHost_Opt3/gemmPerHost_Opt3.cpp
+  ../src/host/gemmPerHost/gemmPerHost_Opt4/gemmPerHost_Opt4.cpp
+  ../src/kernel/gemmPerKernel/gemmPerKernel.cpp
   
   ../src/host/vectorAddHost/vectorAddHost.cpp
   ../src/host/vectorAddHost/vectorAddHost_Opt0/vectorAddHost_Opt0.cpp

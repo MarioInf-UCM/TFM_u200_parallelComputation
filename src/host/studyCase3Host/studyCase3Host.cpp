@@ -33,7 +33,7 @@ bool StudyCase3Host::exec(Execution exec, vector<double>& resultsPerformance, ve
         result = StudyCase3Host_d::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_statsFile);
 
     }else{
-        fileWriter_logFile.writeln("ERROR..: host name unknow (" + hostName + ").");
+        fileWriter_logFile.writeln("ERROR..: StudyCase3 host name unknow (" + hostName + ").");
         return false;
     }
 

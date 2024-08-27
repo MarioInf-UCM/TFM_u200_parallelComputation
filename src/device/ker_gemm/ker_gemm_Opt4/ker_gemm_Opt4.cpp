@@ -5,8 +5,8 @@
 
 // TYPEDATA COMPILATOR VARIABLE
 //**********************************
-#define TYPEDATA_BITS_SIZE 32
-#define TYPEDATA_BITS_INT 17
+#define TYPEDATA_BITS_SIZE 16
+#define TYPEDATA_BITS_INT 7
 typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 
 

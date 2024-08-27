@@ -39,7 +39,7 @@ GemmHost_Opt4::~GemmHost_Opt4(){}
 // MAIN FUNCTION - START
 //*************************************
 bool GemmHost_Opt4::exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
-    fileWriter_logFile.writeln("Executing host function \"GemmHost::gemmHost_Opt2_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
+    fileWriter_logFile.writeln("Executing host function \"GemmHost::gemmHost_Opt4_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_I=0, SIZE_J=0, SIZE_K=0;    
     bool result = initParameter(exec, SIZE_I, SIZE_J, SIZE_K);

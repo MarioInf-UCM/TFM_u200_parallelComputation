@@ -36,7 +36,7 @@ bool CholeskyHost::exec(Execution exec, vector<double>& resultsPerformance, vect
         result = CholeskyHost_Opt4::exec(exec, resultsPerformance, resultsPower, fileWriter_logFile, fileWriter_statsFile);
 
     }else{
-        fileWriter_logFile.writeln("ERROR..: Doitgen host name unknow (" + hostName + ").");
+        fileWriter_logFile.writeln("ERROR..: Cholesky host name unknow (" + hostName + ").");
         return false;
     }
 

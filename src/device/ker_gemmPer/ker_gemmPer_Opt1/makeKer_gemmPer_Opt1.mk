@@ -32,14 +32,14 @@ VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vi
 
 BUILD_DIR := ../../../../build/kernelBuild
 
-CONNECTIVITY_FOLDER := ../gemmPer_connectivityConfig/
+CONNECTIVITY_FOLDER := connectivityConfig/
 CONNECTIVITY_NAME_MINI := gemmPer_Opt1_mini_connec.ini
 CONNECTIVITY_NAME_SMALL := gemmPer_Opt1_small_connec.ini
 CONNECTIVITY_NAME_MEDIUM := gemmPer_Opt1_medium_connec.ini
 CONNECTIVITY_NAME_LARGE := gemmPer_Opt1_large_connec.ini
 CONNECTIVITY_NAME_EXTRALARGE := gemmPer_Opt1_extralarge_connec.ini
 
-PROFILE_FOLDER := ../gemmPer_connectivityConfig/
+PROFILE_FOLDER := connectivityConfig/
 PROFILE_NAME := profile.ini
 
 
@@ -60,8 +60,8 @@ MAKEFILE_NAME := makeKer_gemmPer_Opt1.mk
 PackKerList := kerPack_gemmPer_Opt1_mini
 PackKerList += kerPack_gemmPer_Opt1_small
 PackKerList += kerPack_gemmPer_Opt1_medium
-#PackKerList += kerPack_gemmPer_Opt1_large
-#PackKerList += kerPack_gemmPer_Opt1_extralarge
+PackKerList += kerPack_gemmPer_Opt1_large
+PackKerList += kerPack_gemmPer_Opt1_extralarge
 
 
 ker_gemmPer_Opt1_mini_XOS := ker_gemmPer_Opt1_mini.xo

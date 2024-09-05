@@ -201,7 +201,7 @@ void GemmPerKernel::kernel_gemmPer_CPU(){
 
     for (int i = 0; i < get_SIZE_I(); i++) {
         for (int j = 0; j < get_SIZE_J(); j++){
-            get_resultCPU()[i][j] *= get_beta();
+            get_resultCPU()[i][j] = get_C()[i][j] * beta;
         }
         for (int k = 0; k < get_SIZE_K(); k++){
             for (int j = 0; j < get_SIZE_J(); j++){
@@ -227,12 +227,12 @@ void GemmPerKernel::kernel_gemmPer_CPU_opt(){
     #pragma omp parallel for
     for (int i = 0; i < size_i; i++) {
         for (int j = 0; j < size_j; j++) {
-            get_resultCPU_opt()[i][j] *= beta;
+            result[i][j] = get_C()[i][j] * beta;
         }
         
         for (int k = 0; k < size_k; k++) {
             for (int j = 0; j < size_j; j++) {
-                get_resultCPU_opt()[i][j] += alpha * A[i][k] * B[k][j];
+                result[i][j] += alpha * A[i][k] * B[k][j];
             }
         }
     }

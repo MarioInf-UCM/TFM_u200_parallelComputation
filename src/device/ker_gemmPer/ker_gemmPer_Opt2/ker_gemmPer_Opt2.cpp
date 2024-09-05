@@ -6,8 +6,6 @@
 //**********************************
 typedef float typeData;
 
-
-
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET
@@ -58,19 +56,20 @@ extern "C"{
         return;
     }
 
-    void readData_C(typeData *inD_C, typeData *inD_C_local){
+    void readData_C(typeData *inD_C, typeData *inD_C_local, typeData *outD_result_local){
         for (int i = 0 ; i < NI*NJ ; i++) {
             #pragma HLS pipeline off
             inD_C_local[i] = inD_C[i];
+            outD_result_local[i] = inD_C[i];
         }  
         return;
     }
 
-    void readData(typeData *inD_A, typeData *inD_A_local, typeData *inD_B, typeData *inD_B_local, typeData *inD_C, typeData *inD_C_local){
+    void readData(typeData *inD_A, typeData *inD_A_local, typeData *inD_B, typeData *inD_B_local, typeData *inD_C, typeData *inD_C_local, typeData *outD_result_local){
         #pragma HLS DATAFLOW
         readData_A(inD_A, inD_A_local);
         readData_B(inD_B, inD_B_local);
-        readData_C(inD_C, inD_C_local);
+        readData_C(inD_C, inD_C_local, outD_result_local);
         return;
     }
 
@@ -134,8 +133,8 @@ extern "C"{
         typeData inD_C_local[NI*NJ];
         typeData outD_result_local[NI*NJ];
 
-        readData(inD_A, inD_A_local,  inD_B, inD_B_local,  inD_C, inD_C_local);
-        processData(inD_A_local,  inD_B_local,  inD_C_local,  outD_result_local);
+        readData(inD_A, inD_A_local, inD_B, inD_B_local, inD_C, inD_C_local, outD_result);
+        processData(inD_A_local, inD_B_local, inD_C_local, outD_result_local);
         writedata(outD_result, outD_result_local);
 
         return;

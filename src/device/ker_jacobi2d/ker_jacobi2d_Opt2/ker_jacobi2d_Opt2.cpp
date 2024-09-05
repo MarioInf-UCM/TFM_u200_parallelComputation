@@ -36,13 +36,26 @@ typedef float typeData;
 
 extern "C"{
 
-
-    void readData(typeData *inD_A, typeData *inD_B, typeData *inD_A_local, typeData *inD_B_local){
-        for (int i = 0 ; i < SIZE_N*SIZE_N ; i++) {
+    void readData_A(typeData *inD_A, typeData *inD_A_local){
+        for (int i = 0; i < SIZE_N*SIZE_N; i++) {
             #pragma HLS PIPELINE off
             inD_A_local[i] = inD_A[i];
-            inD_B_local[i] = inD_B[i];
         }
+        return;
+    }
+
+    void readData_B(typeData *inD_B, typeData *inD_B_local){
+        for (int i = 0; i < SIZE_N*SIZE_N ; i++) {
+            #pragma HLS PIPELINE off
+            inD_B_local[i] = inD_B[i];
+        }        
+        return;
+    }
+
+    void readData(typeData *inD_A, typeData *inD_B, typeData *inD_A_local, typeData *inD_B_local){
+        #pragma HLS DATAFLOW
+        readData_A(inD_A, inD_A_local);
+        readData_B(inD_B, inD_B_local);
         return;
     }
 
@@ -62,12 +75,26 @@ extern "C"{
         return;  
     }
 
-    void writeData(typeData *inD_A, typeData *inD_B, typeData *inD_A_local, typeData *inD_B_local) {
-        for (int i = 0 ; i < SIZE_N*SIZE_N ; i++) {
+    void writeData_A(typeData *inD_A, typeData *inD_A_local){
+        for (int i = 0; i < SIZE_N*SIZE_N; i++) {
             #pragma HLS PIPELINE off
             inD_A[i] = inD_A_local[i];
-            inD_B[i] = inD_B_local[i];
         }
+        return;
+    }
+
+    void writeData_B(typeData *inD_B, typeData *inD_B_local){
+        for (int i = 0; i < SIZE_N*SIZE_N ; i++) {
+            #pragma HLS PIPELINE off
+            inD_B[i] = inD_B_local[i];
+        }        
+        return;
+    }
+
+    void writeData(typeData *inD_A, typeData *inD_B, typeData *inD_A_local, typeData *inD_B_local) {
+        #pragma HLS DATAFLOW
+        readData_A(inD_A, inD_A_local);
+        readData_B(inD_B, inD_B_local);
         return;
     }
 

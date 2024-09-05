@@ -46,20 +46,26 @@ typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 
 extern "C"{
 
-    void readData(typeData *inD_A, typeData *inD_C4, typeData *inD_A_local, typeData *inD_C4_local){
-        #pragma HLS DATAFLOW
+    void readData_A(typeData *inD_A, typeData *inD_A_local){
         for (int i = 0; i < SIZE_R*SIZE_Q*SIZE_P ; i++) {
-            #pragma HLS PIPELINE II=1
-            #pragma HLS LOOP_TRIPCOUNT min=SIZE_R*SIZE_Q*SIZE_P  max=SIZE_R*SIZE_Q*SIZE_P 
-            #pragma HLS UNROLL factor=4
+            #pragma HLS PIPELINE off
             inD_A_local[i] = inD_A[i];
         }
+        return;
+    }
+
+    void readData_C4(typeData *inD_C4, typeData *inD_C4_local){
         for (int i = 0; i < SIZE_P*SIZE_P ; i++) {
-            #pragma HLS PIPELINE II=1
-            #pragma HLS LOOP_TRIPCOUNT min=SIZE_P*SIZE_P  max=SIZE_P*SIZE_P 
-            #pragma HLS UNROLL factor=4
+            #pragma HLS PIPELINE off
             inD_C4_local[i] = inD_C4[i];
-        }
+        }        
+        return;
+    }
+
+    void readData(typeData *inD_A, typeData *inD_C4, typeData *inD_A_local, typeData *inD_C4_local){
+        #pragma HLS DATAFLOW
+        readData_A(inD_A, inD_A_local);
+        readData_C4(inD_C4, inD_C4_local);
         return;
     }
 

@@ -8,7 +8,7 @@ DEPENDENCIES_SCRIPTS_ROUTE=cmake/scripts/installDependencies.sh
 
 JOBS = 12
 REPLACE_FILES = true
-CONFIGFILE_ROUTE=../../../config/configTest_gemmPer/configTest_gemmPer_Opt4_sw_emu.json
+CONFIGFILE_ROUTE=../../../config/configTest_gemmPer/configBenchmark_gemmPer.json
 
 
 

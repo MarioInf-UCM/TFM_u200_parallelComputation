@@ -115,7 +115,7 @@ def generateSpeedupTable(csv_file):
 
 
     #################################
-    # Tratamiento de datos Mini
+    # Tratamiento de datos Small
     #################################
     dfTemp=pd.DataFrame()
     newRow_name="->CPU"
@@ -125,8 +125,8 @@ def generateSpeedupTable(csv_file):
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
     newRow_name="->CPU Opt"
-    newRow = df_ini.iloc[0, 1:]
-    accelerator = df_ini.iloc[0, 2]
+    newRow = df_ini.iloc[1, 1:]
+    accelerator = df_ini.iloc[1, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
@@ -185,8 +185,8 @@ def generateSpeedupTable(csv_file):
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
     newRow_name="->CPU Opt"
-    newRow = df_ini.iloc[0, 1:]
-    accelerator = df_ini.iloc[0, 2]
+    newRow = df_ini.iloc[2, 1:]
+    accelerator = df_ini.iloc[2, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
@@ -244,15 +244,15 @@ def generateSpeedupTable(csv_file):
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->Opt0"
+    newRow_name="->CPU Opt"
     newRow = df_ini.iloc[3, 1:]
-    accelerator = df_ini.iloc[3, 2]
+    accelerator = df_ini.iloc[3, 3]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
-    newRow_name="->CPU Opt"
-    newRow = df_ini.iloc[0, 1:]
-    accelerator = df_ini.iloc[0, 3]
+    newRow_name="->Opt0"
+    newRow = df_ini.iloc[3, 1:]
+    accelerator = df_ini.iloc[3, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
@@ -305,8 +305,8 @@ def generateSpeedupTable(csv_file):
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 
     newRow_name="->CPU Opt"
-    newRow = df_ini.iloc[0, 1:]
-    accelerator = df_ini.iloc[0, 2]
+    newRow = df_ini.iloc[4, 1:]
+    accelerator = df_ini.iloc[4, 2]
     newRow = ((newRow-accelerator)/accelerator)*100
     dfTemp = pd.concat([dfTemp, pd.DataFrame([newRow], index=[newRow_name])])
 

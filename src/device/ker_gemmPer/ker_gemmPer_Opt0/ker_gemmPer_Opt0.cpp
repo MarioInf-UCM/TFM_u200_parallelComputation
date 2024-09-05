@@ -6,8 +6,6 @@
 //**********************************
 typedef float typeData;
 
-
-
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET
@@ -38,7 +36,6 @@ typedef float typeData;
 
 #define GEMM_ALPHA 1.5f
 #define GEMM_BETA 1.2f
-
 
 
 extern "C"{
@@ -72,7 +69,7 @@ extern "C"{
             #pragma HLS pipeline off
             for (int j = 0; j < NJ; j++){
                 #pragma HLS pipeline off
-                outD_result[(i*NJ)+j] *= GEMM_BETA;
+                outD_result[(i*NJ)+j] = inD_C[i] * GEMM_BETA;
             }
             for (int k = 0; k < NK; k++){
                 #pragma HLS pipeline off

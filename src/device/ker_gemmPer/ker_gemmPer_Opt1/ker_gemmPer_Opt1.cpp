@@ -6,8 +6,6 @@
 //**********************************
 typedef float typeData;
 
-
-
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET
@@ -86,7 +84,7 @@ extern "C"{
         for (int i = 0 ; i < NI*NJ ; i++) {
             #pragma HLS pipeline off
             inD_C_local[i] = inD_C[i];
-            outD_result_local[i] = 0.0f;
+            outD_result_local[i] = inD_C[i];
         }
 
         for (int i = 0; i < NI; i++) {

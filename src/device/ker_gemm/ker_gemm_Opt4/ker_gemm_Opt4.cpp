@@ -9,8 +9,6 @@
 #define TYPEDATA_BITS_INT 7
 typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 
-
-
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET

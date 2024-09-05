@@ -9,8 +9,6 @@
 #define TYPEDATA_BITS_INT 7
 typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData;
 
-
-
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET
@@ -65,21 +63,22 @@ extern "C"{
         return;
     }
 
-    void readData_C(typeData *inD_C, typeData *inD_C_local){
+    void readData_C(typeData *inD_C, typeData *inD_C_local, typeData *outD_result_local){
         for (int i = 0 ; i < NI*NJ ; i++) {
             #pragma HLS PIPELINE II=1
             #pragma HLS LOOP_TRIPCOUNT min=NI*NJ max=NI*NJ
             #pragma HLS UNROLL factor=2
             inD_C_local[i] = inD_C[i];
+            outD_result_local[i] = inD_C[i];
         }  
         return;
     }
 
-    void readData(typeData *inD_A, typeData *inD_A_local, typeData *inD_B, typeData *inD_B_local, typeData *inD_C, typeData *inD_C_local){
+    void readData(typeData *inD_A, typeData *inD_A_local, typeData *inD_B, typeData *inD_B_local, typeData *inD_C, typeData *inD_C_local, typeData *outD_result_local){
         #pragma HLS DATAFLOW
         readData_A(inD_A, inD_A_local);
         readData_B(inD_B, inD_B_local);
-        readData_C(inD_C, inD_C_local);
+        readData_C(inD_C, inD_C_local, outD_result_local);
         return;
     }
 
@@ -89,7 +88,7 @@ extern "C"{
 
         for (int i = 0; i < NI; i++) {
             for (int j = 0; j < NJ; j++){
-                #pragma HLS PIPELINE II=1
+                #pragma HLS PIPELINE II=1   
                 #pragma HLS LOOP_TRIPCOUNT min=NJ max=NJ
                 #pragma HLS UNROLL factor=2    
                 outD_result_local[(i*NJ)+j] *= beta;
@@ -109,9 +108,9 @@ extern "C"{
     void writedata(typeData *outD_result, typeData *outD_result_local){
         for (int i=0; i<NI; i++){
             for (int j=0; j<NJ; ++j){
-                    #pragma HLS PIPELINE II=1
-                    #pragma HLS LOOP_TRIPCOUNT min=NK max=NK
-                    #pragma HLS UNROLL factor=2  
+                #pragma HLS PIPELINE II=1
+                #pragma HLS LOOP_TRIPCOUNT min=NK max=NK
+                #pragma HLS UNROLL factor=2  
                 outD_result[(i*NJ)+j] = outD_result_local[(i*NJ)+j];
             }
         }
@@ -149,7 +148,7 @@ extern "C"{
         typeData inD_C_local[NI*NJ];
         typeData outD_result_local[NI*NJ];
 
-        readData(inD_A, inD_A_local,  inD_B, inD_B_local,  inD_C, inD_C_local);
+        readData(inD_A, inD_A_local, inD_B, inD_B_local, inD_C, inD_C_local, outD_result_local);
         processData(inD_A_local,  inD_B_local,  inD_C_local,  outD_result_local);
         writedata(outD_result, outD_result_local);
 

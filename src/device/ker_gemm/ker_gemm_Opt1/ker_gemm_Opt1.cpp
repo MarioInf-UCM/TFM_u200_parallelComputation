@@ -6,8 +6,6 @@
 //**********************************
 typedef float typeData;
 
-
-
 // DATASIZE COMPILATOR VARIABLE
 //**********************************
 #ifdef MINI_DATASET

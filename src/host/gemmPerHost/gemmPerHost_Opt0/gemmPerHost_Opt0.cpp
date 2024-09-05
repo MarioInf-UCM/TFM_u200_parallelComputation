@@ -36,7 +36,7 @@ GemmPerHost_Opt0::~GemmPerHost_Opt0(){}
 // MAIN FUNCTION - START
 //*************************************
 bool GemmPerHost_Opt0::exec(Execution exec, vector<double>& resultsPerformance, vector<double>& resultsPower, FileWriter_service fileWriter_logFile, FileWriter_service fileWriter_statsFile){
-    fileWriter_logFile.writeln("Executing host function \"GemmPerHost::gemmHost_Opt0_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
+    fileWriter_logFile.writeln("Executing host function \"GemmPerHost::gemmPerHost_Opt0_exec\". Execution configuration:\n" + exec.displayInfo("\t"));
 
     unsigned int SIZE_I=0, SIZE_J=0, SIZE_K=0;    
     bool result = initParameter(exec, SIZE_I, SIZE_J, SIZE_K);

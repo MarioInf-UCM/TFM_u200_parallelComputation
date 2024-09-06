@@ -42,18 +42,18 @@ def generate_plot(csv_url):
     plt.plot(x, y_opt3_energy, marker='P', label='Consumo energético del dispositivo Opt3', color='lime')
     plt.plot(x, y_opt4_energy, marker='*', label='Consumo energético del dispositivo Opt4', color='green')
 
-    plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
+    #plt.title(f'Comparación de potencia consumida - {os.path.basename(csv_url)}')
     plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
     #plt.xlabel('Tamaño de datos de entrada')                  #Etiqueta exclusivas del kernel VectorAdd
 
-    plt.ylabel('Consumo (Vatios)')
+    plt.ylabel('Potencia (Vatios)')
     plt.legend()
     plt.xticks(ticks=range(len(categories)), labels=categories)
 
     image_locationTemp = csv_url + ".jpg"
-    plt.savefig(image_locationTemp, format='jpg', dpi=600)
+    plt.savefig(image_locationTemp, format='jpg', dpi=600, bbox_inches='tight')
     image_locationTemp = csv_url + ".pdf"
-    plt.savefig(image_locationTemp, format='pdf', dpi=600)
+    plt.savefig(image_locationTemp, format='pdf', dpi=600, bbox_inches='tight')
 
     plt.close()
 

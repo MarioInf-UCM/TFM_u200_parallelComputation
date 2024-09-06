@@ -30,7 +30,7 @@ def generate_plot(csv_url):
     plt.plot(x, y3, marker='s', label='Ejecución del dispositivo', color='blue')
     plt.plot(x, y4, marker='p', label='Transmisión y recepción de datos al dispositivo', color='aquamarine')
 
-    plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
+    #plt.title(f'Comparación de tiempos de ejecución - {os.path.basename(csv_url)}')
     plt.xlabel('Tamaño de datos de entrada (según Polybench/C)')
     #plt.xlabel('Tamaño de datos de entrada')                            #Etiqueta exclusivas del kernel VectorAdd
 
@@ -40,9 +40,9 @@ def generate_plot(csv_url):
     plt.yscale('log')
 
     image_locationTemp = csv_url + ".jpg"
-    plt.savefig(image_locationTemp, format='jpg', dpi=600)
+    plt.savefig(image_locationTemp, format='jpg', dpi=600, bbox_inches='tight')
     image_locationTemp = csv_url + ".pdf"
-    plt.savefig(image_locationTemp, format='pdf', dpi=600)
+    plt.savefig(image_locationTemp, format='pdf', dpi=600, bbox_inches='tight')
 
     plt.close()
 

@@ -55,6 +55,10 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
     jsonConfiguration.set_verbose(root["verbose"].asBool());
     jsonConfiguration.set_logFile(root["logFile"].asString());
     jsonConfiguration.set_outDir(root["outDir"].asString());
+    jsonConfiguration.set_global_performanceFile(root["global_performanceFile"].asString());
+    jsonConfiguration.set_global_powerFile(root["global_powerFile"].asString());
+    jsonConfiguration.set_generate_global_PerformanceGraphics(root["generate_global_PerformanceGraphics"].asBool());
+    jsonConfiguration.set_generate_global_PowerGraphics(root["generate_global_PowerGraphics"].asBool());
 
     Test testTemp;
     Execution executionTemp;
@@ -62,17 +66,23 @@ JsonConfiguration Json_service::getJSONConfiguration_FromFile() {
     for (const auto &test : root["testList"]) {
         testTemp = Test();
         testTemp.set_name(test["name"].asString());
-        testTemp.set_generatePictures(test["generatePictures"].asBool());
-        testTemp.set_statsFile(test["statsFile"].asString());
-        
+        testTemp.set_performanceFile(test["performanceFile"].asString());
+        testTemp.set_powerFile(test["powerFile"].asString());
+        testTemp.set_generate_performanceGraphics(test["generate_performanceGraphics"].asBool());
+        testTemp.set_generate_powerGraphics(test["generate_powerGraphics"].asBool());
+
         for (const auto &execution : test["executionList"]) {
             executionTemp = Execution();
             executionTemp.set_host(execution["host"].asString());
             executionTemp.set_kernelPackage(execution["kernelPackage"].asString());
             executionTemp.set_kernel(execution["kernel"].asString());
             executionTemp.set_dataSize(execution["dataSize"].asString());
+            executionTemp.set_measurePower_CPU(execution["measurePower_CPU"].asBool());
+            executionTemp.set_measurePower_CPUopt(execution["measurePower_CPUopt"].asBool());
+            executionTemp.set_measurePower_device(execution["measurePower_device"].asBool());
             executionTemp.set_printResults(execution["printResults"].asBool());
-            executionTemp.set_numExecutions(execution["numExecutions"].asInt());
+            executionTemp.set_numExecutions_cool(execution["numExecutions_cool"].asUInt());
+            executionTemp.set_numExecutions_hot(execution["numExecutions_hot"].asUInt());
             testTemp.get_executionList().push_back(executionTemp);
         }
         jsonConfiguration.get_testList().push_back(testTemp);        

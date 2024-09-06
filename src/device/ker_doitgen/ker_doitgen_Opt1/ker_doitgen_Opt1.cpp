@@ -41,7 +41,6 @@ typedef float typeData;
 #define VECTOR_SIZE (DATAWIDTH / sizeof(typeData) )
 
 
-
 extern "C"{
 
     #ifdef MINI_DATASET
@@ -58,9 +57,9 @@ extern "C"{
         void ker_doitgenOpt1(typeData *inD_A, typeData *inD_C4, typeData *outD_A)
     #endif
     {
-        #pragma HLS INTERFACE m_axi port = inD_A max_read_burst_length = 32 offset = slave bundle = gmem
-        #pragma HLS INTERFACE m_axi port = inD_C4 max_read_burst_length = 32 offset = slave bundle = gmem1
-        #pragma HLS INTERFACE m_axi port = outD_A max_write_burst_length = 32 offset = slave bundle = gmem2
+        #pragma HLS INTERFACE m_axi port = inD_A offset = slave bundle = gmem
+        #pragma HLS INTERFACE m_axi port = inD_C4 offset = slave bundle = gmem
+        #pragma HLS INTERFACE m_axi port = outD_A offset = slave bundle = gmem
 
         #pragma HLS INTERFACE s_axilite port = inD_A bundle = control
         #pragma HLS INTERFACE s_axilite port = inD_C4 bundle = control
@@ -72,70 +71,40 @@ extern "C"{
         typeData outD_A_local[SIZE_R*SIZE_Q*SIZE_P];
         typeData sum[SIZE_P];
 
-        #pragma HLS DATAFLOW
-        //#pragma HLS stream variable = inD_A_local depth = 64
-        //#pragma HLS stream variable = outD_C4_local depth = 64
-        //#pragma HLS stream variable = outD_A_local depth = 64
 
-
-        readingInitDataA:
         for (int i = 0; i < SIZE_R*SIZE_Q*SIZE_P ; i++) {
-            #pragma HLS LOOP_TRIPCOUNT min=SIZE_R*SIZE_Q*SIZE_P max=SIZE_R*SIZE_Q*SIZE_P
-            #pragma HLS UNROLL factor=8
-            #pragma HLS PIPELINE II=1
+            #pragma HLS PIPELINE off
             inD_A_local[i] = inD_A[i];
             outD_A_local[i] = 0.0;
         }
-
-        readingInitDataC4:
         for (int i = 0; i < SIZE_P*SIZE_P ; i++) {
-            #pragma HLS LOOP_TRIPCOUNT min=SIZE_P*SIZE_P  max=SIZE_P*SIZE_P 
-            #pragma HLS UNROLL factor=8
-            #pragma HLS PIPELINE II=1
+            #pragma HLS PIPELINE off
             inD_C4_local[i] = inD_C4[i];
         }
 
-
-        mainLoop:
         for (int r = 0; r < SIZE_R; r++){
-            #pragma HLS LOOP_TRIPCOUNT min=SIZE_R max=SIZE_R
-            #pragma HLS UNROLL factor=8
+            #pragma HLS PIPELINE off
 
             for (int q = 0; q < SIZE_Q; q++){
-                #pragma HLS LOOP_TRIPCOUNT min=SIZE_Q max=SIZE_Q
-                #pragma HLS UNROLL factor=8
+                #pragma HLS PIPELINE off
 
                 for (int p = 0; p < SIZE_P; p++){
-                    #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
+                    #pragma HLS PIPELINE off
                     sum[p] = 0.0;
 
                     for (int s = 0; s < SIZE_P; s++){
-                        #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
-                        #pragma HLS PIPELINE II=1
+                        #pragma HLS PIPELINE off
                         sum[p] += inD_A_local[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+s] * inD_C4_local[(s*SIZE_P)+p];
                     }
                 }
 
                 for (int p = 0; p < SIZE_P; p++){
-                    #pragma HLS LOOP_TRIPCOUNT min=SIZE_P max=SIZE_P
-                    #pragma HLS PIPELINE II=1
-                    outD_A_local[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p] = sum[p];
+                    #pragma HLS PIPELINE off
+                    outD_A[(r*SIZE_Q*SIZE_P)+(q*SIZE_P)+p] = sum[p];
                 }
             }
         }
 
-
-
-        writingResults:
-        for (int i = 0; i < SIZE_R*SIZE_Q*SIZE_P ; i++) {
-            #pragma HLS LOOP_TRIPCOUNT min=SIZE_R*SIZE_Q*SIZE_P max=SIZE_R*SIZE_Q*SIZE_P
-            #pragma HLS UNROLL factor=8
-            #pragma HLS PIPELINE II=1
-            outD_A[i] = outD_A_local[i];
-        }
-
         return;
-        
     }
-
 }

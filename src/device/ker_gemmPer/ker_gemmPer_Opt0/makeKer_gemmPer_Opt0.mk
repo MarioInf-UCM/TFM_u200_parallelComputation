@@ -32,14 +32,14 @@ VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vi
 
 BUILD_DIR := ../../../../build/kernelBuild
 
-CONNECTIVITY_FOLDER := ../gemmPer_connectivityConfig/
+CONNECTIVITY_FOLDER := connectivityConfig/
 CONNECTIVITY_NAME_MINI := gemmPer_Opt0_mini_connec.ini
 CONNECTIVITY_NAME_SMALL := gemmPer_Opt0_small_connec.ini
 CONNECTIVITY_NAME_MEDIUM := gemmPer_Opt0_medium_connec.ini
 CONNECTIVITY_NAME_LARGE := gemmPer_Opt0_large_connec.ini
 CONNECTIVITY_NAME_EXTRALARGE := gemmPer_Opt0_extralarge_connec.ini
 
-PROFILE_FOLDER := ../gemmPer_connectivityConfig/
+PROFILE_FOLDER := connectivityConfig/
 PROFILE_NAME := profile.ini
 
 

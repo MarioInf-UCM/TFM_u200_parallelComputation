@@ -52,6 +52,8 @@ class Jacobi_2dKernel{
 
         void kernel_jacobi_2d_CPU();
         void kernel_jacobi_2d_CPU_opt();
+        void saveResults();
+        void saveResults_opt();
 
 
 

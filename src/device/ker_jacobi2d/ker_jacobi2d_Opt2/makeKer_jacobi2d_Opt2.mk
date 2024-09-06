@@ -32,14 +32,14 @@ VPPFLAGS_GENERAL := --platform $(PFM) -t $(TARGET) -s -g --hls.jobs $(JOBS) --vi
 
 BUILD_DIR := ../../../../build/kernelBuild
 
-CONNECTIVITY_FOLDER := ../jacobi2d_connectivityConfig/
+CONNECTIVITY_FOLDER := connectivityConfig/
 CONNECTIVITY_NAME_MINI := jacobi2d_Opt2_mini_connec.ini
 CONNECTIVITY_NAME_SMALL := jacobi2d_Opt2_small_connec.ini
 CONNECTIVITY_NAME_MEDIUM := jacobi2d_Opt2_medium_connec.ini
 CONNECTIVITY_NAME_LARGE := jacobi2d_Opt2_large_connec.ini
 CONNECTIVITY_NAME_EXTRALARGE := jacobi2d_Opt2_extralarge_connec.ini
 
-PROFILE_FOLDER := ../jacobi2d_connectivityConfig/
+PROFILE_FOLDER := connectivityConfig/
 PROFILE_NAME := profile.ini
 
 

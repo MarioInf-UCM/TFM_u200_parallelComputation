@@ -5,16 +5,16 @@
 
 using namespace std;
 
-ExternProgramsConnection_service::ExternProgramsConnection_service():
-    generatePyctures_URL("generatePyctures.py")
+ExternProgramsConnection_service::ExternProgramsConnection_service(string generatePicture_URL):
+    generatePyctures_URL(generatePicture_URL)
 {}
 ExternProgramsConnection_service::~ExternProgramsConnection_service(){}
 
 
 
-bool ExternProgramsConnection_service::execute_generatePyctures(string entryParam, string outFile){
+bool ExternProgramsConnection_service::executeCommand(string entryParam){
 
-    string command = "python3 " + get_generatePyctures_URL() + " " + entryParam + " " + outFile;
+    string command = "python3 " + get_generatePyctures_URL() + " " + entryParam;
     int result = system(command.c_str());
     if (result == 0) {
         return true;
@@ -24,7 +24,7 @@ bool ExternProgramsConnection_service::execute_generatePyctures(string entryPara
 }
 
 
-bool ExternProgramsConnection_service::execute_generatePyctures(){
+bool ExternProgramsConnection_service::executeCommand(){
     
     string command = "python3 " + get_generatePyctures_URL();
     for (const auto& filePath : get_generatePyctures_entryParams()) {

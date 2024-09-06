@@ -5,13 +5,8 @@
 #include <iostream>
 #include "../../configParams/configParams.hpp"
 
-/* namespace gemmConfiguration_typeData{
-    typedef double typeData;
-} */
-
 using namespace std;
 using globalConfiguration_typeData::typeData;
-//using namespace gemmConfiguration_typeData;
 
 class GemmKernel{
 
@@ -66,8 +61,6 @@ class GemmKernel{
 
         void kernel_gemm_CPU();
         void kernel_gemm_CPU_opt();
-        void kernel_gemm_per_CPU();
-        void kernel_gemm_per_CPU_opt();
 
 
 

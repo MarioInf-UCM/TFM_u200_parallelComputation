@@ -2,14 +2,20 @@
 #define _CONFIGPARAMS_HPP_
 
 #include <ap_fixed.h>
-    //DEFINE TYPE OF DATA
+    //GENERAL
     //******************************
     namespace globalConfiguration_typeData{
         typedef float typeData;
-        #define TYPEDATA_BITS_SIZE 32
-        #define TYPEDATA_BITS_INT 8
+        #define TYPEDATA_BITS_SIZE 16
+        #define TYPEDATA_BITS_INT 7
         typedef ap_fixed<TYPEDATA_BITS_SIZE, TYPEDATA_BITS_INT> typeData_fixed;
     }
+
+    #define MSR_RAPL_POWER_UNIT 0x606
+    #define MSR_PKG_ENERGY_STATUS 0x611
+    #define MSR_PP0_ENERGY_STATUS 0x639
+    #define MSR_PP1_ENERGY_STATUS 0x641
+
 
 
 
@@ -51,8 +57,8 @@
 
     //DEFINE PARAMS FOR GEMM KERNEL
     //**********************************
-    #define GEMM_ALPHA 1.5
-    #define GEMM_BETA 1.2
+    #define GEMM_ALPHA 1.5f
+    #define GEMM_BETA 1.2f
 
     #if !defined(GEMM_NI) && !defined(GEMM_NJ) && !defined(GEMM_NK)
         #define GEMM_I_MINI 20
@@ -95,6 +101,19 @@
         #define JACOBI2D_TSTEPS_EXTRALARGE 1000
         #define JACOBI2D_N_EXTRALARGE 2800
     #endif
+
+
+    //DEFINE PARAMS FOR VECTORADD KERNEL
+    //**********************************
+    # if !defined(VECTORADD_SIZE)
+        #define VECTORADD_SIZE_MINI (1024 * 1024 * 2)
+        #define VECTORADD_SIZE_SMALL (1024 * 1024 * 4)
+        #define VECTORADD_SIZE_MEDIUM (1024 * 1024 * 8)
+        #define VECTORADD_SIZE_LARGE (1024 * 1024 * 16)
+        #define VECTORADD_SIZE_EXTRALARGE (1024 * 1024 * 32)
+    #endif
+        
+
 
 
 #endif

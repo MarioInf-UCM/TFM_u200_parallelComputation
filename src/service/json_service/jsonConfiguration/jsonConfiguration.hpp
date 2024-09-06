@@ -15,6 +15,10 @@ class JsonConfiguration{
         bool verbose;
         string outDir;
         string logFile;
+        string global_performanceFile;
+        string global_powerFile;
+        bool generate_global_PerformanceGraphics;
+        bool generate_global_PowerGraphics;
         vector<Test> testList;
     
 
@@ -39,10 +43,20 @@ class JsonConfiguration{
         string get_logFile() const;
         void set_logFile(string data);
 
+        string get_global_performanceFile() const;
+        void set_global_performanceFile(string data);
+
+        string get_global_powerFile() const;
+        void set_global_powerFile(string data);
+
+        bool get_generate_global_PerformanceGraphics() const;
+        void set_generate_global_PerformanceGraphics(bool data);
+
+        bool get_generate_global_PowerGraphics() const;
+        void set_generate_global_PowerGraphics(bool data);
+
         vector<Test>& get_testList();
-        Test getElement_testList_byIndex(unsigned int index);
         void set_testList(vector<Test> newList);
-        void setElement_testList_byIndex(unsigned int index, Test value);
 
 };
 

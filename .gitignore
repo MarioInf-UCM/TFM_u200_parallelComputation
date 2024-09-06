@@ -30,3 +30,27 @@
 *.exe
 *.out
 *.app
+
+# Vidis projects files
+*.aux
+*.log
+*.out
+*.toc
+.vscode
+.private
+.Xil
+_x
+*.xo
+**/build/*
+**/out/*
+**/venv/
+*.ltx
+*.xclbin
+*.info
+**/build/kernelBuild/*.csv
+*.fls
+*.fdb_latexmk
+*.compile_summary*
+vitis_analyzer*
+*.link_summary*
+hw_src/ip_cache
